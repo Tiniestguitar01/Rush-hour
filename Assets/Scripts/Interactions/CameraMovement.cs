@@ -10,22 +10,28 @@ public class CameraMovement : MonoBehaviour
     public float cameraYMax = 90;
     public float cameraYMin = 0;
 
-    float rotationY = 0F;
+    float rotationY = 0f;
 
     void LateUpdate()
     {
         transform.LookAt(target);
-
-        if (Input.GetMouseButton(1))
+        if(UIManager.Instance.state == (int)Menu.Game)
         {
-            float VerticalAxis = -Input.GetAxis("Mouse Y") * speed;
+            if (Input.GetMouseButton(1))
+            {
+                float VerticalAxis = -Input.GetAxis("Mouse Y") * speed;
 
-            float rotationX = rotation.transform.localEulerAngles.y + Input.GetAxis("Mouse X") * speed;
+                float rotationX = rotation.transform.localEulerAngles.y + Input.GetAxis("Mouse X") * speed;
 
-            rotationY += -Input.GetAxis("Mouse Y") * speed;
-            rotationY = Mathf.Clamp(rotationY, cameraYMin, cameraYMax);
+                rotationY += -Input.GetAxis("Mouse Y") * speed;
+                rotationY = Mathf.Clamp(rotationY, cameraYMin, cameraYMax);
 
-            rotation.transform.localEulerAngles = new Vector3(rotationY, rotationX, 0);
+                rotation.transform.localEulerAngles = new Vector3(rotationY, rotationX, 0);
+            }
+        }
+        else
+        {
+            rotation.RotateAround(target.position, Vector3.up, speed * Time.deltaTime);
         }
     }
 }

@@ -32,11 +32,11 @@ public class VehicleMovement : MonoBehaviour
             {
                 hitted = hit.transform.gameObject;
                 VehicleComponent vehicleComponent = hitted.GetComponent<VehicleComponent>();
-                vehicle = new Vehicle(vehicleComponent.id, vehicleComponent.size, vehicleComponent.startPosition, vehicleComponent.direction);
+                vehicle = new Vehicle(vehicleComponent.id, vehicleComponent.size, vehicleComponent.startPosition, vehicleComponent.direction, Board.Instance.board);
 
                 DirectionFromCarOrigin = hitted.transform.parent.position - hit.point;
                 startHitPoint = hit.point;
-                vehicle.GetMovablePosition();
+                vehicle.GetMovablePosition(Board.Instance.board);
             }
         }
         else if (hitted != null && (Input.GetMouseButton(0)))
@@ -87,6 +87,7 @@ public class VehicleMovement : MonoBehaviour
             if (Vector3.Distance(hitted.transform.parent.position, moveTo) < 1.1f)
             {
                 hitted.transform.parent.position = new Vector3(moveTo.x, (0.5f * vehicle.size), moveTo.z);
+                GameData.Instance.moved++;
                 hitted = null;
             }
         }
