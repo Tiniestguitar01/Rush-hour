@@ -1,24 +1,26 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public class Graph
-{
-    public SortedSet<Node> openList;
-    public HashSet<Node> closedList;
-
-    public Graph()
+    public class Graph
     {
-        openList = new SortedSet<Node>();
-        closedList = new HashSet<Node>();
-    }
+        public SortedSet<Node> openList;
+        public SortedSet<Node> closedList;
 
-    public void AddToOpenList(Node node)
-    {
-        openList.Add(node);
-    }
+        public Graph()
+        {
+            openList = new SortedSet<Node>();
+            closedList = new SortedSet<Node>();
+        }
 
-    public void RemoveFromOpenList(Node node)
-    {
-        openList.Remove(node);
-        closedList.Add(node);
+        public void AddToOpenList(Node node)
+        {
+            openList.Add(node);
+        }
+
+        public void RemoveFromOpenList(Node node)
+        {
+            openList.Remove(node);
+            closedList.Add(node);
+        }
+
     }
-}

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -17,11 +18,11 @@ public class Board : MonoBehaviour
         GenerateBoard();
     }
 
-    void GenerateBoard()
+    public void GenerateBoard()
     {
         board = new int[size, size];
 
-        for (int x = 0; x < size; x++) 
+        for (int x = 0; x < size; x++)
         {
             for (int z = 0; z < size; z++)
             {
@@ -51,13 +52,13 @@ public class Board : MonoBehaviour
         }
     }
 
-    public Vector3 BoardCoordinateToWordSpace(int[] coordinate)
-    {
-        return new Vector3(coordinate[0] * 3, 0, coordinate[1] * 3);
-    }
+        public Vector3 BoardCoordinateToWordSpace(int[] coordinate)
+        {
+            return new Vector3(coordinate[0] * 3, 0, coordinate[1] * 3);
+        }
 
-    public int[] WordSpaceToBoardCoordinateTo(Vector3 coordinate)
-    {
-        return new int[] { (int)coordinate.x / 3, (int)coordinate.z / 3 };
-    }
+        public int[] WordSpaceToBoardCoordinateTo(Vector3 coordinate)
+        {
+            return new int[] { (int)coordinate.x / 3, (int)coordinate.z / 3 };
+        }
 }

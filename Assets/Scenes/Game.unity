@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 37844471}
   - component: {fileID: 37844470}
   - component: {fileID: 37844472}
+  - component: {fileID: 37844473}
   m_Layer: 0
   m_Name: GenerationManager
   m_TagString: Untagged
@@ -315,6 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987418e383031f74191b6c6a4b059c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vehicleGOs: []
 --- !u!114 &37844472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,6 +327,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 80664779332b22343b787281a317102b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &37844473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37844467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc30f0dfb2cd25a439816b8b478fe0c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &78367961
@@ -773,6 +787,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moved: 0
+  timer: 0
+  timerStarted: 0
   difficulty: 0
 --- !u!4 &270333728
 Transform:
@@ -1182,8 +1198,11 @@ MonoBehaviour:
   target: {fileID: 1248838642}
   rotation: {fileID: 1248838642}
   speed: 5
+  scrollScale: 2
   cameraYMax: 50
   cameraYMin: -15
+  cameraZMax: -15
+  cameraZMin: -30
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,40 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ModifyBoard : MonoBehaviour
-{
-    public static ModifyBoard Instance;
-
-    void Awake()
+    public class ModifyBoard : MonoBehaviour
     {
-        Instance = this;
-    }
+        public static ModifyBoard Instance;
 
-    public void InsertVehicle(Vehicle vehicle, int[,] board)
-    {
-        List<int[]> position = vehicle.GetPosition();
-
-        for (int x = 0; x < position.Count; x++)
+        void Awake()
         {
-            board[position[x][0], position[x][1]] = vehicle.id;
+            Instance = this;
         }
-    }
 
-    public void RemoveVehicle(Vehicle vehicle, int[,] board)
-    {
-        List<int[]> position = vehicle.GetPosition();
-
-        for (int x = 0; x < position.Count; x++)
+        public void InsertVehicle(Vehicle vehicle, int[,] board)
         {
-            board[position[x][0], position[x][1]] = 0;
+            List<int[]> position = vehicle.GetPosition();
+
+            for (int x = 0; x < position.Count; x++)
+            {
+                board[position[x][0], position[x][1]] = vehicle.id;
+            }
         }
-    }
 
-    public void MoveVehicle(Vehicle vehicle, int[] position, int[,] board)
-    {
-        RemoveVehicle(vehicle, board);
-        vehicle.Move(position);
-        InsertVehicle(vehicle, board);
-    }
+        public void RemoveVehicle(Vehicle vehicle, int[,] board)
+        {
+            List<int[]> position = vehicle.GetPosition();
 
-}
+            for (int x = 0; x < position.Count; x++)
+            {
+                board[position[x][0], position[x][1]] = 0;
+            }
+        }
+
+        public void MoveVehicle(Vehicle vehicle, int[] position, int[,] board)
+        {
+            RemoveVehicle(vehicle, board);
+            vehicle.Move(position);
+            InsertVehicle(vehicle, board);
+        }
+
+    }

@@ -2,64 +2,52 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum CostMiniMax
-{
-    Minimise = 0,
-    Maximise = 1,
-}
-
-public class Solver : MonoBehaviour
-{
-    public static Solver Instance;
-
-    int steps = 0;
-
-    void Start()
+    public class Solver : MonoBehaviour
     {
-        Instance = this;
-    }
+        public static Solver Instance;
 
-    public bool SearchSolution(CostMiniMax miniMax, int[,] firstBoard)
-    {
-        Graph graph = new Graph();
-        Node firstNode = new Node(firstBoard);
-        graph.AddToOpenList(firstNode);
-        steps = 0;
+        int steps = 0;
 
-        // && steps < (int)GameData.Instance.difficulty
-        while (graph.openList.Count != 0)
+        public Node resultNode;
+
+        void Awake()
         {
-            Node bestNode;
-            if (miniMax == CostMiniMax.Minimise)
+            Instance = this;
+        }
+
+        public bool BestFirstSearch(int[,] firstBoard)
+        {
+            Graph graph = new Graph();
+            Node firstNode = new Node(firstBoard);
+            graph.AddToOpenList(firstNode);
+            steps = 0;
+            while (graph.openList.Count != 0)
             {
+                Node bestNode;
                 bestNode = graph.openList.First();
-            }
-            else
-            {
-                bestNode = graph.openList.Last();
-            }
 
-            graph.RemoveFromOpenList(bestNode);
+                graph.RemoveFromOpenList(bestNode);
 
-            List<Node> children = bestNode.GetChildren(graph);
-            foreach (Node child in children)
-            {
-                //cost-ot lehetne a difficulty-hoz kötni
-                if (child.cost == 0)
+                List<Node> children = bestNode.GetChildren();
+                foreach (Node child in children)
                 {
-                    return true;
-                }
-                else
-                {
-                    if (!graph.Contains(child))
+                    if (child.cost == 0)
                     {
-                        graph.AddToOpenList(child);
+                        resultNode = child;
+                        return true;
+                    }
+                    else
+                    {
+                        if (!graph.openList.Contains(child) && !graph.closedList.Contains(child))
+                        {
+                            graph.AddToOpenList(child);
+                            child.parent = bestNode;
+                        }
                     }
                 }
+                steps++;
             }
-            steps++;
-        }
-        return false;
+            return false;
 
+        }
     }
-}

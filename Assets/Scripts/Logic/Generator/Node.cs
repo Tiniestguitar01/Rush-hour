@@ -7,6 +7,8 @@ public class Node : IComparable<Node>, ICloneable
     public int[,] board;
     public int cost;
 
+    public Node parent;
+
     public Node(int[,] board)
     {
         this.board = board;
@@ -22,7 +24,7 @@ public class Node : IComparable<Node>, ICloneable
         return new Node((int[,])board.Clone());
     }
 
-    public List<Node> GetChildren(Graph graph)
+    public List<Node> GetChildren()
     {
         List<Vehicle> vehicles = GetVehicles();
 
@@ -34,14 +36,15 @@ public class Node : IComparable<Node>, ICloneable
 
             for (int i = 1; i < vehicle.possibleMoves.Count; i++)
             {
-                children.Add(CreateChildren(graph, vehicle, vehicle.possibleMoves[i], board));
+                Node node = CreateChild(vehicle, vehicle.possibleMoves[i], board);
+                children.Add(node);
             }
         }
 
         return children;
     }
 
-    List<Vehicle> GetVehicles()
+    public List<Vehicle> GetVehicles()
     {
         //Get all vehicles
         List<Vehicle> vehicles = new List<Vehicle>();
@@ -75,11 +78,11 @@ public class Node : IComparable<Node>, ICloneable
                         }
                     }
 
-                    if (!vehicles.Exists(v => board[x, z] == v.id))
-                    {
+                     if (!vehicles.Exists(v => board[x, z] == v.id))
+                     {
                         Vehicle vehicle = new Vehicle(board[x, z], size, new int[] { x, z }, direction, board);
                         vehicles.Add(vehicle);
-                    }
+                     }
                 }
             }
         }
@@ -87,17 +90,16 @@ public class Node : IComparable<Node>, ICloneable
         return vehicles;
     }
 
-    Node CreateChildren(Graph graph,Vehicle vehicle, int[] position, int[,] board)
+    public Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
     {
         ModifyBoard.Instance.MoveVehicle(vehicle, position, board);
 
         Node newNode = new Node(board);
         newNode.EvaluateCost();
-
         return newNode;
     }
 
-    void EvaluateCost()
+    public void EvaluateCost()
     {
         for (int i = 0; i < board.GetLength(0); i++)
         {
@@ -105,7 +107,7 @@ public class Node : IComparable<Node>, ICloneable
             {
                 cost += board.GetLength(0);
             }
-            
+
             if (board[i, 2] == 1)
             {
                 cost += i;

@@ -3,67 +3,69 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public enum Menu
-{
-    Menu = 0,
-    Game = 1,
-    Difficulty = 2,
-    Options = 3
-}
-
-public class UIManager : MonoBehaviour
-{
-    [Header("Menus")]
-    public List<GameObject> menus;
-
-    [Header("GameUI")]
-
-    public TMP_Text TimerText;
-    public TMP_Text MovedText;
-
-    public static UIManager Instance;
-
-    public int state = 0;
-
-    void Start()
+    public enum Menu
     {
-        Instance = this;
+        Menu = 0,
+        Game = 1,
+        Difficulty = 2,
+        Options = 3
     }
 
-    public void SetMenuActive(Menu menuCode)
+    public class UIManager : MonoBehaviour
     {
-        foreach(GameObject menu in menus)
+        [Header("Menus")]
+        public List<GameObject> menus;
+
+        [Header("GameUI")]
+
+        public TMP_Text TimerText;
+        public TMP_Text MovedText;
+
+        public static UIManager Instance;
+
+        public int state = 0;
+
+        void Start()
         {
-            menu.SetActive(false);
+            Instance = this;
         }
 
-        menus[(int)menuCode].SetActive(true);
-        state = (int)menuCode;
-    }
+        public void SetMenuActive(Menu menuCode)
+        {
+            foreach (GameObject menu in menus)
+            {
+                menu.SetActive(false);
+            }
 
-    public void StartToDifficulty()
-    {
-        SetMenuActive(Menu.Difficulty);
-    }
+            menus[(int)menuCode].SetActive(true);
+            state = (int)menuCode;
+        }
 
-    public void StartGame()
-    {
-        SetMenuActive(Menu.Game);
-    }
+        public void StartToDifficulty()
+        {
+            SetMenuActive(Menu.Difficulty);
+        }
 
-    public void BackToMenu()
-    {
-        SetMenuActive(Menu.Menu);
-    }
+        public void StartGame()
+        {
+            PuzzleGenerator.Instance.GeneratePuzzle();
+            SetMenuActive(Menu.Game);
+            GameData.Instance.StartTimer();
+        }
 
-    public void Quit()
-    {
-        Application.Quit();
-    }
+        public void BackToMenu()
+        {
+            SetMenuActive(Menu.Menu);
+        }
 
-    public void SetDifficulty(int difficulty)
-    {
-        GameData.Instance.difficulty = (Difficulty)difficulty;
-        StartGame();
+        public void Quit()
+        {
+            Application.Quit();
+        }
+
+        public void SetDifficulty(int difficulty)
+        {
+            GameData.Instance.difficulty = (Difficulty)difficulty;
+            StartGame();
+        }
     }
-}
