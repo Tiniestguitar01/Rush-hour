@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
     public class Solver : MonoBehaviour
@@ -19,9 +20,9 @@ using UnityEngine;
         {
             Graph graph = new Graph();
             Node firstNode = new Node(firstBoard);
-            graph.AddToOpenList((Node)firstNode.Clone());
+            graph.AddToOpenList(firstNode);
             steps = 0;
-            while (graph.openList.Count != 0)
+            while (graph.openList.Count != 0 && steps < 3000)
             {
                 Node bestNode;
                 bestNode = graph.openList.First();
@@ -30,29 +31,9 @@ using UnityEngine;
 
                 List<Node> children = bestNode.GetChildren();
 
-                Debug.Log("----------------parent----------------");
-                PuzzleGenerator.Instance.PrintBoard(bestNode.board);
-
-                Debug.Log("----------------openlist----------------");
-                foreach(Node n in graph.openList)
-                {
-                    PuzzleGenerator.Instance.PrintBoard(n.board);
-                }
-
-                Debug.Log("----------------closedlist----------------");
-
-                Debug.Log("----------------children----------------");
-                foreach(Node n in graph.closedList)
-                {
-                    PuzzleGenerator.Instance.PrintBoard(n.board);
-                }
-
                 foreach (Node child in children)
                 {
-                    PuzzleGenerator.Instance.PrintBoard(child.board);
-                    Debug.Log(child.cost);
-
-                    if (child.cost == 0)
+                if (child.cost == 0)
                     {
                         resultNode = child;
                         return true;
@@ -60,11 +41,9 @@ using UnityEngine;
                     else
                     {
 
-                        Debug.Log("In openList: " + graph.openList.Contains((Node)child.Clone()));
-                        Debug.Log("In closedList: " + graph.closedList.Contains((Node)child.Clone()));
-                        if (!graph.openList.Contains((Node)child.Clone()) && !graph.closedList.Contains((Node)child.Clone()))
+                        if (!graph.openList.Any(node => node.Equals(child)) && !graph.closedList.Any(node => node.Equals(child)))
                         {
-                            graph.AddToOpenList((Node)child.Clone());
+                            graph.AddToOpenList(child);
                             child.parent = bestNode;
                         }
                     }

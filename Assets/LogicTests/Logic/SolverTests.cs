@@ -91,4 +91,26 @@ public class SolverTests
 
         Assert.AreEqual(true, Solver.Instance.BestFirstSearch(testBoard));
     }
+
+    [Test]
+    public void HardestPossiblePuzzle()
+    {
+        Board.Instance = new Board();
+        Board.Instance.size = 6;
+        ModifyBoard.Instance = new ModifyBoard();
+        Solver.Instance = new Solver();
+
+        PuzzleGenerator.Instance = new PuzzleGenerator();
+
+        int[,] testBoard = new int[,] {
+            { 0,2,2,2,4,0 },
+            { 3,3,1,0,4,5 },
+            { 0,0,1,6,6,5 },
+            { 13,10,10,9,7,7 },
+            { 13,11,11,9,0,8 },
+            { 12,12,12,9,0,8 }
+        };
+
+        Assert.AreEqual(true, Solver.Instance.BestFirstSearch(testBoard));
+    }
 }

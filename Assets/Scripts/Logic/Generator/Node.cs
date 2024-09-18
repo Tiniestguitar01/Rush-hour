@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : IComparable<Node>, ICloneable
+public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
 {
     public int[,] board;
     public int cost;
@@ -20,13 +20,8 @@ public class Node : IComparable<Node>, ICloneable
         return this.cost.CompareTo(other.cost);
     }
 
-    // Optionally, override Equals and GetHashCode for proper equality checking
-    public override bool Equals(object obj)
+    public bool Equals(Node other)
     {
-        if (obj == null || GetType() != obj.GetType()) return false;
-
-        var other = (Node)obj;
-
         for (int i = 0; i < board.GetLength(0); i++)
         {
             for (int j = 0; j < board.GetLength(1); j++)
@@ -35,8 +30,12 @@ public class Node : IComparable<Node>, ICloneable
                     return false;
             }
         }
-
         return true;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(board, cost);
     }
 
     public object Clone()

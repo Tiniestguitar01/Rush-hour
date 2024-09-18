@@ -31,10 +31,15 @@ using UnityEngine;
         }
 
         public void MoveVehicle(Vehicle vehicle, int[] position, int[,] board)
-        {
+        {            
             RemoveVehicle(vehicle, board);
             vehicle.Move(position);
             InsertVehicle(vehicle, board);
+
+            if(vehicle.id == 1 && vehicle.startPosition[0] == 0)
+            {
+                UIManager.Instance.state = (int)Menu.GameOver;
+            }
         }
 
     }
