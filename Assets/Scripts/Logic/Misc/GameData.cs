@@ -29,16 +29,25 @@ using UnityEngine;
 
         void Update()
         {
-            if (timerStarted)
+            if (UIManager.Instance.state == (int)Menu.Game)
             {
-                timer += Time.deltaTime;
+                if (timerStarted)
+                {
+                    timer += Time.deltaTime;
+                }
+
+                string minute = Mathf.Floor((timer / 60)).ToString("00");
+                string second = (timer % 59).ToString("00");
+                UIManager.Instance.TimerText.text = minute + ":" + second;
+
+                UIManager.Instance.MovedText.text = "Moved: " + moved;
+            }
+            else
+            {
+                moved = 0;
+                timer = 0;
             }
 
-            string minute = Mathf.Floor((timer / 60)).ToString("00");
-            string second = (timer % 59).ToString("00");
-            UIManager.Instance.TimerText.text = minute + ":" + second;
-
-            UIManager.Instance.MovedText.text = "Moved: " + moved;
         }
 
         public void StartTimer()

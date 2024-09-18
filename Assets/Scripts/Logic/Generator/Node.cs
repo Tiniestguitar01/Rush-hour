@@ -27,11 +27,9 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
             for (int j = 0; j < board.GetLength(1); j++)
             {
                 if (board[i, j] != other.board[i, j])
-                    Debug.Log(board[i, j]+ " "+ other.board[i, j]);
                     return false;
             }
         }
-        Debug.Log("yeee");
         return true;
     }
 
