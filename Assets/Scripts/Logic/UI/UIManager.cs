@@ -9,6 +9,7 @@ public enum Menu
     Game = 1,
     Difficulty = 2,
     Pause = 3,
+    GameOver = 4,
 }
 public class UIManager : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class UIManager : MonoBehaviour
     public int state = 0; //0=menu,1=game
     public bool paused = false;
 
-    void Start()
+    void Awake()
     {
         Instance = this;
     }

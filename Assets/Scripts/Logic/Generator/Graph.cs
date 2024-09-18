@@ -19,7 +19,13 @@ using UnityEngine;
 
         public void RemoveFromOpenList(Node node)
         {
-            openList.Remove(node);
+            for(int i = 0; i < openList.Count;i++)
+            {
+                if(openList[i].Equals(node))
+                {
+                    openList.RemoveAt(i);
+                }
+            }
             closedList.Add(node);
         }
 
