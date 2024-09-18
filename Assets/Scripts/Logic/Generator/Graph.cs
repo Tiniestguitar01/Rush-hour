@@ -3,13 +3,13 @@ using UnityEngine;
 
     public class Graph
     {
-        public SortedSet<Node> openList;
-        public SortedSet<Node> closedList;
+        public List<Node> openList;
+        public List<Node> closedList;
 
         public Graph()
         {
-            openList = new SortedSet<Node>();
-            closedList = new SortedSet<Node>();
+            openList = new List<Node>();
+            closedList = new List<Node>();
         }
 
         public void AddToOpenList(Node node)
