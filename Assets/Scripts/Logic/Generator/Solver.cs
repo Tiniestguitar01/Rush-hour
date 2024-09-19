@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using System.Threading.Tasks;
 
     public class Solver : MonoBehaviour
     {
@@ -16,13 +17,13 @@ using UnityEngine;
             Instance = this;
         }
 
-        public bool BestFirstSearch(int[,] firstBoard)
+        public async Task<bool> BestFirstSearch(int[,] firstBoard)
         {
             Graph graph = new Graph();
             Node firstNode = new Node(firstBoard);
             graph.AddToOpenList(firstNode);
             steps = 0;
-            while (graph.openList.Count != 0 && steps < 3000)
+            while (graph.openList.Count != 0 && steps < 500)
             {
                 Node bestNode;
                 bestNode = graph.openList.First();
@@ -36,7 +37,7 @@ using UnityEngine;
                 if (child.cost == 0)
                     {
                         resultNode = child;
-                        return true;
+                        return await Task.FromResult(true);
                     }
                     else
                     {
@@ -49,8 +50,9 @@ using UnityEngine;
                     }
                 }
                 steps++;
+                await Task.Yield();
             }
-            return false;
+            return await Task.FromResult(false);
 
         }
     }

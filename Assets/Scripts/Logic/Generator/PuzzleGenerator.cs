@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class PuzzleGenerator : MonoBehaviour
 {
@@ -15,19 +16,19 @@ public class PuzzleGenerator : MonoBehaviour
     int truckCount = 0;
     int carCount = 0;
 
-    void Start()
+    async void Start()
     {
         Instance = this;
-        GeneratePuzzle();
+        await GeneratePuzzle();
         SpawnGrid.Instance.Spawn();
     }
 
-    public void GeneratePuzzle()
+    public async Task<bool> GeneratePuzzle()
     {
         DeleteVehicles();
         Board.Instance.GenerateBoard();
 
-        InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(2, Board.Instance.size - 1), 2 }, Direction.Vertical), Board.Instance.board);
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(2, Board.Instance.size - 1), 2 }, Direction.Vertical), Board.Instance.board);
 
         foreach (Place place in Board.Instance.places)
         {
@@ -35,9 +36,11 @@ public class PuzzleGenerator : MonoBehaviour
         }
 
         GenerateVehicles();
+
+        return await Task.FromResult(true);
     }
 
-    void GenerateVehicles()
+    async void GenerateVehicles()
     {
         for (int id = 2; id < 16 && Board.Instance.places.Count > 0; id++)
         {
@@ -49,17 +52,12 @@ public class PuzzleGenerator : MonoBehaviour
             Board.Instance.places.Sort();
 
             int random = Random.Range(0, Mathf.Min( 10, Board.Instance.places.Count));
-
-            if (!InsertVehicle(CreateVehicle(id, Board.Instance.places[random].size, Board.Instance.places[random].placePosition, Board.Instance.places[random].direction), Board.Instance.board))
+            bool result = await InsertVehicle(CreateVehicle(id, Board.Instance.places[random].size, Board.Instance.places[random].placePosition, Board.Instance.places[random].direction), Board.Instance.board);
+            if (!result)
             {
                 id--;
             }
         }
-
-        //Maximise cost for difficulty
-        /*Solver.Instance.BestFirstSearch(CostMiniMax.Maximise, Board.Instance.board);
-
-        Board.Instance.board = (int[,])Solver.Instance.resultNode.board.Clone();*/
 
         PrintBoard(Board.Instance.board);
 
@@ -72,19 +70,20 @@ public class PuzzleGenerator : MonoBehaviour
         return vehicle;
     }
 
-    public bool InsertVehicle(Vehicle vehicle, int[,] board)
+    public async Task<bool> InsertVehicle(Vehicle vehicle, int[,] board)
     {
         //ezt �t kell �rni 
         List<int[]> position = vehicle.GetPosition();
         ModifyBoard.Instance.InsertVehicle(vehicle, board);
 
-        if (!Solver.Instance.BestFirstSearch(Board.Instance.board))
+        bool solvable = await Solver.Instance.BestFirstSearch(Board.Instance.board);
+        if (!solvable)
         {
             Board.Instance.places.RemoveAll(place => place.placePosition[0] == position[0][0] && place.placePosition[1] == position[0][1]);
 
             ModifyBoard.Instance.RemoveVehicle(vehicle, board);
 
-            return false;
+            return await Task.FromResult(false);
         }
 
         vehicles.Add(vehicle);
@@ -112,7 +111,7 @@ public class PuzzleGenerator : MonoBehaviour
             Board.Instance.places.RemoveAll(place => place.size == 3);
         }
 
-        return true;
+        return await Task.FromResult(true);
     }
 
     public void RemovePlaces(int[] position)

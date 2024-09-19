@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Threading.Tasks;
 
 public enum Menu
 {
@@ -56,11 +57,12 @@ public class UIManager : MonoBehaviour
         SetMenuActive(Menu.Difficulty);
     }
 
-    public void StartGame()
+    public async Task<bool> StartGame()
     {
-        PuzzleGenerator.Instance.GeneratePuzzle();
+        await PuzzleGenerator.Instance.GeneratePuzzle();
         SetMenuActive(Menu.Game);
         GameData.Instance.StartTimer();
+        return await Task.FromResult(true);
     }
 
     public void BackToMenu()
@@ -73,10 +75,10 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void SetDifficulty(int difficulty)
+    public async void SetDifficulty(int difficulty)
     {
         GameData.Instance.difficulty = (Difficulty)difficulty;
-        StartGame();
+        await StartGame();
     }
 
     public void HandlePause()
