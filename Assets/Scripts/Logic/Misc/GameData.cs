@@ -12,7 +12,6 @@ using UnityEngine;
 
     public class GameData : MonoBehaviour
     {
-        public static GameData Instance;
 
         public int moved = 0;
         public float timer = 0;
@@ -21,15 +20,17 @@ using UnityEngine;
 
         public Difficulty difficulty;
 
-        void Awake()
+    UIManager uiManagerInstance;
+
+        void Start()
         {
+            uiManagerInstance = InstanceCreator.GetUIManager();
             difficulty = Difficulty.Beginner;
-            Instance = this;
         }
 
         void Update()
         {
-            if (UIManager.Instance.state == (int)Menu.Game)
+            if (uiManagerInstance.state == (int)Menu.Game)
             {
                 if (timerStarted)
                 {
@@ -38,9 +39,9 @@ using UnityEngine;
 
                 string minute = Mathf.Floor((timer / 60)).ToString("00");
                 string second = (timer % 59).ToString("00");
-                UIManager.Instance.TimerText.text = minute + ":" + second;
+            uiManagerInstance.TimerText.text = minute + ":" + second;
 
-                UIManager.Instance.MovedText.text = "Moved: " + moved;
+                uiManagerInstance.MovedText.text = "Moved: " + moved;
             }
             else
             {

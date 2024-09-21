@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-    public enum Direction
+public enum Direction
     {
         Vertical,
         Horizontal
@@ -30,7 +31,7 @@ using System.Collections.Generic;
 
         public List<int[]> GetPosition()
         {
-            int boardSize = Board.Instance.size;
+            int boardSize = InstanceCreator.GetBoard().size;
 
             List<int[]> position = new List<int[]>();
 
@@ -48,68 +49,68 @@ using System.Collections.Generic;
 
             possibleMoves.Add(startPosition);
 
-            int size = Board.Instance.size;
+            int size = InstanceCreator.GetBoard().size;
 
-            maxDistanceForward = 0;
-            maxDistanceBackward = 0;
+        maxDistanceForward = 0;
+        maxDistanceBackward = 0;
 
-            if (this.direction == Direction.Vertical)
+        if (this.direction == Direction.Vertical)
+        {
+            for (int coordinate = startPosition[0] + this.size; coordinate < size; coordinate++)
             {
-                for (int coordinate = startPosition[0] + this.size; coordinate < size; coordinate++)
+                if (board[coordinate, startPosition[1]] == 0)
                 {
-                    if (board[coordinate, startPosition[1]] == 0)
-                    {
-                        possibleMoves.Add(new int[] { coordinate - this.size + 1, startPosition[1] });
-                        maxDistanceBackward++;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    possibleMoves.Add(new int[] { coordinate - this.size + 1, startPosition[1] });
+                    maxDistanceBackward++;
                 }
-
-                for (int coordinate = startPosition[0] - 1; coordinate >= 0; coordinate--)
+                else
                 {
-                    if (board[coordinate, startPosition[1]] == 0)
-                    {
-                        possibleMoves.Add(new int[] { coordinate, startPosition[1] });
-                        maxDistanceForward++;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
-            else
-            {
-                for (int coordinate = startPosition[1] + this.size; coordinate < size; coordinate++)
-                {
-                    if (board[startPosition[0], coordinate] == 0)
-                    {
-                        possibleMoves.Add(new int[] { startPosition[0], coordinate - this.size + 1 });
-                        maxDistanceBackward++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
 
-                for (int coordinate = startPosition[1] - 1; coordinate >= 0; coordinate--)
+            for (int coordinate = startPosition[0] - 1; coordinate >= 0; coordinate--)
+            {
+                if (board[coordinate, startPosition[1]] == 0)
                 {
-                    if (board[startPosition[0], coordinate] == 0)
-                    {
-                        possibleMoves.Add(new int[] { startPosition[0], coordinate });
-                        maxDistanceForward++;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    possibleMoves.Add(new int[] { coordinate, startPosition[1] });
+                    maxDistanceForward++;
+                }
+                else
+                {
+                    break;
                 }
             }
         }
+        else
+        {
+            for (int coordinate = startPosition[1] + this.size; coordinate < size; coordinate++)
+            {
+                if (board[startPosition[0], coordinate] == 0)
+                {
+                    possibleMoves.Add(new int[] { startPosition[0], coordinate - this.size + 1 });
+                    maxDistanceBackward++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int coordinate = startPosition[1] - 1; coordinate >= 0; coordinate--)
+            {
+                if (board[startPosition[0], coordinate] == 0)
+                {
+                    possibleMoves.Add(new int[] { startPosition[0], coordinate });
+                    maxDistanceForward++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
 
         public void Move(int[] position)
         {
