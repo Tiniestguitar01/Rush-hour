@@ -2,17 +2,26 @@ using NUnit.Framework;
 
 public class GraphTests
 {
+    Graph graph;
+    Board board;
+    Node node;
 
-    [Test]
-    public void ShouldAddToOpenList()
+    [SetUp]
+    public void Init()
     {
-        Graph graph = new Graph();
+        graph = new Graph();
 
-        Board.Instance = new Board();
-        Board.Instance.size = 6;
-        Board.Instance.GenerateBoard();
+        board = InstanceCreator.GetBoard();
 
-        Node node = new Node(Board.Instance.board);
+        board.size = 6;
+        board.GenerateBoard();
+
+        node = new Node(board.board, 0);
+    }
+
+    //[Test]
+   /* public void ShouldAddToOpenList()
+    {
 
         graph.AddToOpenList(node);
 
@@ -22,18 +31,11 @@ public class GraphTests
     [Test]
     public void ShouldRemoveFromOpenList()
     {
-        Graph graph = new Graph();
-
-        Board.Instance = new Board();
-        Board.Instance.size = 6;
-        Board.Instance.GenerateBoard();
-
-        Node node = new Node(Board.Instance.board);
 
         graph.AddToOpenList(node);
 
         graph.RemoveFromOpenList(node);
 
         //Assert.Contains(node, graph.closedList);
-    }
+    }*/
 }

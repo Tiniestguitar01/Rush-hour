@@ -2,17 +2,31 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
+public class Node : IComparable<Node>, IEquatable<Node>
 {
     public int[,] board;
-    public int cost;
+    public int depth;
+    public float cost;
 
+    public Vehicle movedVehicle;
+    
     public Node parent;
 
-    public Node(int[,] board)
+    public int[,] goalBoard;
+
+    public Node(int[,] board, int depth)
     {
         this.board = board;
-        EvaluateCost();
+        this.depth = depth;
+        EvaluateCostForSolution();
+    }
+
+    public Node(int[,] board, int depth, int[,] goalBoard)
+    {
+        this.board = board;
+        this.depth = depth;
+        this.goalBoard = goalBoard;
+        EvaluateCostCompareBoard(goalBoard);
     }
 
     public int CompareTo(Node other)
@@ -38,11 +52,6 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
         return HashCode.Combine(board, cost);
     }
 
-    public object Clone()
-    {
-        return new Node((int[,])board.Clone());
-    }
-
     public List<Node> GetChildren()
     {
         List<Vehicle> vehicles = GetVehicles();
@@ -53,10 +62,10 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
         {
             int[,] board = (int[,])this.board.Clone();
 
-            for (int i = 1; i < vehicle.possibleMoves.Count; i++)
+            for (int i = 0; i < vehicle.possibleMoves.Count; i++)
             {
                 Node node = CreateChild(vehicle, vehicle.possibleMoves[i], board);
-                children.Add((Node)node.Clone());
+                children.Add(node);
             }
         }
 
@@ -68,7 +77,7 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
         //Get all vehicles
         List<Vehicle> vehicles = new List<Vehicle>();
 
-        int boardSize = Board.Instance.size;
+        int boardSize = InstanceCreator.GetBoard().size;
         for (int x = 0; x < boardSize; x++)
         {
             for (int z = 0; z < boardSize; z++)
@@ -111,12 +120,24 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
 
     public Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
     {
-        ModifyBoard.Instance.MoveVehicle(vehicle, position, board);
-        Node newNode = new Node(board);
+        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board);
+
+        Node newNode;
+        if (goalBoard != null)
+        {
+            newNode = new Node(board, depth + 1, goalBoard);
+        }
+        else
+        { 
+            newNode = new Node(board, depth + 1); 
+        }
+
+        newNode.parent = this;
+        newNode.movedVehicle = vehicle;
         return newNode;
     }
 
-    public void EvaluateCost()
+    public void EvaluateCostForSolution()
     {
         for (int i = 0; i < board.GetLength(0); i++)
         {
@@ -130,6 +151,22 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
                 cost += i;
                 break;
             }
+        }
+        cost += depth;
+    }
+
+    public void EvaluateCostCompareBoard(int[,] goalBoard)
+    {
+        cost += (board.GetLength(0) * board.GetLength(1));
+        for (int i = 0; i < board.GetLength(0); i++)
+        {
+            for(int j = 0; j < board.GetLength(0); j++)
+            {
+                if (board[i,j] == goalBoard[i,j])
+                {
+                    cost--;
+                }
+            }   
         }
     }
 }
