@@ -23,7 +23,6 @@ public class ModifyBoard : MonoBehaviour
 
     public void MoveVehicle(Vehicle vehicle, int[] position, int[,] board)
     {            
-        Debug.Log("Moving to: " + position[0] + " " + position[1]);
         RemoveVehicle(vehicle, board);
         vehicle.Move(position);
         InsertVehicle(vehicle, board);

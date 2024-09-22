@@ -17,7 +17,7 @@ public class Solver : MonoBehaviour
         puzzleGeneratorInstance = InstanceCreator.GetPuzzleGenerator();
     }
 
-    public async Task<bool> AStar(int[,] firstBoard, bool forSolution)
+    public async Task<bool> Search(int[,] firstBoard, bool forSolution)
     {
         Graph graph = new Graph();
 
@@ -83,9 +83,11 @@ public class Solver : MonoBehaviour
     {
         List<Node> solution = new List<Node>();
 
-        await AStar(InstanceCreator.GetBoard().board, forSolution);
+        await Search(InstanceCreator.GetBoard().board, forSolution);
 
         Node node = resultNode;
+
+        puzzleGeneratorInstance.PrintBoard(resultNode.goalBoard);
 
         while (node != null)
         {
