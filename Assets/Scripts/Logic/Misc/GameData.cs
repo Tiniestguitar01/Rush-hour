@@ -1,64 +1,64 @@
 using System;
 using UnityEngine;
 
-    [Serializable]
-    public enum Difficulty
-    {
-        Beginner = 10,
-        Intermediate = 25,
-        Advanced = 50,
-        Expert = 75
-    }
+[Serializable]
+public enum Difficulty
+{
+    Beginner = 10,
+    Intermediate = 25,
+    Advanced = 50,
+    Expert = 75
+}
 
-    public class GameData : MonoBehaviour
-    {
+public class GameData : MonoBehaviour
+{
 
-        public int moved = 0;
-        public float timer = 0;
+    public int moved = 0;
+    public float timer = 0;
 
-        public bool timerStarted = false;
+    public bool timerStarted = false;
 
-        public Difficulty difficulty;
+    public Difficulty difficulty;
 
     UIManager uiManagerInstance;
 
-        void Start()
-        {
-            uiManagerInstance = InstanceCreator.GetUIManager();
-            difficulty = Difficulty.Beginner;
-        }
+    void Start()
+    {
+        uiManagerInstance = InstanceCreator.GetUIManager();
+        difficulty = Difficulty.Beginner;
+    }
 
-        void Update()
+    void Update()
+    {
+        if (uiManagerInstance.state == (int)Menu.Game)
         {
-            if (uiManagerInstance.state == (int)Menu.Game)
+            if (timerStarted)
             {
-                if (timerStarted)
-                {
-                    timer += Time.deltaTime;
-                }
+                timer += Time.deltaTime;
+            }
 
-                string minute = Mathf.Floor((timer / 60)).ToString("00");
-                string second = (timer % 59).ToString("00");
+            string minute = Mathf.Floor((timer / 59)).ToString("00");
+            string second = (timer % 59).ToString("00");
             uiManagerInstance.TimerText.text = minute + ":" + second;
 
-                uiManagerInstance.MovedText.text = "Moved: " + moved;
-            }
-            else
-            {
-                moved = 0;
-                timer = 0;
-            }
-
+            uiManagerInstance.MovedText.text = "Moved: " + moved;
         }
-
-        public void StartTimer()
+        else
         {
-            timerStarted = true;
+            moved = 0;
             timer = 0;
         }
 
-        public void StopTimer()
-        {
-            timerStarted = false;
-        }
     }
+
+    public void StartTimer()
+    {
+        timerStarted = true;
+        timer = 0;
+    }
+
+    public void StopTimer()
+    {
+        timerStarted = false;
+    }
+}

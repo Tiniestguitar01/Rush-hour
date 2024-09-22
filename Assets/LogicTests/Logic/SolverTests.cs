@@ -29,7 +29,7 @@ public class SolverTests
             { 0,0,0,0,0,0 }
         };
 
-        bool result = await solverInstance.AStar(testBoard, true);
+        bool result = await solverInstance.Search(testBoard, true);
         Assert.AreEqual(true, result);
     }
 
@@ -45,7 +45,7 @@ public class SolverTests
             { 0,0,0,0,0,0 },
             { 0,0,0,0,0,0 }
         };
-        bool result = await solverInstance.AStar(testBoard, true);
+        bool result = await solverInstance.Search(testBoard, true);
         Assert.AreEqual(true, result);
     }
 
@@ -62,7 +62,7 @@ public class SolverTests
             { 0,0,0,0,0,0 }
         };
 
-        bool result = await solverInstance.AStar(testBoard, true);
+        bool result = await solverInstance.Search(testBoard, true);
         Assert.AreEqual(false, result);
     }
 
@@ -80,7 +80,7 @@ public class SolverTests
             { 8,8,1,2,0,4 }
         };
 
-        bool result = await solverInstance.AStar(testBoard, true);
+        bool result = await solverInstance.Search(testBoard, true);
         Assert.AreEqual(true, result);
     }
 
@@ -97,7 +97,7 @@ public class SolverTests
             { 12,12,12,9,0,8 }
         };
 
-        bool result = await solverInstance.AStar(testBoard, true);
+        bool result = await solverInstance.Search(testBoard, true);
         Assert.AreEqual(true, result);
     }
 }
