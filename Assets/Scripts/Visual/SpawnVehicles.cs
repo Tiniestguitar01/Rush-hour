@@ -21,7 +21,7 @@ using UnityEngine;
                 holder = new GameObject();
                 holder.name = id.ToString();
 
-            vehicleGOs.Add(holder);
+                vehicleGOs.Add(holder);
 
                 if (id == 1)
                 {

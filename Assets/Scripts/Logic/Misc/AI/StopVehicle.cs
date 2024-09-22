@@ -8,17 +8,23 @@ public class StopVehicle : MonoBehaviour
 
     public GameObject redPrefab;
 
-    GameObject red;
+    public GameObject red;
 
     public bool stopped = false;
 
     void Start()
     {
-        red = Instantiate(redPrefab, transform.position, Quaternion.identity);
+        InstantiateRed(redPrefab);
         StartCoroutine(Stop());
     }
 
-    IEnumerator Stop()
+    public void InstantiateRed(GameObject redPrefab)
+    {
+        red = Instantiate(redPrefab, transform.position, Quaternion.identity);
+        red.SetActive(false);
+    }
+
+    public IEnumerator Stop()
     {
         if(stopped)
         {

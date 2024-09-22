@@ -122,16 +122,16 @@ public class NodeTests
 
         int[,] firstMove = new int[,] {
             { 0,0,3,3,3,0 },
-            { 0,0,1,0,0,0 },
-            { 0,0,1,0,0,0 },
             { 0,0,0,0,0,0 },
             { 0,0,0,0,0,0 },
+            { 0,0,1,0,0,0 },
+            { 0,0,1,0,0,0 },
             { 0,2,2,0,0,0 }
         };
 
         Node resultNode = new Node(firstMove, 0);
 
         Assert.AreEqual(resultNode.board, child.board);
-        Assert.AreEqual(8, child.cost);
+        Assert.AreEqual(10, child.cost);
     }
 }

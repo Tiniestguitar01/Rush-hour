@@ -15,7 +15,7 @@ public class VehicleSpawner : MonoBehaviour
         StartCoroutine(Spawn());
     }
 
-    IEnumerator Spawn()
+    public IEnumerator Spawn()
     {
         GameObject vehicleParent = Instantiate(VehiclePrefab, transform.position, Quaternion.identity);
         GameObject vehicle = Instantiate(vehicles[Random.Range(0,vehicles.Count-1)], vehicleParent.transform.position, Quaternion.identity);

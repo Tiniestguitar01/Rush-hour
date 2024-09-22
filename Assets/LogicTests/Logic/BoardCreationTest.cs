@@ -47,4 +47,10 @@ public class BoardCreationTest
 
         Assert.AreNotEqual(testBoard, boardInstance.board);
     }
+
+    [Test]
+    public void ShouldConvertCoordinate()
+    {
+        Assert.AreEqual(new Vector3(3.5f, 0f, 3.5f), boardInstance.BoardCoordinateToWordSpace(new int[] {1, 1}));
+    }
 }
