@@ -14,17 +14,18 @@ public class VehicleAI : MonoBehaviour
 
     public float distanceToDestroy = 200f;
 
+    float timeSinceStop = 0;
+
     private void Start()
     {
         startPosition = transform.position;
-
-        speed = Random.Range(1f,1.5f);
     }
 
     void Update()
     {
         if (stopped == false)
         {
+            timeSinceStop = 0;
             transform.position = Vector3.Lerp(transform.position, transform.position + transform.right * step, Time.deltaTime * speed);
         }
 
@@ -48,6 +49,15 @@ public class VehicleAI : MonoBehaviour
         if (Vector3.Distance(transform.position, startPosition) > distanceToDestroy)
         {
             Destroy(gameObject);
+        }
+
+        if(stopped == true)
+        {
+            timeSinceStop += Time.deltaTime;
+            if (timeSinceStop > 20f)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

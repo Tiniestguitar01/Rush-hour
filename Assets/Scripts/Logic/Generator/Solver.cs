@@ -87,8 +87,6 @@ public class Solver : MonoBehaviour
 
         Node node = resultNode;
 
-        puzzleGeneratorInstance.PrintBoard(resultNode.goalBoard);
-
         while (node != null)
         {
             solution.Add(node);

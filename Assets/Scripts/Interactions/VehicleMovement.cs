@@ -94,9 +94,9 @@ public class VehicleMovement : MonoBehaviour
                     }
                 }
 
-                hitted.transform.parent.position = Vector3.Lerp(hitted.transform.parent.position, new Vector3(moveTo.x, (0.5f * vehicle.size), moveTo.z), Vector3.Distance(hitted.transform.position.normalized, moveTo.normalized));
+                hitted.transform.parent.position = Vector3.Lerp(hitted.transform.parent.position, new Vector3(moveTo.x, (0.5f * vehicle.size), moveTo.z), Vector3.Distance(hitted.transform.parent.position, moveTo));
 
-                InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)moveTo.x / 3, (int)moveTo.z / 3 }, boardInstance.board);
+                InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)(moveTo.x / 3.5f), (int)(moveTo.z / 3.5f) }, boardInstance.board);
 
                 if (Vector3.Distance(hitted.transform.parent.position, moveTo) < 1.1f * vehicle.size / 2)
                 {

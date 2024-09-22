@@ -10,10 +10,10 @@ public class PuzzleGenerator : MonoBehaviour
     const int numberOfCars = 12;
     const int numberOfTrucks = 4;
 
-    int truckCount = 0;
-    int carCount = 0;
+    public int truckCount = 0;
+    public int carCount = 0;
 
-    Board boardInstance;
+    public Board boardInstance;
     ModifyBoard modifyBoardInstance;
     Solver solverInstance;
     SpawnVehicles spawnVehicleInstance;
@@ -51,7 +51,7 @@ public class PuzzleGenerator : MonoBehaviour
         return await Task.FromResult(true);
     }
 
-    async void GenerateVehicles()
+    public async void GenerateVehicles()
     {
         for (int id = 2; id < 10 && boardInstance.places.Count > 0; id++)
         {
@@ -73,9 +73,10 @@ public class PuzzleGenerator : MonoBehaviour
         spawnVehicleInstance.Spawn();
     }
 
-    Vehicle CreateVehicle(int id, int size, int[] startPosition, Direction direction)
+    public Vehicle CreateVehicle(int id, int size, int[] startPosition, Direction direction)
     {
-        Vehicle vehicle = new Vehicle(id, size, startPosition, direction, boardInstance.board);
+        
+        Vehicle vehicle = new Vehicle(id, size, startPosition, direction,boardInstance.board);
         return vehicle;
     }
 
@@ -140,7 +141,7 @@ public class PuzzleGenerator : MonoBehaviour
         }
     }
 
-    void DeleteVehicles()
+    public void DeleteVehicles()
     {
         foreach (GameObject vehicle in spawnVehicleInstance.vehicleGOs)
         {
