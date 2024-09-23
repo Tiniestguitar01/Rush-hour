@@ -24,11 +24,11 @@ public class Solver : MonoBehaviour
         Node firstNode;
         if (forSolution)
         {
-            firstNode = new Node(firstBoard, 0);
+            firstNode = new NodeForSolution(firstBoard, 0);
         }
         else
         {
-            firstNode = new Node(firstBoard, 0, (int[,])puzzleGeneratorInstance.resultBoard.Clone());
+            firstNode = new NodeToCompareBoard(firstBoard, 0, (int[,])puzzleGeneratorInstance.resultBoard.Clone());
         }
 
         graph.openList.Add(firstNode);

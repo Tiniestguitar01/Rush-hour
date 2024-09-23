@@ -154,6 +154,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!4 &1973789
 Transform:
@@ -498,6 +499,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987418e383031f74191b6c6a4b059c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  truckCount: 0
+  carCount: 0
+  boardInstance: {fileID: 0}
 --- !u!114 &37844472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -590,6 +594,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!4 &46141357
 Transform:
@@ -653,6 +658,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!4 &73293118 stripped
 Transform:
@@ -987,6 +993,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1001 &126861591
 PrefabInstance:
@@ -1167,6 +1174,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!4 &129773190
 Transform:
@@ -1273,7 +1281,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &163629705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1408,6 +1416,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1001 &203702281
 PrefabInstance:
@@ -1826,6 +1835,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1001 &227035302
 PrefabInstance:
@@ -1948,6 +1958,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &270333726
 GameObject:
@@ -2897,6 +2908,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1 &396071950
 GameObject:
@@ -3148,6 +3160,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1 &405263980
 GameObject:
@@ -4842,6 +4855,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1001 &758163561
 PrefabInstance:
@@ -5007,7 +5021,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &781087893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5249,6 +5263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: {fileID: 5744296139159231737, guid: 9555038637aa74344a63de3eca5ee82d, type: 3}
+  instantiatedCells: []
 --- !u!4 &858301596
 Transform:
   m_ObjectHideFlags: 0
@@ -5561,7 +5576,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &871859252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5844,6 +5859,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &902787907
 GameObject:
@@ -5892,6 +5908,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &923517403
 GameObject:
@@ -5940,6 +5957,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1001 &929288494
 PrefabInstance:
@@ -6466,6 +6484,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &1069026103
 GameObject:
@@ -6514,6 +6533,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &1075482455
 GameObject:
@@ -7727,7 +7747,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1222168261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8292,7 +8312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1263463297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8427,6 +8447,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &1320892532
 GameObject:
@@ -8475,6 +8496,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &1325780660
 GameObject:
@@ -8523,6 +8545,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1001 &1327383884
 PrefabInstance:
@@ -8922,6 +8945,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &1437830301
 GameObject:
@@ -8970,6 +8994,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &1465523538
 GameObject:
@@ -9182,6 +9207,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!4 &1480413707
 Transform:
@@ -9319,6 +9345,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1001 &1546245513
 PrefabInstance:
@@ -10017,6 +10044,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!4 &1655178364 stripped
 Transform:
@@ -10828,6 +10856,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1001 &1761316146
 PrefabInstance:
@@ -10919,7 +10948,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1783919610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11054,6 +11083,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1 &1796221616
 GameObject:
@@ -11560,7 +11590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1868961488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12427,6 +12457,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 1
 --- !u!1 &2022234085
 GameObject:
@@ -12614,6 +12645,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1 &2048881628
 GameObject:
@@ -12631,7 +12663,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2048881629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12766,6 +12798,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1 &2088386789
 GameObject:
@@ -12883,6 +12916,7 @@ MonoBehaviour:
   wait: 20
   redPrefab: {fileID: 382876705942873761, guid: 0c272957ef269894bb8fc705a5be2030,
     type: 3}
+  red: {fileID: 0}
   stopped: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

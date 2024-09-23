@@ -32,7 +32,7 @@ public class NodeTests
             { 0,2,2,0,0,0 }
         };
 
-        Node node = new Node(testBoard, 0);
+        Node node = new NodeForSolution(testBoard, 0);
         //List<Node> children = node.GetChildren();
 
         List<Node> childrenTest = new List<Node>();
@@ -64,7 +64,7 @@ public class NodeTests
             { 0,2,2,0,0,0 }
         };
 
-        childrenTest.AddRange(new List<Node> { new Node(firstMove, 0), new Node(secondMove, 0), new Node(thirdMove, 0) });
+        childrenTest.AddRange(new List<Node> { new NodeForSolution(firstMove, 0), new NodeForSolution(secondMove, 0), new NodeForSolution(thirdMove, 0) });
 
         //Assert.AreEqual(childrenTest[0].board, children[0].board);
         //Assert.AreEqual(childrenTest[1].board, children[1].board);
@@ -84,7 +84,7 @@ public class NodeTests
             { 0,2,2,0,0,0 }
         };
 
-        Node node = new Node(testBoard, 0);
+        Node node = new NodeForSolution(testBoard, 0);
 
        // List<Vehicle> vehicles = node.GetVehicles();
 
@@ -114,7 +114,7 @@ public class NodeTests
             { 0,2,2,0,0,0 }
         };
 
-        Node node = new Node(testBoard, 0);
+        Node node = new NodeForSolution(testBoard, 0);
 
         Vehicle vehicle1 = new Vehicle(1, 2, new int[] { 2, 2 }, Direction.Vertical, testBoard);
 
@@ -129,7 +129,7 @@ public class NodeTests
             { 0,2,2,0,0,0 }
         };
 
-        Node resultNode = new Node(firstMove, 0);
+        Node resultNode = new NodeForSolution(firstMove, 0);
 
         Assert.AreEqual(resultNode.board, child.board);
         Assert.AreEqual(10, child.cost);
