@@ -16,7 +16,7 @@ public class GraphTests
         board.size = 6;
         board.GenerateBoard();
 
-        node = new Node(board.board, 0);
+        node = new NodeForSolution(board.board, 0);
     }
 
     //[Test]

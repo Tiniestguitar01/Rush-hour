@@ -23,8 +23,8 @@ public class Place : IComparable<Place>
     public void CalculateCost(int[] targetPosition,Direction prevDirection)
     {
         //distance from target car
-        float x = Mathf.Pow(targetPosition[0] - 0,2);
-        float y = Mathf.Pow(targetPosition[1] - 2,2);
+        float x = Mathf.Pow(0 - placePosition[0], 2);
+        float y = Mathf.Pow(2 - placePosition[1], 2);
         this.cost = (int)Mathf.Sqrt(x + y);
 
         //this.cost += targetPosition[0] - 0;

@@ -37,12 +37,13 @@ public class PuzzleGenerator : MonoBehaviour
 
         InstanceCreator.GetSpawnGrid().Spawn();
 
-        await InsertVehicle(CreateVehicle(1, 2, new int[] { 0, 2 }, Direction.Vertical), boardInstance.board);
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(1,boardInstance.size), 2 }, Direction.Vertical), boardInstance.board);
 
         foreach (Place place in boardInstance.places)
         {
             place.CalculateCost(vehicles[0].startPosition, Direction.Vertical);
         }
+
         GenerateVehicles();
 
         resultBoard = (int[,])boardInstance.board.Clone();
