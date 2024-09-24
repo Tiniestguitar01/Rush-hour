@@ -502,6 +502,7 @@ MonoBehaviour:
   truckCount: 0
   carCount: 0
   boardInstance: {fileID: 0}
+  id: 0
 --- !u!114 &37844472
 MonoBehaviour:
   m_ObjectHideFlags: 0

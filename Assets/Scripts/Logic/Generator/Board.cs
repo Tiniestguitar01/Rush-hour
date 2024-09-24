@@ -36,7 +36,6 @@ public class Board : MonoBehaviour
 
                 if (z + 2 < size)
                 {
-
                     places.Add(new Place(3, new int[] { x, z }, Direction.Horizontal));
                 }
 

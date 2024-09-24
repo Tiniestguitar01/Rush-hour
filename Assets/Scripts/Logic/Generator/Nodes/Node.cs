@@ -7,9 +7,9 @@ public abstract class Node : IComparable<Node>, IEquatable<Node>
     public int[,] board;
     public int depth;
     public float cost;
-
-    public Vehicle movedVehicle;
     
+    public Vehicle vehicle;
+
     public Node parent;
 
     public Node(int[,] board, int depth)
@@ -41,7 +41,7 @@ public abstract class Node : IComparable<Node>, IEquatable<Node>
         return HashCode.Combine(board, cost);
     }
 
-    public List<Node> GetChildren()
+    public virtual List<Node> GetChildren()
     {
         List<Vehicle> vehicles = GetVehicles();
 

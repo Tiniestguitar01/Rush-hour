@@ -36,47 +36,53 @@ public class PuzzleGenerator : MonoBehaviour
         boardInstance.GenerateBoard();
 
         InstanceCreator.GetSpawnGrid().Spawn();
+        
 
-        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(1,boardInstance.size), 2 }, Direction.Vertical), boardInstance.board);
+        //el kellene indítani az algoritmust
+        Graph graph = new Graph();
+        Vehicle firstVehicle = CreateVehicle(1, 2, new int[] { Random.Range(1, boardInstance.size - 1), 2 }, Direction.Vertical);
+        await InsertVehicle(CreateVehicle(1, firstVehicle.size, firstVehicle.startPosition, firstVehicle.direction), boardInstance.board);
+        Node firstNode = new NodeForGeneration(boardInstance.board, 0, firstVehicle);
+        graph.openList.Add(firstNode);
 
-        foreach (Place place in boardInstance.places)
+        while (graph.openList.Count != 0)
         {
-            place.CalculateCost(vehicles[0].startPosition, Direction.Vertical);
-        }
+            graph.openList.Sort();
+            graph.openList.Reverse();
 
-        GenerateVehicles();
+            Node bestNode = graph.openList.First();
+            Debug.Log(bestNode.vehicle.ToString());
+            await InsertVehicle(CreateVehicle(vehicles.Count, bestNode.vehicle.size, bestNode.vehicle.startPosition, bestNode.vehicle.direction), boardInstance.board);
 
-        resultBoard = (int[,])boardInstance.board.Clone();
-        PrintBoard(resultBoard);
-
-        return await Task.FromResult(true);
-    }
-
-    public async void GenerateVehicles()
-    {
-        for (int id = 2; id < 10 && boardInstance.places.Count > 0; id++)
-        {
-            foreach (Place place in boardInstance.places)
+            graph.openList.RemoveAt(0);
+            graph.closedList.Add(bestNode);
+            List<Node> children = bestNode.GetChildren();
+            for (int nodeIndex = 0; nodeIndex < children.Count; nodeIndex++)
             {
-                place.CalculateCost(vehicles[0].startPosition, vehicles[vehicles.Count - 1].direction);
+                if ((children[nodeIndex].cost - children[nodeIndex].depth) >= 20 )
+                {
+                    resultBoard = children[nodeIndex].board;
+                    PrintBoard(resultBoard);
+                    Debug.Log("Yeeeee");
+                    spawnVehicleInstance.Spawn();
+                    return await Task.FromResult(true);
+                }
+                else
+                {
+                    if (!graph.openList.Any((node) => node.Equals(children[nodeIndex])) && !graph.closedList.Any((node) => node.Equals(children[nodeIndex])))
+                    {
+                        PrintBoard(children[nodeIndex].board);
+                        graph.openList.Add(children[nodeIndex]);
+                    }
+                }
             }
-
-            boardInstance.places.Sort();
-
-            int random = Random.Range(0, Mathf.Min( 10, boardInstance.places.Count));
-            bool result = await InsertVehicle(CreateVehicle(id, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
-            if (!result)
-            {
-                id--;
-            }
+            await Task.Yield();
         }
-
-        spawnVehicleInstance.Spawn();
+        return await Task.FromResult(false);
     }
 
     public Vehicle CreateVehicle(int id, int size, int[] startPosition, Direction direction)
     {
-        
         Vehicle vehicle = new Vehicle(id, size, startPosition, direction,boardInstance.board);
         return vehicle;
     }
@@ -87,16 +93,15 @@ public class PuzzleGenerator : MonoBehaviour
         List<int[]> position = vehicle.GetPosition();
         modifyBoardInstance.InsertVehicle(vehicle, board);
 
-        //bool solvable = await solverInstance.BestFirstSearch(boardInstance.board);
-        /*if (!solvable)
+        bool solvable = await solverInstance.Search(boardInstance.board,true);
+        if (!solvable)
         {
             boardInstance.places.RemoveAll(place => place.placePosition[0] == position[0][0] && place.placePosition[1] == position[0][1]);
 
             modifyBoardInstance.RemoveVehicle(vehicle, board);
 
             return await Task.FromResult(false);
-        }*/
-
+        }
         vehicles.Add(vehicle);
         for (int x = 0; x < vehicle.size; x++)
         {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class NodeToCompareBoard : Node
 {
     public int[,] goalBoard;
-    public NodeToCompareBoard(int[,] board, int depth, int[,] goalBoard) : base(board,depth)
+    public NodeToCompareBoard(int[,] board, int depth, int[,] goalBoard) : base(board, depth)
     {
         this.goalBoard = goalBoard;
         EvaluateCost();
@@ -18,7 +18,7 @@ public class NodeToCompareBoard : Node
         Node newNode = new NodeToCompareBoard(board, depth + 1, goalBoard);
         
         newNode.parent = this;
-        newNode.movedVehicle = vehicle;
+        newNode.vehicle = vehicle;
         return newNode;
     }
 

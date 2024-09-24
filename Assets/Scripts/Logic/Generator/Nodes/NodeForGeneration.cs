@@ -4,34 +4,61 @@ using UnityEngine;
 
 public class NodeForGeneration : Node
 {
-    public NodeForGeneration(int[,] board, int depth) : base(board, depth) { EvaluateCost(); }
+    public NodeForGeneration(int[,] board, int depth, Vehicle vehicle) : base(board, depth)
+    { 
+        this.vehicle = vehicle;
+        EvaluateCost(); 
+    }
 
-    public override Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
+    public override List<Node> GetChildren()
     {
-        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board);
+        List<Place> places = InstanceCreator.GetBoard().places;
+        int currentId = InstanceCreator.GetPuzzleGenerator().vehicles.Count;
 
-        Node newNode = new NodeForSolution(board, depth + 1);
+        List<Node> children = new List<Node>();
 
+        foreach (Place place in places)
+        {
+            int[,] board = (int[,])this.board.Clone();
+
+
+            Vehicle newVehicle = new Vehicle(currentId, place.size,place.placePosition, place.direction,board);
+
+            InstanceCreator.GetModifyBoard().InsertVehicle(newVehicle, board);
+
+            children.Add(CreateChild(newVehicle,board));
+        }
+
+        return children;
+    }
+
+    public Node CreateChild(Vehicle vehicle, int[,] board)
+    {
+        Node newNode = new NodeForGeneration(board, depth + 1, vehicle);
         newNode.parent = this;
-        newNode.movedVehicle = vehicle;
         return newNode;
     }
 
     public override void EvaluateCost()
     {
         //distance from end
-        //float x = Mathf.Pow(0 - x, 2);
-        //float y = Mathf.Pow(2 - y, 2);
-        //this.cost = (int)Mathf.Sqrt(x + y);
+        float x = Mathf.Pow(0 - vehicle.startPosition[0], 2);
+        float y = Mathf.Pow(2 - vehicle.startPosition[1], 2);
+        this.cost = (int)Mathf.Sqrt(x + y);
 
-        //this.cost += targetPosition[0] - 0;
-        //this.cost += targetPosition[1] - 2;
+        //this.cost += 0 - vehicle.startPosition[0];
+        //this.cost += 2 - vehicle.startPosition[1];
 
         //direction variation
-        //if (prevDirection == direction)
+        if (parent != null)
         {
-            this.cost += 3;
+            if (parent.vehicle.direction == vehicle.direction)
+            {
+                this.cost += 3;
+            }
         }
+
+        cost -= vehicle.maxDistanceForward - vehicle.maxDistanceBackward;
         cost += depth;
     }
 }
