@@ -1,20 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
+using System.Threading.Tasks;
 
 public class SolverTests
 {
+    Board boardInstance;
+    ModifyBoard modifyBoardInstance;
+    Solver solverInstance;
+
+    [SetUp]
+    public void Init()
+    {
+        boardInstance = InstanceCreator.GetBoard();
+        boardInstance.size = 6;
+        boardInstance.GenerateBoard();
+        modifyBoardInstance = InstanceCreator.GetModifyBoard();
+        solverInstance = InstanceCreator.GetSolver();
+    }
 
     [Test]
-    public void ShouldGetTrueForOneCar()
+    public async void ShouldGetTrueForOneCar()
     {
-        Board.Instance = new Board();
-        Board.Instance.size = 6;
-        ModifyBoard.Instance = new ModifyBoard();
-        Solver.Instance = new Solver();
-
         int[,] testBoard = new int[,] {
             { 0,0,0,0,0,0 },
             { 0,0,1,0,0,0 },
@@ -24,16 +29,13 @@ public class SolverTests
             { 0,0,0,0,0,0 }
         };
 
-        Assert.AreEqual(true,Solver.Instance.BestFirstSearch(testBoard));
+        bool result = await solverInstance.Search(testBoard, true);
+        Assert.AreEqual(true, result);
     }
 
     [Test]
-    public void ShouldGetTrueForBlockingCar()
+    public async void ShouldGetTrueForBlockingCar()
     {
-        Board.Instance = new Board();
-        Board.Instance.size = 6;
-        ModifyBoard.Instance = new ModifyBoard();
-        Solver.Instance = new Solver();
 
         int[,] testBoard = new int[,] {
             { 0,0,0,0,0,0 },
@@ -43,19 +45,13 @@ public class SolverTests
             { 0,0,0,0,0,0 },
             { 0,0,0,0,0,0 }
         };
-
-        Assert.AreEqual(true, Solver.Instance.BestFirstSearch(testBoard));
+        bool result = await solverInstance.Search(testBoard, true);
+        Assert.AreEqual(true, result);
     }
 
     [Test]
-    public void ShouldGetFalseForCarInFrontOfTargetCar()
+    public async void ShouldGetFalseForCarInFrontOfTargetCar()
     {
-        Board.Instance = new Board();
-        Board.Instance.size = 6;
-        ModifyBoard.Instance = new ModifyBoard();
-        Solver.Instance = new Solver();
-
-        PuzzleGenerator.Instance = new PuzzleGenerator();
 
         int[,] testBoard = new int[,] {
             { 0,0,0,0,0,0 },
@@ -66,19 +62,14 @@ public class SolverTests
             { 0,0,0,0,0,0 }
         };
 
-        Assert.AreEqual(false, Solver.Instance.BestFirstSearch(testBoard));
+        bool result = await solverInstance.Search(testBoard, true);
+        Assert.AreEqual(false, result);
     }
 
     
     [Test]
-    public void ThinkFunMostDifficultPuzzle()
+    public async void ThinkFunMostDifficultPuzzle()
     {
-        Board.Instance = new Board();
-        Board.Instance.size = 6;
-        ModifyBoard.Instance = new ModifyBoard();
-        Solver.Instance = new Solver();
-
-        PuzzleGenerator.Instance = new PuzzleGenerator();
 
         int[,] testBoard = new int[,] {
             { 12,0,0,7,7,7 },
@@ -89,18 +80,13 @@ public class SolverTests
             { 8,8,1,2,0,4 }
         };
 
-        Assert.AreEqual(true, Solver.Instance.BestFirstSearch(testBoard));
+        bool result = await solverInstance.Search(testBoard, true);
+        Assert.AreEqual(true, result);
     }
 
     [Test]
-    public void HardestPossiblePuzzle()
+    public async void HardestPossiblePuzzle()
     {
-        Board.Instance = new Board();
-        Board.Instance.size = 6;
-        ModifyBoard.Instance = new ModifyBoard();
-        Solver.Instance = new Solver();
-
-        PuzzleGenerator.Instance = new PuzzleGenerator();
 
         int[,] testBoard = new int[,] {
             { 0,2,2,2,4,0 },
@@ -111,6 +97,7 @@ public class SolverTests
             { 12,12,12,9,0,8 }
         };
 
-        Assert.AreEqual(true, Solver.Instance.BestFirstSearch(testBoard));
+        bool result = await solverInstance.Search(testBoard, true);
+        Assert.AreEqual(true, result);
     }
 }

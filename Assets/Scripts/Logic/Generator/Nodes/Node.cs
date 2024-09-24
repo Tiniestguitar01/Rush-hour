@@ -2,17 +2,20 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
+public abstract class Node : IComparable<Node>, IEquatable<Node>
 {
     public int[,] board;
-    public int cost;
+    public int depth;
+    public float cost;
+    
+    public Vehicle vehicle;
 
     public Node parent;
 
-    public Node(int[,] board)
+    public Node(int[,] board, int depth)
     {
         this.board = board;
-        EvaluateCost();
+        this.depth = depth;
     }
 
     public int CompareTo(Node other)
@@ -38,12 +41,7 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
         return HashCode.Combine(board, cost);
     }
 
-    public object Clone()
-    {
-        return new Node((int[,])board.Clone());
-    }
-
-    public List<Node> GetChildren()
+    public virtual List<Node> GetChildren()
     {
         List<Vehicle> vehicles = GetVehicles();
 
@@ -53,10 +51,10 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
         {
             int[,] board = (int[,])this.board.Clone();
 
-            for (int i = 1; i < vehicle.possibleMoves.Count; i++)
+            for (int i = 0; i < vehicle.possibleMoves.Count; i++)
             {
                 Node node = CreateChild(vehicle, vehicle.possibleMoves[i], board);
-                children.Add((Node)node.Clone());
+                children.Add(node);
             }
         }
 
@@ -68,7 +66,7 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
         //Get all vehicles
         List<Vehicle> vehicles = new List<Vehicle>();
 
-        int boardSize = Board.Instance.size;
+        int boardSize = InstanceCreator.GetBoard().size;
         for (int x = 0; x < boardSize; x++)
         {
             for (int z = 0; z < boardSize; z++)
@@ -109,27 +107,7 @@ public class Node : IComparable<Node>, ICloneable, IEquatable<Node>
         return vehicles;
     }
 
-    public Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
-    {
-        ModifyBoard.Instance.MoveVehicle(vehicle, position, board);
-        Node newNode = new Node(board);
-        return newNode;
-    }
+    public virtual Node CreateChild(Vehicle vehicle, int[] position, int[,] board) { return null; }
 
-    public void EvaluateCost()
-    {
-        for (int i = 0; i < board.GetLength(0); i++)
-        {
-            if (board[i, 2] != 1 && board[i, 2] != 0)
-            {
-                cost += board.GetLength(0);
-            }
-
-            if (board[i, 2] == 1)
-            {
-                cost += i;
-                break;
-            }
-        }
-    }
+    public virtual void EvaluateCost() {}
 }

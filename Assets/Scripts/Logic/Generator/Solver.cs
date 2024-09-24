@@ -1,58 +1,110 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
-using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine;
 
-    public class Solver : MonoBehaviour
+public class Solver : MonoBehaviour
+{
+    public Node resultNode;
+    public float solutionPlaySpeed = 1.0f;
+    VehicleMovement vehicleMovementInstance;
+    PuzzleGenerator puzzleGeneratorInstance;
+
+    private void Start()
     {
-        public static Solver Instance;
+        vehicleMovementInstance = InstanceCreator.GetVehicleMovement();
+        puzzleGeneratorInstance = InstanceCreator.GetPuzzleGenerator();
+    }
 
-        int steps = 0;
+    public async Task<bool> Search(int[,] firstBoard, bool forSolution)
+    {
+        Graph graph = new Graph();
 
-        public Node resultNode;
-
-        void Awake()
+        Node firstNode;
+        if (forSolution)
         {
-            Instance = this;
+            firstNode = new NodeForSolution(firstBoard, 0);
+        }
+        else
+        {
+            firstNode = new NodeToCompareBoard(firstBoard, 0, (int[,])puzzleGeneratorInstance.resultBoard.Clone());
         }
 
-        public async Task<bool> BestFirstSearch(int[,] firstBoard)
+        graph.openList.Add(firstNode);
+        while (graph.openList.Count != 0)
         {
-            Graph graph = new Graph();
-            Node firstNode = new Node(firstBoard);
-            graph.AddToOpenList(firstNode);
-            steps = 0;
-            while (graph.openList.Count != 0 && steps < 500)
+            graph.openList.Sort();
+            Node bestNode = graph.openList.First();
+
+            graph.openList.RemoveAt(0);
+            graph.closedList.Add(bestNode);
+
+            List<Node> children = bestNode.GetChildren();
+
+            for (int nodeIndex = 0; nodeIndex < children.Count; nodeIndex++)
             {
-                Node bestNode;
-                bestNode = graph.openList.First();
 
-                graph.RemoveFromOpenList(bestNode);
-
-                List<Node> children = bestNode.GetChildren();
-
-                foreach (Node child in children)
+                if ((children[nodeIndex].cost - children[nodeIndex].depth) == 0 && forSolution == true)
                 {
-                if (child.cost == 0)
+                    resultNode = children[nodeIndex];
+                    return await Task.FromResult(true);
+                }
+                else if(children[nodeIndex].cost == 0 && forSolution == false)
+                {
+                    resultNode = children[nodeIndex];
+                    return await Task.FromResult(true);
+                }
+                else
+                {
+                    if (!graph.openList.Any((node) => node.Equals(children[nodeIndex])) && !graph.closedList.Any((node) => node.Equals(children[nodeIndex])))
                     {
-                        resultNode = child;
-                        return await Task.FromResult(true);
-                    }
-                    else
-                    {
-
-                        if (!graph.openList.Any(node => node.Equals(child)) && !graph.closedList.Any(node => node.Equals(child)))
-                        {
-                            graph.AddToOpenList(child);
-                            child.parent = bestNode;
-                        }
+                        graph.openList.Add(children[nodeIndex]);
                     }
                 }
-                steps++;
-                await Task.Yield();
             }
-            return await Task.FromResult(false);
+            await Task.Yield();
+        }
+        return await Task.FromResult(false);
+    }
 
+    public async void Solve()
+    {
+        await GetSteps(true);
+    }
+
+    public async void ResetBoard()
+    {
+        await GetSteps(false);
+        InstanceCreator.GetGameData().moved = 0;
+    }
+
+    async Task<bool> GetSteps(bool forSolution)
+    {
+        List<Node> solution = new List<Node>();
+
+        await Search(InstanceCreator.GetBoard().board, forSolution);
+
+        Node node = resultNode;
+
+        while (node != null)
+        {
+            solution.Add(node);
+            node = node.parent;
+        }
+
+        solution.Reverse();
+
+        StartCoroutine(Move(solution));
+
+        return await Task.FromResult(true);
+    }
+
+    IEnumerator Move(List<Node> solution)
+    {
+        for (int nodeIndex = 1; nodeIndex < solution.Count; nodeIndex++)
+        {
+            yield return InstanceCreator.GetVehicleMovement().MoveTo(solution[nodeIndex].vehicle.id, solution[nodeIndex].vehicle.startPosition);
         }
     }
+}
