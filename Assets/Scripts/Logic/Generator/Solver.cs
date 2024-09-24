@@ -104,7 +104,7 @@ public class Solver : MonoBehaviour
     {
         for (int nodeIndex = 1; nodeIndex < solution.Count; nodeIndex++)
         {
-            yield return InstanceCreator.GetVehicleMovement().MoveTo(solution[nodeIndex].movedVehicle.id, solution[nodeIndex].movedVehicle.startPosition);
+            yield return InstanceCreator.GetVehicleMovement().MoveTo(solution[nodeIndex].vehicle.id, solution[nodeIndex].vehicle.startPosition);
         }
     }
 }

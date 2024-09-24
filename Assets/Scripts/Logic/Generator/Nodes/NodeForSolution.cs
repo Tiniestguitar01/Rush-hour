@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NodeForSolution : Node
 {
-    public NodeForSolution(int[,] board, int depth) : base(board,depth) { EvaluateCost(); }
+    public NodeForSolution(int[,] board, int depth) : base(board, depth) { EvaluateCost(); }
 
     public override Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
     {
@@ -13,7 +13,7 @@ public class NodeForSolution : Node
         Node newNode = new NodeForSolution(board, depth + 1);
 
         newNode.parent = this;
-        newNode.movedVehicle = vehicle;
+        newNode.vehicle = vehicle;
         return newNode;
     }
 
