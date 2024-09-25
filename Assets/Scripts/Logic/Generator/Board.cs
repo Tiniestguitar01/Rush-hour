@@ -24,12 +24,12 @@ public class Board : MonoBehaviour
             {
                 board[x, z] = 0;
 
-                if (x + 2 < size)
+                if (x + 2 < size && z != 2)
                 {
                     places.Add(new Place(3, new int[] { x, z }, Direction.Vertical));
                 }
 
-                if (x + 1 < size)
+                if (x + 1 < size && z != 2)
                 {
                     places.Add(new Place(2, new int[] { x, z }, Direction.Vertical));
                 }

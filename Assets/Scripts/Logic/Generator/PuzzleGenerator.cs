@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Codice.CM.WorkspaceServer.DataStore.WkTree.WriteWorkspaceTree;
 
 public class PuzzleGenerator : MonoBehaviour
 {
@@ -37,48 +38,67 @@ public class PuzzleGenerator : MonoBehaviour
 
         InstanceCreator.GetSpawnGrid().Spawn();
         
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(1,boardInstance.size - 2), 2 }, Direction.Vertical), boardInstance.board);
 
-        //el kellene indítani az algoritmust
+        await GenerateVehicles();
+
         Graph graph = new Graph();
-        Vehicle firstVehicle = CreateVehicle(1, 2, new int[] { Random.Range(1, boardInstance.size - 1), 2 }, Direction.Vertical);
-        await InsertVehicle(CreateVehicle(1, firstVehicle.size, firstVehicle.startPosition, firstVehicle.direction), boardInstance.board);
-        Node firstNode = new NodeForGeneration(boardInstance.board, 0, firstVehicle);
+        Node firstNode = new NodeForGeneration(boardInstance.board, 0, vehicles[0]);
         graph.openList.Add(firstNode);
-
-        while (graph.openList.Count != 0)
+        int steps = 0;
+        while (graph.openList.Count != 0 && steps < 500)
         {
             graph.openList.Sort();
-            graph.openList.Reverse();
 
-            Node bestNode = graph.openList.First();
-            Debug.Log(bestNode.vehicle.ToString());
-            await InsertVehicle(CreateVehicle(vehicles.Count, bestNode.vehicle.size, bestNode.vehicle.startPosition, bestNode.vehicle.direction), boardInstance.board);
-
-            graph.openList.RemoveAt(0);
+            Node bestNode = graph.openList.Last();
+            graph.openList.RemoveAt(graph.openList.Count - 1);
             graph.closedList.Add(bestNode);
+
+            boardInstance.board = (int[,])bestNode.board.Clone();
+            resultBoard = (int[,])boardInstance.board.Clone();
+
             List<Node> children = bestNode.GetChildren();
+
             for (int nodeIndex = 0; nodeIndex < children.Count; nodeIndex++)
             {
-                if ((children[nodeIndex].cost - children[nodeIndex].depth) >= 20 )
+                /*if (children[nodeIndex].cost >= 5)
                 {
-                    resultBoard = children[nodeIndex].board;
+                    boardInstance.board = (int[,])children[nodeIndex].board.Clone();
+                    resultBoard = (int[,])boardInstance.board.Clone();
                     PrintBoard(resultBoard);
-                    Debug.Log("Yeeeee");
+                    Debug.Log("Siker yeee");
                     spawnVehicleInstance.Spawn();
                     return await Task.FromResult(true);
                 }
-                else
+                else*/
                 {
                     if (!graph.openList.Any((node) => node.Equals(children[nodeIndex])) && !graph.closedList.Any((node) => node.Equals(children[nodeIndex])))
                     {
-                        PrintBoard(children[nodeIndex].board);
                         graph.openList.Add(children[nodeIndex]);
                     }
                 }
             }
+            steps++;
             await Task.Yield();
         }
+
+        PrintBoard(resultBoard);
+        Debug.Log("Siker yeee");
+        spawnVehicleInstance.Spawn();
+
         return await Task.FromResult(false);
+    }
+    public async Task GenerateVehicles()
+    {
+        for (int id = 2; id < 16 && boardInstance.places.Count > 0; id++)
+        {
+            int random = Random.Range(0, boardInstance.places.Count);
+            bool result = await InsertVehicle(CreateVehicle(id, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
+            if (!result)
+            {
+                id--;
+            }
+        }
     }
 
     public Vehicle CreateVehicle(int id, int size, int[] startPosition, Direction direction)
@@ -102,6 +122,7 @@ public class PuzzleGenerator : MonoBehaviour
 
             return await Task.FromResult(false);
         }
+
         vehicles.Add(vehicle);
         for (int x = 0; x < vehicle.size; x++)
         {

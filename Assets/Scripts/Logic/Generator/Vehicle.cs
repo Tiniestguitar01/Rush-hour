@@ -31,11 +31,10 @@ public class Vehicle
 
         public List<int[]> GetPosition()
         {
-            int boardSize = InstanceCreator.GetBoard().size;
 
             List<int[]> position = new List<int[]>();
 
-            for (int coordinate = 0; coordinate < size; coordinate++)
+            for (int coordinate = 0; coordinate < this.size; coordinate++)
             {
                 position.Add(new int[] { startPosition[0] + (direction == Direction.Vertical ? coordinate : 0), startPosition[1] + (direction == Direction.Horizontal ? coordinate : 0) });
             }
@@ -60,8 +59,7 @@ public class Vehicle
             {
                 if (board[coordinate, startPosition[1]] == 0)
                 {
-                    Debug.Log(coordinate + " " + startPosition[1]);
-                    possibleMoves.Add(new int[] { coordinate, startPosition[1] });
+                    possibleMoves.Add(new int[] { coordinate - this.size + 1, startPosition[1] });
                     maxDistanceBackward++;
                 }
                 else
@@ -74,7 +72,6 @@ public class Vehicle
             {
                 if (board[coordinate, startPosition[1]] == 0)
                 {
-                    Debug.Log(coordinate + " " + startPosition[1]);
                     possibleMoves.Add(new int[] { coordinate, startPosition[1] });
                     maxDistanceForward++;
                 }
@@ -89,9 +86,8 @@ public class Vehicle
             for (int coordinate = startPosition[1] + this.size; coordinate < size; coordinate++)
             {
                 if (board[startPosition[0], coordinate] == 0)
-                {
-                    Debug.Log(startPosition[0]+" "+ coordinate);
-                    possibleMoves.Add(new int[] { startPosition[0], coordinate});
+                { 
+                    possibleMoves.Add(new int[] { startPosition[0] , coordinate - this.size + 1});
                     maxDistanceBackward++;
                 }
                 else
@@ -104,7 +100,6 @@ public class Vehicle
             {
                 if (board[startPosition[0], coordinate] == 0)
                 {
-                    Debug.Log(startPosition[0]+" "+ coordinate);
                     possibleMoves.Add(new int[] { startPosition[0], coordinate });
                     maxDistanceForward++;
                 }

@@ -50,9 +50,8 @@ public abstract class Node : IComparable<Node>, IEquatable<Node>
         foreach (Vehicle vehicle in vehicles)
         {
             int[,] board = (int[,])this.board.Clone();
-
             for (int i = 0; i < vehicle.possibleMoves.Count; i++)
-            {
+            {      
                 Node node = CreateChild(vehicle, vehicle.possibleMoves[i], board);
                 children.Add(node);
             }
