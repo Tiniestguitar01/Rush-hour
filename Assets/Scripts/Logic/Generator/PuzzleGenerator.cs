@@ -1,3 +1,4 @@
+using PlasticGui.WorkspaceWindow.BranchExplorer;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ public class PuzzleGenerator : MonoBehaviour
         Node firstNode = new NodeForGeneration(boardInstance.board, 0, vehicles[0]);
         graph.openList.Add(firstNode);
         int steps = 0;
-        while (graph.openList.Count != 0 && steps < 500)
+        while (graph.openList.Count != 0 && steps < 100)
         {
             graph.openList.Sort();
 
@@ -56,6 +57,8 @@ public class PuzzleGenerator : MonoBehaviour
 
             boardInstance.board = (int[,])bestNode.board.Clone();
             resultBoard = (int[,])boardInstance.board.Clone();
+
+            vehicles = bestNode.GetVehicles();
 
             List<Node> children = bestNode.GetChildren();
 
@@ -84,6 +87,7 @@ public class PuzzleGenerator : MonoBehaviour
 
         PrintBoard(resultBoard);
         Debug.Log("Siker yeee");
+        vehicles.Sort();
         spawnVehicleInstance.Spawn();
 
         return await Task.FromResult(false);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public enum Direction
     Horizontal
 }
 
-public class Vehicle
+public class Vehicle : IComparable<Vehicle>
 {
         public int id;
         public int size;
@@ -109,6 +110,11 @@ public class Vehicle
                 }
             }
         }
+    }
+
+    public int CompareTo(Vehicle other)
+    {
+        return this.id.CompareTo(other.id);
     }
 
     public void Move(int[] position)
