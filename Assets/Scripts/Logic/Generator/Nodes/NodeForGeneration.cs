@@ -16,7 +16,7 @@ public class NodeForGeneration : Node
 
         List<Node> children = new List<Node>();
 
-        for (int i = 1; i< vehicles.Count;i++)
+        for (int i = 0; i< vehicles.Count;i++)
         {
             int[,] board = (int[,])this.board.Clone();
             for (int j = 0; j < vehicles[i].possibleMoves.Count; j++)
@@ -41,15 +41,22 @@ public class NodeForGeneration : Node
 
     public override void EvaluateCost()
     {
-        //distance from end
-        float x = Mathf.Pow(6 - vehicle.startPosition[0], 2);
-        float y = Mathf.Pow(2 - vehicle.startPosition[1], 2);
-        this.cost = (int)Mathf.Sqrt(x + y);
+        if (vehicle.id != 1)
+        {
+            float x = Mathf.Pow(6 - vehicle.startPosition[0], 2);
+            float y = Mathf.Pow(2 - vehicle.startPosition[1], 2);
+            this.cost = (int)Mathf.Sqrt(x + y);
+        }
+        else
+        {
+            float x = Mathf.Pow(0 - vehicle.startPosition[0], 2);
+            float y = Mathf.Pow(2 - vehicle.startPosition[1], 2);
+            this.cost = (int)Mathf.Sqrt(x + y);
+        }
 
         //this.cost += 0 - vehicle.startPosition[0];
         //this.cost += 2 - vehicle.startPosition[1];
 
-        //direction variation
         if (parent != null)
         {
             if (parent.vehicle.direction == vehicle.direction)

@@ -23,11 +23,11 @@ using UnityEngine;
 
                 vehicleGOs.Add(holder);
 
-                if (id == 1)
+                if (vehicles[id - 1].id == 1)
                 {
                     clone = Instantiate(cars[0]);
                 }
-                else if (vehicle.size == 2 && id != 1)
+                else if (vehicle.size == 2 && vehicles[id - 1].id != 1)
                 {
                     int random = Random.Range(1, cars.Count - 1);
                     clone = Instantiate(cars[random]);
