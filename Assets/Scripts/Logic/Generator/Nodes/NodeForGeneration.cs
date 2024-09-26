@@ -22,6 +22,8 @@ public class NodeForGeneration : Node
             for (int j = 0; j < vehicles[i].possibleMoves.Count; j++)
             {
                 Node node = CreateChild(vehicles[i], vehicles[i].possibleMoves[j], board);
+                InstanceCreator.GetPuzzleGenerator().PrintBoard(board);
+                Debug.Log(node.cost);
                 children.Add(node);
             }
         }
@@ -59,9 +61,9 @@ public class NodeForGeneration : Node
 
         if (parent != null)
         {
-            if (parent.vehicle.direction == vehicle.direction)
+            if (parent.vehicle.direction != vehicle.direction)
             {
-                this.cost -= 3;
+                this.cost += 3;
             }
         }
 

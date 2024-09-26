@@ -39,7 +39,7 @@ public class PuzzleGenerator : MonoBehaviour
 
         InstanceCreator.GetSpawnGrid().Spawn();
         
-        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(1,boardInstance.size - 2), 2 }, Direction.Vertical), boardInstance.board);
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(1,boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
 
         await GenerateVehicles();
 
@@ -47,7 +47,7 @@ public class PuzzleGenerator : MonoBehaviour
         Node firstNode = new NodeForGeneration(boardInstance.board, 0, vehicles[0]);
         graph.openList.Add(firstNode);
         int steps = 0;
-        while (graph.openList.Count != 0 && steps < 100)
+        while (graph.openList.Count != 0 && steps < 1000)
         {
             graph.openList.Sort();
 
@@ -64,7 +64,7 @@ public class PuzzleGenerator : MonoBehaviour
 
             for (int nodeIndex = 0; nodeIndex < children.Count; nodeIndex++)
             {
-                /*if (children[nodeIndex].cost >= 5)
+                if (children[nodeIndex].cost >= 5)
                 {
                     boardInstance.board = (int[,])children[nodeIndex].board.Clone();
                     resultBoard = (int[,])boardInstance.board.Clone();
@@ -73,7 +73,7 @@ public class PuzzleGenerator : MonoBehaviour
                     spawnVehicleInstance.Spawn();
                     return await Task.FromResult(true);
                 }
-                else*/
+                else
                 {
                     if (!graph.openList.Any((node) => node.Equals(children[nodeIndex])) && !graph.closedList.Any((node) => node.Equals(children[nodeIndex])))
                     {
@@ -82,11 +82,10 @@ public class PuzzleGenerator : MonoBehaviour
                 }
             }
             steps++;
+            Debug.Log("generation: " + steps);
             await Task.Yield();
         }
 
-        PrintBoard(resultBoard);
-        Debug.Log("Siker yeee");
         vehicles.Sort();
         spawnVehicleInstance.Spawn();
 
@@ -94,13 +93,21 @@ public class PuzzleGenerator : MonoBehaviour
     }
     public async Task GenerateVehicles()
     {
-        for (int id = 2; id < 16 && boardInstance.places.Count > 0; id++)
+        for (int id = 2; id < 6 && boardInstance.places.Count > 0; id++)
         {
             int random = Random.Range(0, boardInstance.places.Count);
-            bool result = await InsertVehicle(CreateVehicle(id, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
-            if (!result)
+            await InsertVehicle(CreateVehicle(vehicles.Count, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
+        }
+
+        for (int i = 0; i < vehicles.Count; i++)
+        {
+            for (int j = 1; j < vehicles[i].possibleMoves.Count; j++)
             {
-                id--;
+                Place place = boardInstance.GetRandomPlaceByCoordinate(vehicles[i].possibleMoves[j]);
+                if (place != null)
+                {
+                    await InsertVehicle(CreateVehicle(vehicles.Count, place.size, place.placePosition, place.direction), boardInstance.board);
+                }
             }
         }
     }
@@ -151,6 +158,7 @@ public class PuzzleGenerator : MonoBehaviour
         {
             boardInstance.places.RemoveAll(place => place.size == 3);
         }
+        PrintBoard(boardInstance.board);
 
         return await Task.FromResult(true);
     }

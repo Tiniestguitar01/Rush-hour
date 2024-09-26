@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -47,8 +48,28 @@ public class Board : MonoBehaviour
         }
     }
 
-        public Vector3 BoardCoordinateToWordSpace(int[] coordinate)
+    public Vector3 BoardCoordinateToWordSpace(int[] coordinate)
+    {
+        return new Vector3(coordinate[0] * 3.5f, 0, coordinate[1] * 3.5f);
+    }
+
+    public Place GetRandomPlaceByCoordinate(int[] position)
+    {
+        for (int i = 0; i < places.Count; i++ )
         {
-            return new Vector3(coordinate[0] * 3.5f, 0, coordinate[1] * 3.5f);
+            if (places[i].placePosition[0] == position[0] && places[i].placePosition[1] == position[1])
+            {
+                return places[i];
+            }
         }
+
+        if(places.Count > 0)
+        {
+            return places[Random.Range(0,places.Count)];
+        }
+        else
+        {
+            return null;
+        }
+    }
 }
