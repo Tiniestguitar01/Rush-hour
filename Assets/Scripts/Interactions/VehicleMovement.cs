@@ -62,7 +62,7 @@ public class VehicleMovement : MonoBehaviour
                     if (vehicle.direction == Direction.Vertical)
                     {
                         float distance = hit.point.x - startHitPoint.x;
-                        if (distance <= vehicle.maxDistanceBackward * 3 && distance >= vehicle.maxDistanceForward * -3)
+                        if (distance <= vehicle.maxDistanceBackward * 3.5f && distance >= vehicle.maxDistanceForward * -3.5f)
                         {
                             hitted.transform.parent.position = new Vector3(hit.point.x + DirectionFromCarOrigin.x, hitted.transform.parent.position.y, hitted.transform.parent.position.z);
                         }
@@ -70,7 +70,7 @@ public class VehicleMovement : MonoBehaviour
                     else
                     {
                         float distance = hit.point.z - startHitPoint.z;
-                        if (distance <= vehicle.maxDistanceBackward * 3 && distance >= vehicle.maxDistanceForward * -3)
+                        if (distance <= vehicle.maxDistanceBackward * 3.5f && distance >= vehicle.maxDistanceForward * -3.5f)
                         {
                             hitted.transform.parent.position = new Vector3(hitted.transform.parent.position.x, hitted.transform.parent.position.y, hit.point.z + DirectionFromCarOrigin.z);
                         }

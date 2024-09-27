@@ -20,25 +20,6 @@ public class Place : IComparable<Place>
         return this.cost.CompareTo(other.cost);
     }
 
-    public void CalculateCost(int[] targetPosition,Direction prevDirection)
-    {
-        //distance from target car
-        float x = Mathf.Pow(0 - placePosition[0], 2);
-        float y = Mathf.Pow(2 - placePosition[1], 2);
-        this.cost = (int)Mathf.Sqrt(x + y);
-
-        //this.cost += targetPosition[0] - 0;
-        //this.cost += targetPosition[1] - 2;
-
-        //direction variation
-        if (prevDirection == direction)
-        {
-            this.cost += 3;
-        }
-
-
-    }
-
     public override string ToString()
     {
         return "Vehicle: {Size: " + size + ", placeposition: {" + placePosition[0] + "," + placePosition[1] + "}, Direction: " + direction + ", cost: " + cost + "}";

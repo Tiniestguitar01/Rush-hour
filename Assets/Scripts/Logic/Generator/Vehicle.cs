@@ -1,14 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum Direction
-    {
-        Vertical,
-        Horizontal
-    }
+{
+    Vertical,
+    Horizontal
+}
 
-    public class Vehicle
-    {
+public class Vehicle : IComparable<Vehicle>
+{
         public int id;
         public int size;
         public int[] startPosition;
@@ -31,11 +32,10 @@ public enum Direction
 
         public List<int[]> GetPosition()
         {
-            int boardSize = InstanceCreator.GetBoard().size;
 
             List<int[]> position = new List<int[]>();
 
-            for (int coordinate = 0; coordinate < size; coordinate++)
+            for (int coordinate = 0; coordinate < this.size; coordinate++)
             {
                 position.Add(new int[] { startPosition[0] + (direction == Direction.Vertical ? coordinate : 0), startPosition[1] + (direction == Direction.Horizontal ? coordinate : 0) });
             }
@@ -43,13 +43,13 @@ public enum Direction
             return position;
         }
 
-        public void GetMovablePosition(int[,] board)
-        {
-            possibleMoves = new List<int[]>();
+    public void GetMovablePosition(int[,] board)
+    {
+        possibleMoves = new List<int[]>();
 
-            possibleMoves.Add(startPosition);
+        possibleMoves.Add(startPosition);
 
-            int size = InstanceCreator.GetBoard().size;
+        int size = InstanceCreator.GetBoard().size;
 
         maxDistanceForward = 0;
         maxDistanceBackward = 0;
@@ -87,8 +87,8 @@ public enum Direction
             for (int coordinate = startPosition[1] + this.size; coordinate < size; coordinate++)
             {
                 if (board[startPosition[0], coordinate] == 0)
-                {
-                    possibleMoves.Add(new int[] { startPosition[0], coordinate - this.size + 1 });
+                { 
+                    possibleMoves.Add(new int[] { startPosition[0] , coordinate - this.size + 1});
                     maxDistanceBackward++;
                 }
                 else
@@ -112,14 +112,19 @@ public enum Direction
         }
     }
 
-        public void Move(int[] position)
-        {
-            startPosition[0] = position[0];
-            startPosition[1] = position[1];
-        }
-
-        public override string ToString()
-        {
-            return "Vehicle: {Id: " + id + ", Size: " + size + ", Startposition: {" + startPosition[0] + "," + startPosition[1] + "}, Direction: " + direction + ", backSpace: " + maxDistanceBackward + ", frontSpace: " + maxDistanceForward + "}";
-        }
+    public int CompareTo(Vehicle other)
+    {
+        return this.id.CompareTo(other.id);
     }
+
+    public void Move(int[] position)
+    {
+        startPosition[0] = position[0];
+        startPosition[1] = position[1];
+    }
+
+    public override string ToString()
+    {
+        return "Vehicle: {Id: " + id + ", Size: " + size + ", Startposition: {" + startPosition[0] + "," + startPosition[1] + "}, Direction: " + direction + ", backSpace: " + maxDistanceBackward + ", frontSpace: " + maxDistanceForward + "}";
+    }
+}
