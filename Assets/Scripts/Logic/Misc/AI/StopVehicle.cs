@@ -20,7 +20,7 @@ public class StopVehicle : MonoBehaviour
 
     public void InstantiateRed(GameObject redPrefab)
     {
-        red = Instantiate(redPrefab, transform.position, Quaternion.identity);
+        red = Instantiate(redPrefab, transform.position, transform.rotation);
         red.SetActive(false);
     }
 

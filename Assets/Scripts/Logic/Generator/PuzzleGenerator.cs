@@ -1,9 +1,7 @@
-using PlasticGui.WorkspaceWindow.BranchExplorer;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using static Codice.CM.WorkspaceServer.DataStore.WkTree.WriteWorkspaceTree;
 
 public class PuzzleGenerator : MonoBehaviour
 {
@@ -38,10 +36,13 @@ public class PuzzleGenerator : MonoBehaviour
         boardInstance.GenerateBoard();
 
         InstanceCreator.GetSpawnGrid().Spawn();
-        
-        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(1,boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
+
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(1, boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
 
         await GenerateVehicles();
+
+        Debug.Log("After  blocking cars: ");
+        PrintBoard(boardInstance.board);
 
         Graph graph = new Graph();
         Node firstNode = new NodeForGeneration(boardInstance.board, 0, vehicles[0]);
@@ -55,8 +56,6 @@ public class PuzzleGenerator : MonoBehaviour
             graph.openList.RemoveAt(graph.openList.Count - 1);
             graph.closedList.Add(bestNode);
 
-            boardInstance.board = (int[,])bestNode.board.Clone();
-            resultBoard = (int[,])boardInstance.board.Clone();
 
             vehicles = bestNode.GetVehicles();
 
@@ -64,16 +63,6 @@ public class PuzzleGenerator : MonoBehaviour
 
             for (int nodeIndex = 0; nodeIndex < children.Count; nodeIndex++)
             {
-                if (children[nodeIndex].cost >= 5)
-                {
-                    boardInstance.board = (int[,])children[nodeIndex].board.Clone();
-                    resultBoard = (int[,])boardInstance.board.Clone();
-                    PrintBoard(resultBoard);
-                    Debug.Log("Siker yeee");
-                    spawnVehicleInstance.Spawn();
-                    return await Task.FromResult(true);
-                }
-                else
                 {
                     if (!graph.openList.Any((node) => node.Equals(children[nodeIndex])) && !graph.closedList.Any((node) => node.Equals(children[nodeIndex])))
                     {
@@ -82,33 +71,55 @@ public class PuzzleGenerator : MonoBehaviour
                 }
             }
             steps++;
-            Debug.Log("generation: " + steps);
             await Task.Yield();
         }
 
+        graph.closedList.Sort();
+        vehicles = graph.closedList.Last().GetVehicles();
+        boardInstance.board = (int[,])graph.closedList.Last().board.Clone();
+
+        boardInstance.GetFreeSpaces();
+        await GenerateVehicles();
+
+        resultBoard = (int[,])boardInstance.board.Clone();
+
         vehicles.Sort();
+        PrintBoard(boardInstance.board);
         spawnVehicleInstance.Spawn();
 
-        return await Task.FromResult(false);
+        return await Task.FromResult(true);
     }
     public async Task GenerateVehicles()
     {
-        for (int id = 2; id < 6 && boardInstance.places.Count > 0; id++)
+        int id = 0;
+        for (int i = 0; i < 16; i++)
         {
-            int random = Random.Range(0, boardInstance.places.Count);
-            await InsertVehicle(CreateVehicle(vehicles.Count, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
+            Debug.Log("Blocked car: " + vehicles[id].ToString());
+            Place placeForward = boardInstance.GetPlace(vehicles[id], true);
+
+            bool firstResult = false;
+            bool secondResult = false;
+
+            if (placeForward != null)
+            {
+                firstResult = await InsertVehicle(CreateVehicle(vehicles.Count + 1, placeForward.size, placeForward.placePosition, placeForward.direction), boardInstance.board);
+            }
+            Place placeBackward = boardInstance.GetPlace(vehicles[id], false);
+            if (placeBackward != null)
+            {
+                secondResult = await InsertVehicle(CreateVehicle(vehicles.Count + 1, placeBackward.size, placeBackward.placePosition, placeBackward.direction), boardInstance.board);
+            }
+
+            if (firstResult || (!firstResult && secondResult))
+            {
+                id++;
+            }
         }
 
-        for (int i = 0; i < vehicles.Count; i++)
+        while (boardInstance.places.Count > 0)
         {
-            for (int j = 1; j < vehicles[i].possibleMoves.Count; j++)
-            {
-                Place place = boardInstance.GetRandomPlaceByCoordinate(vehicles[i].possibleMoves[j]);
-                if (place != null)
-                {
-                    await InsertVehicle(CreateVehicle(vehicles.Count, place.size, place.placePosition, place.direction), boardInstance.board);
-                }
-            }
+            int random = Random.Range(0, boardInstance.places.Count);
+            await InsertVehicle(CreateVehicle(vehicles.Count + 1, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
         }
     }
 

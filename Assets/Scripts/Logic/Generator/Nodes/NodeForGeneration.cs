@@ -22,8 +22,6 @@ public class NodeForGeneration : Node
             for (int j = 0; j < vehicles[i].possibleMoves.Count; j++)
             {
                 Node node = CreateChild(vehicles[i], vehicles[i].possibleMoves[j], board);
-                InstanceCreator.GetPuzzleGenerator().PrintBoard(board);
-                Debug.Log(node.cost);
                 children.Add(node);
             }
         }
@@ -43,30 +41,20 @@ public class NodeForGeneration : Node
 
     public override void EvaluateCost()
     {
-        if (vehicle.id != 1)
+        for (int i = 0; i < board.GetLength(0); i++)
         {
-            float x = Mathf.Pow(6 - vehicle.startPosition[0], 2);
-            float y = Mathf.Pow(2 - vehicle.startPosition[1], 2);
-            this.cost = (int)Mathf.Sqrt(x + y);
-        }
-        else
-        {
-            float x = Mathf.Pow(0 - vehicle.startPosition[0], 2);
-            float y = Mathf.Pow(2 - vehicle.startPosition[1], 2);
-            this.cost = (int)Mathf.Sqrt(x + y);
-        }
-
-        //this.cost += 0 - vehicle.startPosition[0];
-        //this.cost += 2 - vehicle.startPosition[1];
-
-        if (parent != null)
-        {
-            if (parent.vehicle.direction != vehicle.direction)
+            if (board[i, 2] != 1 && board[i, 2] != 0)
             {
-                this.cost += 3;
+                cost += board.GetLength(0);
+            }
+
+            if (board[i, 2] == 1)
+            {
+                cost += i;
+                break;
             }
         }
 
-        //cost -= vehicle.maxDistanceForward - vehicle.maxDistanceBackward;
+        cost -= (vehicle.maxDistanceForward + vehicle.maxDistanceBackward)/2;
     }
 }
