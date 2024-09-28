@@ -33,7 +33,7 @@ public class Solver : MonoBehaviour
 
         graph.openList.Add(firstNode);
         int steps = 0;
-        while (graph.openList.Count != 0 && steps < 2000)
+        while (graph.openList.Count != 0 && steps < 1000)
         {
             graph.openList.Sort();
             Node bestNode = graph.openList.First();
@@ -65,7 +65,7 @@ public class Solver : MonoBehaviour
                 }
             }
             steps++;
-            Debug.Log("solver: "+ steps);
+            //Debug.Log("solver: "+ steps);
             await Task.Yield();
         }
         return await Task.FromResult(false);
