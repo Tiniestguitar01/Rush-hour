@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 3348814}
   - component: {fileID: 2305816}
   - component: {fileID: 6877526446199036160}
+  - component: {fileID: -142587902167416431}
   m_Layer: 6
   m_Name: Car_4_Yellow
   m_TagString: Untagged
@@ -275,11 +276,32 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 80492071631ffe442bdaacf7b2e4a9f3, type: 3}
+--- !u!65 &-142587902167416431
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140570}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.047246363, y: 0.02008486, z: 0.022067524}
+  m_Center: {x: -0.000344716, y: 0.0001621684, z: 4.656613e-10}
 --- !u!1 &168118
 GameObject:
   m_ObjectHideFlags: 0

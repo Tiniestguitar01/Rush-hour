@@ -13,7 +13,7 @@ public class NodeToCompareBoard : Node
 
     public override Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
     {
-        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board);
+        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board, false);
 
         Node newNode = new NodeToCompareBoard(board, depth + 1, goalBoard);
         

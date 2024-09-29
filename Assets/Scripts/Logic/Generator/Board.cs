@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -9,14 +8,20 @@ public class Board : MonoBehaviour
     public int[,] board;
 
     public List<Place> places = new List<Place>();
+    GameData gameDataInstance;
 
     void Start()
     {
+        gameDataInstance = InstanceCreator.GetGameData();
+        size = gameDataInstance.boardSize;
         GenerateBoard();
     }
 
     public void GenerateBoard()
     {
+        places.Clear();
+        size = gameDataInstance.boardSize;
+        Debug.Log("size: "+ size);
         board = new int[size, size];
 
         for (int x = 0; x < size; x++)
@@ -60,10 +65,22 @@ public class Board : MonoBehaviour
         {
             for (int i = 0; i < places.Count; i++)
             {
-                if (places[i].placePosition[(int)vehicle.direction] < vehicle.startPosition[(int)vehicle.direction] && (places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 2) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].direction != vehicle.direction)
+                if (places[i].placePosition[(int)vehicle.direction] < vehicle.startPosition[(int)vehicle.direction])
                 {
-                    Debug.Log(places[i].placePosition[0] + " " + places[i].placePosition[1]);
-                    resultList.Add(places[i]);
+                    if((places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 2) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].size > 2 && places[i].direction != vehicle.direction)
+                    {
+                        resultList.Add(places[i]);
+                    }
+
+                    if ((places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 1) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].direction != vehicle.direction)
+                    {
+                        resultList.Add(places[i]);
+                    }
+
+                    if (places[i].placePosition[1 - (int)vehicle.direction] == vehicle.startPosition[1 - (int)vehicle.direction])
+                    {
+                        resultList.Add(places[i]);
+                    }
                 }
             }
         }
@@ -71,11 +88,24 @@ public class Board : MonoBehaviour
         {
             for (int i = 0; i < places.Count; i++)
             {
-                if (places[i].placePosition[(int)vehicle.direction] > vehicle.startPosition[(int)vehicle.direction] && (places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 2) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].direction != vehicle.direction)
+                if (places[i].placePosition[(int)vehicle.direction] > vehicle.startPosition[(int)vehicle.direction])
                 {
-                    Debug.Log(places[i].placePosition[0] + " " + places[i].placePosition[1]);
-                    resultList.Add(places[i]);
+                    if ((places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 2) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].size > 2 && places[i].direction != vehicle.direction)
+                    {
+                        resultList.Add(places[i]);
+                    }
+
+                    if ((places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 1) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].direction != vehicle.direction)
+                    {
+                        resultList.Add(places[i]);
+                    }
+
+                    if (places[i].placePosition[1 - (int)vehicle.direction] == vehicle.startPosition[1 - (int)vehicle.direction])
+                    {
+                        resultList.Add(places[i]);
+                    }
                 }
+                
             }
         }
 

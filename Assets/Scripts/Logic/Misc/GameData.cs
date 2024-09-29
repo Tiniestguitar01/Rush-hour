@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+
 [Serializable]
 public enum Difficulty
 {
@@ -16,9 +17,14 @@ public class GameData : MonoBehaviour
     public int moved = 0;
     public float timer = 0;
 
+    public int prevMoved = 0;
+    public string prevTimer = "";
+
     public bool timerStarted = false;
 
     public Difficulty difficulty;
+
+    public int boardSize = 6;
 
     UIManager uiManagerInstance;
 
@@ -30,16 +36,14 @@ public class GameData : MonoBehaviour
 
     void Update()
     {
-        if (uiManagerInstance.state == (int)Menu.Game)
+        if (uiManagerInstance.state == (int)Menu.Game || uiManagerInstance.state == (int)Menu.Pause)
         {
             if (timerStarted)
             {
                 timer += Time.deltaTime;
             }
 
-            string minute = Mathf.Floor((timer / 59)).ToString("00");
-            string second = (timer % 59).ToString("00");
-            uiManagerInstance.TimerText.text = minute + ":" + second;
+            uiManagerInstance.TimerText.text = GetTimeInString(timer);
 
             uiManagerInstance.MovedText.text = "Moved: " + moved;
         }
@@ -48,7 +52,6 @@ public class GameData : MonoBehaviour
             moved = 0;
             timer = 0;
         }
-
     }
 
     public void StartTimer()
@@ -60,5 +63,12 @@ public class GameData : MonoBehaviour
     public void StopTimer()
     {
         timerStarted = false;
+    }
+
+    public string GetTimeInString(float timer)
+    {
+        string minute = Mathf.Floor((timer / 59)).ToString("00");
+        string second = (timer % 59).ToString("00");
+        return minute + ":" + second;
     }
 }
