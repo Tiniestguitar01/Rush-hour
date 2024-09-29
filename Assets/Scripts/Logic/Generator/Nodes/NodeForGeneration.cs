@@ -31,7 +31,7 @@ public class NodeForGeneration : Node
 
     public override Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
     {
-        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board);
+        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board, false);
 
         Node newNode = new NodeForGeneration(board, depth + 1,vehicle);
 

@@ -17,6 +17,9 @@ public class PuzzleGenerator : MonoBehaviour
     ModifyBoard modifyBoardInstance;
     Solver solverInstance;
     SpawnVehicles spawnVehicleInstance;
+    SpawnGrid spawnGridInstance;
+    UIManager uiManagerInstance;
+    GameData gameDataInstance;
 
     public int[,] resultBoard;
 
@@ -26,29 +29,40 @@ public class PuzzleGenerator : MonoBehaviour
         modifyBoardInstance = InstanceCreator.GetModifyBoard();
         solverInstance = InstanceCreator.GetSolver();
         spawnVehicleInstance = InstanceCreator.GetSpawnVehicles();
-        await GeneratePuzzle();
+        uiManagerInstance = InstanceCreator.GetUIManager();
+        gameDataInstance = InstanceCreator.GetGameData();
+        spawnGridInstance = InstanceCreator.GetSpawnGrid();
+
     }
 
     public async Task<bool> GeneratePuzzle()
     {
+        uiManagerInstance.SetMenuActive(Menu.Loading);
+
         DeleteVehicles();
 
         boardInstance.GenerateBoard();
+        spawnGridInstance.Spawn();
 
-        InstanceCreator.GetSpawnGrid().Spawn();
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(2, boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
 
-        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(1, boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
+        for (int i = 0; i < 2 * (int)gameDataInstance.difficulty; i++)
+        {
+            boardInstance.GetFreeSpaces();
+            await GenerateVehicles();
+        }
 
-        await GenerateVehicles();
+        while (boardInstance.places.Count > 0)
+        {
+            int random = Random.Range(0, boardInstance.places.Count);
+            await InsertVehicle(CreateVehicle(vehicles.Count + 1, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
+        }
 
-        Debug.Log("After  blocking cars: ");
-        PrintBoard(boardInstance.board);
-
-        Graph graph = new Graph();
+        /*Graph graph = new Graph();
         Node firstNode = new NodeForGeneration(boardInstance.board, 0, vehicles[0]);
         graph.openList.Add(firstNode);
         int steps = 0;
-        while (graph.openList.Count != 0 && steps < 1000)
+        while (graph.openList.Count != 0 && steps < 100)
         {
             graph.openList.Sort();
 
@@ -76,10 +90,7 @@ public class PuzzleGenerator : MonoBehaviour
 
         graph.closedList.Sort();
         vehicles = graph.closedList.Last().GetVehicles();
-        boardInstance.board = (int[,])graph.closedList.Last().board.Clone();
-
-        boardInstance.GetFreeSpaces();
-        await GenerateVehicles();
+        boardInstance.board = (int[,])graph.closedList.Last().board.Clone();*/
 
         resultBoard = (int[,])boardInstance.board.Clone();
 
@@ -87,14 +98,15 @@ public class PuzzleGenerator : MonoBehaviour
         PrintBoard(boardInstance.board);
         spawnVehicleInstance.Spawn();
 
+        uiManagerInstance.SetMenuActive(Menu.Game);
+
         return await Task.FromResult(true);
     }
     public async Task GenerateVehicles()
     {
-        int id = 0;
-        for (int i = 0; i < 16; i++)
+        int id = vehicles.Count - 1;
+        for (int i = 0; i < 4 * (int)gameDataInstance.difficulty; i++)
         {
-            Debug.Log("Blocked car: " + vehicles[id].ToString());
             Place placeForward = boardInstance.GetPlace(vehicles[id], true);
 
             bool firstResult = false;
@@ -115,12 +127,6 @@ public class PuzzleGenerator : MonoBehaviour
                 id++;
             }
         }
-
-        while (boardInstance.places.Count > 0)
-        {
-            int random = Random.Range(0, boardInstance.places.Count);
-            await InsertVehicle(CreateVehicle(vehicles.Count + 1, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
-        }
     }
 
     public Vehicle CreateVehicle(int id, int size, int[] startPosition, Direction direction)
@@ -131,7 +137,6 @@ public class PuzzleGenerator : MonoBehaviour
 
     public async Task<bool> InsertVehicle(Vehicle vehicle, int[,] board)
     {
-        //ezt �t kell �rni 
         List<int[]> position = vehicle.GetPosition();
         modifyBoardInstance.InsertVehicle(vehicle, board);
 
@@ -198,7 +203,14 @@ public class PuzzleGenerator : MonoBehaviour
             Destroy(vehicle);
         }
 
+        foreach (GameObject cell in spawnGridInstance.instantiatedCells)
+        {
+            Destroy(cell);
+        }
+
         spawnVehicleInstance.vehicleGOs.Clear();
+        spawnGridInstance.instantiatedCells.Clear();
+
         vehicles.Clear();
 
         truckCount = 0;

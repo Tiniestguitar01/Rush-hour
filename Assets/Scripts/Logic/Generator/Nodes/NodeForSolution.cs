@@ -8,7 +8,7 @@ public class NodeForSolution : Node
 
     public override Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
     {
-        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board);
+        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board, true);
 
         Node newNode = new NodeForSolution(board, depth + 1);
 
