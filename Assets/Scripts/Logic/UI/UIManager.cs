@@ -148,7 +148,7 @@ public class UIManager : MonoBehaviour
         gameDataInstance.boardSize = (int)boardSizeSlider.value;
         databaseInstance.GetResultsByBoardSize(gameDataInstance.boardSize);
 
-        for(int difficulty = 1; difficulty < 4; difficulty++)
+        for(int difficulty = 1; difficulty <= 4; difficulty++)
         {
             Result result = databaseInstance.results.Find(res => res.difficulty == difficulty);
             if(result != null)

@@ -7,8 +7,8 @@ public class PuzzleGenerator : MonoBehaviour
 {
     public List<Vehicle> vehicles = new List<Vehicle>();
 
-    const int numberOfCars = 12;
-    const int numberOfTrucks = 4;
+    int numberOfCars = 12;
+    int numberOfTrucks = 4;
 
     public int truckCount = 0;
     public int carCount = 0;
@@ -33,6 +33,8 @@ public class PuzzleGenerator : MonoBehaviour
         gameDataInstance = InstanceCreator.GetGameData();
         spawnGridInstance = InstanceCreator.GetSpawnGrid();
 
+        numberOfTrucks = boardInstance.board.GetLength(0) - 2;
+        numberOfCars = numberOfCars * 4;
     }
 
     public async Task<bool> GeneratePuzzle()
@@ -44,7 +46,7 @@ public class PuzzleGenerator : MonoBehaviour
         boardInstance.GenerateBoard();
         spawnGridInstance.Spawn();
 
-        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(2, boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(Mathf.Min(2 * (int)((int)gameDataInstance.difficulty / 1.5f), boardInstance.size - 2), boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
 
         for (int i = 0; i < 2 * (int)gameDataInstance.difficulty; i++)
         {
@@ -85,7 +87,6 @@ public class PuzzleGenerator : MonoBehaviour
                 }
             }
             steps++;
-            await Task.Yield();
         }
 
         graph.closedList.Sort();
