@@ -5,35 +5,35 @@ using UnityEngine;
 public class StopVehicle : MonoBehaviour
 {
     public float wait = 30f;
+    BoxCollider boxCollider;
 
-    public GameObject redPrefab;
-
-    public GameObject red;
+    public GameObject redLight;
+    public GameObject greenLight;
 
     public bool stopped = false;
 
     void Start()
     {
-        InstantiateRed(redPrefab);
+        redLight.SetActive(false);
+        greenLight.SetActive(false);
+        boxCollider = GetComponent<BoxCollider>();
         StartCoroutine(Stop());
-    }
-
-    public void InstantiateRed(GameObject redPrefab)
-    {
-        red = Instantiate(redPrefab, transform.position, Quaternion.identity);
-        red.SetActive(false);
     }
 
     public IEnumerator Stop()
     {
         if(stopped)
         {
-            red.SetActive(false);
+            boxCollider.enabled = false;
+            redLight.SetActive(false);
+            greenLight.SetActive(true);
             stopped = false;
         }
         else
         {
-            red.SetActive(true);
+            boxCollider.enabled = true;
+            redLight.SetActive(true);
+            greenLight.SetActive(false);
             stopped = true;
         }
         yield return new WaitForSeconds(wait);

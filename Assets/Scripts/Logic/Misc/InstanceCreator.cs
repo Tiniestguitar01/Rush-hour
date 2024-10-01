@@ -37,6 +37,10 @@ public class InstanceCreator : MonoBehaviour
     {
         return GameObject.Find("MiscLogicManager").GetComponent<GameData>();
     }
+    public static Database GetDatabase()
+    {
+        return GameObject.Find("MiscLogicManager").GetComponent<Database>();
+    }
     public static UIManager GetUIManager()
     {
         return GameObject.Find("UIManager").GetComponent<UIManager>();
@@ -44,5 +48,10 @@ public class InstanceCreator : MonoBehaviour
     public static VehicleMovement GetVehicleMovement()
     {
         return GameObject.Find("Main Camera").GetComponent<VehicleMovement>();
+    }
+
+    public static Settings GetSettings()
+    {
+        return GameObject.Find("UIManager").GetComponent<Settings>();
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -9,14 +8,20 @@ public class Board : MonoBehaviour
     public int[,] board;
 
     public List<Place> places = new List<Place>();
+    GameData gameDataInstance;
 
     void Start()
     {
+        gameDataInstance = InstanceCreator.GetGameData();
+        size = gameDataInstance.boardSize;
         GenerateBoard();
     }
 
     public void GenerateBoard()
     {
+        places.Clear();
+        size = gameDataInstance.boardSize;
+        Debug.Log("size: "+ size);
         board = new int[size, size];
 
         for (int x = 0; x < size; x++)
@@ -53,23 +58,97 @@ public class Board : MonoBehaviour
         return new Vector3(coordinate[0] * 3.5f, 0, coordinate[1] * 3.5f);
     }
 
-    public Place GetRandomPlaceByCoordinate(int[] position)
+    public Place GetPlace(Vehicle vehicle, bool isForward)
     {
-        for (int i = 0; i < places.Count; i++ )
+        List<Place> resultList = new List<Place>();
+        if (isForward)
         {
-            if (places[i].placePosition[0] == position[0] && places[i].placePosition[1] == position[1])
+            for (int i = 0; i < places.Count; i++)
             {
-                return places[i];
+                if (places[i].placePosition[(int)vehicle.direction] < vehicle.startPosition[(int)vehicle.direction])
+                {
+                    if((places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 2) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].size > 2 && places[i].direction != vehicle.direction)
+                    {
+                        resultList.Add(places[i]);
+                    }
+
+                    if ((places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 1) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].direction != vehicle.direction)
+                    {
+                        resultList.Add(places[i]);
+                    }
+
+                    if (places[i].placePosition[1 - (int)vehicle.direction] == vehicle.startPosition[1 - (int)vehicle.direction])
+                    {
+                        resultList.Add(places[i]);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < places.Count; i++)
+            {
+                if (places[i].placePosition[(int)vehicle.direction] > vehicle.startPosition[(int)vehicle.direction])
+                {
+                    if ((places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 2) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].size > 2 && places[i].direction != vehicle.direction)
+                    {
+                        resultList.Add(places[i]);
+                    }
+
+                    if ((places[i].placePosition[1 - (int)vehicle.direction] >= vehicle.startPosition[1 - (int)vehicle.direction] - 1) && places[i].placePosition[1 - (int)vehicle.direction] <= vehicle.startPosition[1 - (int)vehicle.direction] && places[i].direction != vehicle.direction)
+                    {
+                        resultList.Add(places[i]);
+                    }
+
+                    if (places[i].placePosition[1 - (int)vehicle.direction] == vehicle.startPosition[1 - (int)vehicle.direction])
+                    {
+                        resultList.Add(places[i]);
+                    }
+                }
+                
             }
         }
 
-        if(places.Count > 0)
+        if (resultList.Count > 0)
         {
-            return places[Random.Range(0,places.Count)];
+            return resultList[Random.Range(0, resultList.Count - 1)];
         }
         else
         {
             return null;
+        }
+    }
+
+
+    public void GetFreeSpaces()
+    {
+        for (int x = 0; x < size; x++)
+        {
+            for (int z = 0; z < size; z++)
+            {
+                if (board[x,z] == 0)
+                {
+                    if (x + 2 < size && board[x + 2, z] == 0 && board[x + 1, z] == 0)
+                    {
+                        places.Add(new Place(3, new int[] { x, z }, Direction.Vertical));
+                    }
+
+                    if (x + 1 < size && board[x + 1, z] == 0)
+                    {
+                        places.Add(new Place(2, new int[] { x, z }, Direction.Vertical));
+                    }
+
+                    if (z + 2 < size && board[x, z + 2] == 0 && board[x, z + 1] == 0)
+                    {
+                        places.Add(new Place(3, new int[] { x, z }, Direction.Horizontal));
+                    }
+
+                    if (z + 1 < size && board[x, z + 1] == 0)
+                    {
+                        places.Add(new Place(2, new int[] { x, z }, Direction.Horizontal));
+                    }
+                }
+            }
         }
     }
 }

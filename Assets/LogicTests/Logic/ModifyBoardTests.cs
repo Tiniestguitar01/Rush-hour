@@ -90,7 +90,7 @@ public class ModifyBoardTests
 
         Assert.AreEqual(testBoardBeforeMove, boardInstance.board);
 
-        modifyBoardInstance.MoveVehicle(vehicleVertical,new int[]{ 1, 0 }, boardInstance.board);
+        modifyBoardInstance.MoveVehicle(vehicleVertical,new int[]{ 1, 0 }, boardInstance.board, true);
 
         int[,] testBoardAfterMove = new int[,] {
             { 0,0,0,0,0,0 },

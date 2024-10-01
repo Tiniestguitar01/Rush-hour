@@ -87,7 +87,7 @@ public class Vehicle : IComparable<Vehicle>
             for (int coordinate = startPosition[1] + this.size; coordinate < size; coordinate++)
             {
                 if (board[startPosition[0], coordinate] == 0)
-                { 
+                {
                     possibleMoves.Add(new int[] { startPosition[0] , coordinate - this.size + 1});
                     maxDistanceBackward++;
                 }

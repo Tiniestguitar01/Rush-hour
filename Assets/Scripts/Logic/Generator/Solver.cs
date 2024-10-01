@@ -10,15 +10,19 @@ public class Solver : MonoBehaviour
     public float solutionPlaySpeed = 1.0f;
     VehicleMovement vehicleMovementInstance;
     PuzzleGenerator puzzleGeneratorInstance;
+    UIManager uiManagerInstance;
 
     private void Start()
     {
         vehicleMovementInstance = InstanceCreator.GetVehicleMovement();
         puzzleGeneratorInstance = InstanceCreator.GetPuzzleGenerator();
+        uiManagerInstance = InstanceCreator.GetUIManager();
     }
 
     public async Task<bool> Search(int[,] firstBoard, bool forSolution)
     {
+        uiManagerInstance.SetMenuActive(Menu.Loading);
+
         Graph graph = new Graph();
 
         Node firstNode;
@@ -33,7 +37,7 @@ public class Solver : MonoBehaviour
 
         graph.openList.Add(firstNode);
         int steps = 0;
-        while (graph.openList.Count != 0 && steps < 2000)
+        while (graph.openList.Count != 0 && steps < 1000)
         {
             graph.openList.Sort();
             Node bestNode = graph.openList.First();
@@ -49,11 +53,13 @@ public class Solver : MonoBehaviour
                 if ((children[nodeIndex].cost - children[nodeIndex].depth) == 0 && forSolution == true)
                 {
                     resultNode = children[nodeIndex];
+                    uiManagerInstance.SetMenuActive(Menu.Game);
                     return await Task.FromResult(true);
                 }
                 else if(children[nodeIndex].cost == 0 && forSolution == false)
                 {
                     resultNode = children[nodeIndex];
+                    uiManagerInstance.SetMenuActive(Menu.Game);
                     return await Task.FromResult(true);
                 }
                 else
@@ -65,8 +71,10 @@ public class Solver : MonoBehaviour
                 }
             }
             steps++;
-            Debug.Log("solver: "+ steps);
+            //Debug.Log("solver: "+ steps);
+            await Task.Yield();
         }
+        uiManagerInstance.SetMenuActive(Menu.Game);
         return await Task.FromResult(false);
     }
 

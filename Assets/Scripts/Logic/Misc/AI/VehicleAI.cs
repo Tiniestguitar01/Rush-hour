@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static Codice.Client.Common.EventTracking.TrackFeatureUseEvent.Features.DesktopGUI.Filters;
-
 public class VehicleAI : MonoBehaviour
 {
     public float step = 10f;
@@ -15,6 +13,8 @@ public class VehicleAI : MonoBehaviour
     public float distanceToDestroy = 200f;
 
     float timeSinceStop = 0;
+
+    public float timeUntilDestroy = 30f;
 
     private void Start()
     {
@@ -54,7 +54,7 @@ public class VehicleAI : MonoBehaviour
         if(stopped == true)
         {
             timeSinceStop += Time.deltaTime;
-            if (timeSinceStop > 20f)
+            if (timeSinceStop > timeUntilDestroy)
             {
                 Destroy(gameObject);
             }

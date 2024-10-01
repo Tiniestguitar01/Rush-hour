@@ -31,7 +31,7 @@ public class NodeForGeneration : Node
 
     public override Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
     {
-        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board);
+        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, position, board, false);
 
         Node newNode = new NodeForGeneration(board, depth + 1,vehicle);
 
@@ -54,30 +54,7 @@ public class NodeForGeneration : Node
                 break;
             }
         }
-        /*if (vehicle.id != 1)
-        {
-            float x = Mathf.Pow(6 - vehicle.startPosition[0], 2);
-            float y = Mathf.Pow(2 - vehicle.startPosition[1], 2);
-            this.cost = (int)Mathf.Sqrt(x + y);
-        }
-        else
-        {
-            float x = Mathf.Pow(0 - vehicle.startPosition[0], 2);
-            float y = Mathf.Pow(2 - vehicle.startPosition[1], 2);
-            this.cost = (int)Mathf.Sqrt(x + y);
-        }
 
-        //this.cost += 0 - vehicle.startPosition[0];
-        //this.cost += 2 - vehicle.startPosition[1];
-
-        if (parent != null)
-        {
-            if (parent.vehicle.direction != vehicle.direction)
-            {
-                this.cost += 3;
-            }
-        }*/
-
-        //cost -= vehicle.maxDistanceForward - vehicle.maxDistanceBackward;
+        cost -= (vehicle.maxDistanceForward + vehicle.maxDistanceBackward)/2;
     }
 }
