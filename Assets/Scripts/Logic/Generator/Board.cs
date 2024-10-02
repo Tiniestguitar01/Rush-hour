@@ -9,9 +9,12 @@ public class Board : MonoBehaviour
 
     public List<Place> places = new List<Place>();
     GameData gameDataInstance;
+    public int maxBoardSize = 7;
+    SpawnGrid spawnGridInstance;
 
-    void Start()
+    private void Start()
     {
+        spawnGridInstance = InstanceCreator.GetSpawnGrid();
         gameDataInstance = InstanceCreator.GetGameData();
         size = gameDataInstance.boardSize;
         GenerateBoard();
@@ -55,7 +58,7 @@ public class Board : MonoBehaviour
 
     public Vector3 BoardCoordinateToWordSpace(int[] coordinate)
     {
-        return new Vector3(coordinate[0] * 3.5f, 0, coordinate[1] * 3.5f);
+        return new Vector3((coordinate[0] * spawnGridInstance.distance) + ((maxBoardSize - size) * spawnGridInstance.offset), 0, (coordinate[1] * spawnGridInstance.distance) + ((maxBoardSize- size) * spawnGridInstance.offset));
     }
 
     public Place GetPlace(Vehicle vehicle, bool isForward)

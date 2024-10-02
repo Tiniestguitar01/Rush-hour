@@ -5,18 +5,22 @@ public class SpawnGrid : MonoBehaviour
 {
         
     public GameObject cell;
-    float distance = 3.5f;
+    public float distance = 3.5f;
+    public float offset = 2f;
+
+    Board boardInstance;
 
     public List<GameObject> instantiatedCells;
     private void Start()
     {
+        boardInstance = InstanceCreator.GetBoard();
         instantiatedCells = new List<GameObject>();
     }
     public void Spawn()
     {
-        for (float x = 0; x < InstanceCreator.GetBoard().size * distance; x += distance)
+        for (float x = (boardInstance.maxBoardSize - boardInstance.size) * offset; x < boardInstance.size * distance + (boardInstance.maxBoardSize - boardInstance.size) * offset; x += distance)
         {
-            for (float z = 0; z < InstanceCreator.GetBoard().size * distance; z += distance)
+            for (float z = (boardInstance.maxBoardSize - boardInstance.size) * offset; z < boardInstance.size * distance + (boardInstance.maxBoardSize - boardInstance.size) * offset; z += distance)
             {
                 instantiatedCells.Add(Instantiate(cell, new Vector3(x, 0, z), Quaternion.identity));
             }

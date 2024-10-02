@@ -20,14 +20,18 @@ public class VehicleMovement : MonoBehaviour
 
     Board boardInstance;
     GameData gameDataInstance;
+    SpawnGrid spawnGridInstance;
+    SpawnVehicles spawnVehicleInstance;
 
     float moveDuration = 0.5f;
-
+    float minDistanceFromClosestCell = 1.1f;
 
     void Start()
     {
+        spawnGridInstance = InstanceCreator.GetSpawnGrid();
         boardInstance = InstanceCreator.GetBoard();
         gameDataInstance = InstanceCreator.GetGameData();
+        spawnVehicleInstance = InstanceCreator.GetSpawnVehicles();
     }
 
     void Update()
@@ -62,7 +66,7 @@ public class VehicleMovement : MonoBehaviour
                     if (vehicle.direction == Direction.Vertical)
                     {
                         float distance = hit.point.x - startHitPoint.x;
-                        if (distance <= vehicle.maxDistanceBackward * 3.5f && distance >= vehicle.maxDistanceForward * -3.5f)
+                        if (distance <= vehicle.maxDistanceBackward * spawnGridInstance.distance && distance >= vehicle.maxDistanceForward * -spawnGridInstance.distance)
                         {
                             hitted.transform.parent.position = new Vector3(hit.point.x + DirectionFromCarOrigin.x, hitted.transform.parent.position.y, hitted.transform.parent.position.z);
                         }
@@ -70,7 +74,7 @@ public class VehicleMovement : MonoBehaviour
                     else
                     {
                         float distance = hit.point.z - startHitPoint.z;
-                        if (distance <= vehicle.maxDistanceBackward * 3.5f && distance >= vehicle.maxDistanceForward * -3.5f)
+                        if (distance <= vehicle.maxDistanceBackward * spawnGridInstance.distance && distance >= vehicle.maxDistanceForward * -spawnGridInstance.distance)
                         {
                             hitted.transform.parent.position = new Vector3(hitted.transform.parent.position.x, hitted.transform.parent.position.y, hit.point.z + DirectionFromCarOrigin.z);
                         }
@@ -94,13 +98,13 @@ public class VehicleMovement : MonoBehaviour
                     }
                 }
 
-                hitted.transform.parent.position = Vector3.Lerp(hitted.transform.parent.position, new Vector3(moveTo.x, (0.5f * vehicle.size), moveTo.z), Vector3.Distance(hitted.transform.parent.position, moveTo));
+                hitted.transform.parent.position = Vector3.Lerp(hitted.transform.parent.position, new Vector3(moveTo.x, (spawnVehicleInstance.vehicleYOffset * vehicle.size), moveTo.z), Vector3.Distance(hitted.transform.parent.position, moveTo));
 
-                InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)(moveTo.x / 3.5f), (int)(moveTo.z / 3.5f) }, boardInstance.board,false);
+                InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)((moveTo.x - ((boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset)) / spawnGridInstance.distance), (int)((moveTo.z - ((boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset)) / spawnGridInstance.distance) }, boardInstance.board,false);
 
-                if (Vector3.Distance(hitted.transform.parent.position, moveTo) < 1.1f * vehicle.size / 2)
+                if (Vector3.Distance(hitted.transform.parent.position, moveTo) < minDistanceFromClosestCell * vehicle.size / 2)
                 {
-                    hitted.transform.parent.position = new Vector3(moveTo.x, (0.5f * vehicle.size), moveTo.z);
+                    hitted.transform.parent.position = new Vector3(moveTo.x, (spawnVehicleInstance.vehicleYOffset * vehicle.size), moveTo.z);
                     if (originalPosition[0] != vehicle.startPosition[0] || originalPosition[1] != vehicle.startPosition[1])
                     {
                         gameDataInstance.moved++;
@@ -124,12 +128,12 @@ public class VehicleMovement : MonoBehaviour
         {
             timeElapsed += Time.deltaTime;
             float t = timeElapsed / moveDuration;
-            vehicleToMove.transform.position = Vector3.Lerp(vehicleToMove.transform.position, new Vector3(moveTo.x, (0.5f * vehicle.size), moveTo.z), t);
+            vehicleToMove.transform.position = Vector3.Lerp(vehicleToMove.transform.position, new Vector3(moveTo.x, (spawnVehicleInstance.vehicleYOffset * vehicle.size), moveTo.z), t);
             yield return null;
         }
 
-        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)moveTo.x / 3, (int)moveTo.z / 3 }, boardInstance.board, false);
+        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)(moveTo.x / spawnGridInstance.distance), (int)(moveTo.z / spawnGridInstance.distance) }, boardInstance.board, false);
 
-        vehicleToMove.transform.position = new Vector3(moveTo.x, (0.5f * vehicle.size), moveTo.z);
+        vehicleToMove.transform.position = new Vector3(moveTo.x, (spawnVehicleInstance.vehicleYOffset * vehicle.size), moveTo.z);
     }
 }

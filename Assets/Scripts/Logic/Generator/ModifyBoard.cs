@@ -5,18 +5,22 @@ public class ModifyBoard : MonoBehaviour
 {
     public void InsertVehicle(Vehicle vehicle, int[,] board)
     {
+        Debug.Log(vehicle.ToString());
         List<int[]> position = vehicle.GetPosition();
         for (int x = 0; x < position.Count; x++)
         {
+            Debug.Log("insert point:" +  position[x][0] + ", " + position[x][1]);
             board[position[x][0], position[x][1]] = vehicle.id;
         }
     }
 
     public void RemoveVehicle(Vehicle vehicle, int[,] board)
     {
+        Debug.Log(vehicle.ToString());
         List<int[]> position = vehicle.GetPosition();
         for (int x = 0; x < position.Count; x++)
         {
+            Debug.Log("delete point:" + position[x][0] + ", " + position[x][1]);
             board[position[x][0], position[x][1]] = 0;
         }
     }
