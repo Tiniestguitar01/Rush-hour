@@ -14,6 +14,8 @@ public class VehicleAI : MonoBehaviour
 
     float timeSinceStop = 0;
 
+    public float timeUntilDestroy = 30f;
+
     private void Start()
     {
         startPosition = transform.position;
@@ -52,7 +54,7 @@ public class VehicleAI : MonoBehaviour
         if(stopped == true)
         {
             timeSinceStop += Time.deltaTime;
-            if (timeSinceStop > 20f)
+            if (timeSinceStop > timeUntilDestroy)
             {
                 Destroy(gameObject);
             }

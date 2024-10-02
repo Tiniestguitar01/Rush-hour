@@ -8,6 +8,17 @@ public class SpawnVehicles : MonoBehaviour
 
     public List<GameObject> vehicleGOs = new List<GameObject>();
 
+    public float vehicleYOffset = 0.55f;
+
+    SpawnGrid spawnGridInstance;
+    Board boardInstance;
+
+    private void Start()
+    {
+        spawnGridInstance = InstanceCreator.GetSpawnGrid();
+        boardInstance = InstanceCreator.GetBoard();
+    }
+
     public void Spawn()
     {
         List<Vehicle> vehicles = InstanceCreator.GetPuzzleGenerator().vehicles;
@@ -41,7 +52,7 @@ public class SpawnVehicles : MonoBehaviour
             clone.name = id.ToString();
             clone.transform.parent = holder.transform;
             clone.AddComponent<VehicleComponent>().Init(vehicle.id, vehicle.size, vehicle.startPosition, vehicle.direction);
-            holder.transform.position = new Vector3(vehicle.startPosition[0] * 3.5f, (0.55f * vehicle.size), vehicle.startPosition[1] * 3.5f);
+            holder.transform.position = new Vector3(vehicle.startPosition[0] * spawnGridInstance.distance + (boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset, (vehicleYOffset * vehicle.size), vehicle.startPosition[1] * spawnGridInstance.distance + (boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset);
             clone.transform.localPosition = -new Vector3((int)vehicle.direction == 0 ? -1 : 0, 0, (int)vehicle.direction == 1 ? -1 : 0) * vehicle.size * 1f;
             clone.transform.rotation = Quaternion.Euler(0, -90 * (int)vehicle.direction + 180, 0);
         }
