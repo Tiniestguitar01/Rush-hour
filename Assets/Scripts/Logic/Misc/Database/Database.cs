@@ -3,16 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mono.Data.Sqlite;
 using System.Data;
+using Codice.Client.Common;
+using UnityEngine.Assertions;
 
 public class Database : MonoBehaviour
 {
-    string databaseName = "URI=file:RushHour.db";
-    public List<Result> results = new List<Result>();
+    public string databaseName = "URI=file:RushHour.db";
+    public User loggedInUser;
+
+    [HideInInspector]
+    public UserHandler userHandler;
+    [HideInInspector]
+    public ResultHandler resultHandler;
+    [HideInInspector]
+    public SettingHandler settingHandler;
 
     void Awake()
     {
         CreateDatabase();
-        GetResultsByBoardSize(6);
+        userHandler = GetComponent<UserHandler>();
+        resultHandler = GetComponent<ResultHandler>();
+        settingHandler = GetComponent<SettingHandler>();
     }
 
     public void CreateDatabase()
@@ -23,49 +34,15 @@ public class Database : MonoBehaviour
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = "CREATE TABLE IF NOT EXISTS `Result` (`difficulty` INT,`board_size` INT,`time` FLOAT,`moved` INT,PRIMARY KEY (`difficulty`,`board_size`));";
+                string resultTable = "CREATE TABLE IF NOT EXISTS `Result` (`id` INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,`difficulty` INT,`board_size` INT,`time` FLOAT,`moved` INT);";
+                string userTable = "CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,`username` VARCHAR(255),`password` VARCHAR(255));";
+                string settingTable = "CREATE TABLE IF NOT EXISTS `Setting` (`id` INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,`name` VARCHAR(255),`password` VARCHAR(255));";
+                string userResultTable = "CREATE TABLE IF NOT EXISTS `User_Result` (`user_id` INT,`result_id` INT,PRIMARY KEY (`user_id`,`result_id`));";
+                string userSettingTable = "CREATE TABLE IF NOT EXISTS `User_Setting` (`user_id` INT,`setting_id` INT,PRIMARY KEY (`user_id`,`setting_id`));";
+                string insertGuest = "INSERT OR REPLACE INTO `User` (username, password) VALUES ('guest', 'pass');";
+                command.CommandText = resultTable + userTable + settingTable + userResultTable + userSettingTable + insertGuest;
                 command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-    }
-
-    public void AddResult(Result result)
-    {
-        using (var connection = new SqliteConnection(databaseName))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "INSERT OR REPLACE INTO `Result` (difficulty, board_size, time, moved)  VALUES ('" + result.difficulty + "','" + result.boardSize + "','" + result.time + "', '" + result.moved + "' );";
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-    }
-
-    public void GetResultsByBoardSize(int size)
-    {
-        results.Clear();
-        using (var connection = new SqliteConnection(databaseName))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM `Result` WHERE board_size = '" + size + "';";
-                using (IDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Result result = new Result(int.Parse(reader["difficulty"].ToString()), int.Parse(reader["board_size"].ToString()), float.Parse(reader["time"].ToString()), int.Parse(reader["moved"].ToString()));
-                        results.Add(result);
-                    }
-                    reader.Close();
-                }
+                loggedInUser = new User(1,"guest", "pass");
             }
 
             connection.Close();
