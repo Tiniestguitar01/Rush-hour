@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
 using System.Linq;
+using UnityEngine.UIElements;
+using UnityEditor.PackageManager.Requests;
 
 public enum Menu
 {
@@ -15,6 +17,9 @@ public enum Menu
     Loading = 4,
     Options = 5,
     GameOver = 6,
+    Login = 7,
+    Register = 8,
+    Leaderboard = 9,
 }
 public class UIManager : MonoBehaviour
 {
@@ -29,12 +34,31 @@ public class UIManager : MonoBehaviour
     public Menu previousMenu;
 
     [Header("DifficultyUI")]
-    public Slider boardSizeSlider;
+    public UnityEngine.UI.Slider boardSizeSlider;
     public List<TMP_Text> PRTexts;
 
     [Header("GameOverUI")]
     public TMP_Text TimeText;
     public TMP_Text MovesText;
+
+    [Header("LoginUI")]
+    public TMP_InputField loginUserNameInput;
+    public TMP_InputField loginPasswordInput;
+
+    [Header("RegisterUI")]
+    public TMP_InputField registerUserNameInput;
+    public TMP_InputField registerPasswordInput;
+
+    [Header("LeaderboardUI")]
+    public UnityEngine.UI.Slider leaderboardBoardSizeSlider;
+    public TMP_Dropdown difficultyDropdown;
+    public Transform content;
+    public GameObject Record;
+    List<GameObject> instantiatedRecords;
+
+    [Header("MenuUI")]
+    public GameObject LoginButton;
+    public GameObject LogoutButton;
 
 
     GameData gameDataInstance;
@@ -43,6 +67,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        instantiatedRecords = new List<GameObject>();
         gameDataInstance = InstanceCreator.GetGameData();
         databaseInstance = InstanceCreator.GetDatabase();
         SetMenuActive(Menu.Menu);
@@ -120,6 +145,65 @@ public class UIManager : MonoBehaviour
         SetMenuActive(Menu.Options);
     }
 
+    public void StartToLogin()
+    {
+        SetMenuActive(Menu.Login);
+    }
+
+    public void Login()
+    {
+        bool result = databaseInstance.userHandler.LoginUser(new User(loginUserNameInput.text,loginPasswordInput.text));
+        if(result)
+        {
+            LoginButton.SetActive(false);
+            LogoutButton.SetActive(true);
+            SetMenuActive(Menu.Menu);
+        }
+    }
+
+    public void Logout()
+    {
+        databaseInstance.userHandler.LogoutUser();
+        LoginButton.SetActive(true);
+        LogoutButton.SetActive(false);
+    }
+
+    public void StartToRegister()
+    {
+        SetMenuActive(Menu.Register);
+    }
+    public void Register()
+    {
+        bool result = databaseInstance.userHandler.RegisterUser(new User(registerUserNameInput.text, registerPasswordInput.text));
+        if(result)
+        {
+            SetMenuActive(Menu.Menu);
+        }
+    }
+
+    public void StartToLeaderboard()
+    {
+        SetMenuActive(Menu.Leaderboard);
+    }
+
+    public void GetLeaderBoard()
+    {
+        for (int i = 0; i < instantiatedRecords.Count; i++)
+        {
+            Destroy(instantiatedRecords[i]);
+        }
+        instantiatedRecords.Clear();
+
+        List<Result> results = databaseInstance.resultHandler.GetResultsByBoardSizeAndDifficulty(difficultyDropdown.value + 1, (int)leaderboardBoardSizeSlider.value);
+
+        for (int i = 0; i < instantiatedRecords.Count; i++)
+        {
+            GameObject record = Instantiate(Record);
+            record.transform.parent = content;
+            instantiatedRecords.Add(record);
+        }
+    }
+
     public void Quit()
     {
         Application.Quit();
@@ -146,11 +230,11 @@ public class UIManager : MonoBehaviour
     public void BoardSizeSliderChange()
     {
         gameDataInstance.boardSize = (int)boardSizeSlider.value;
-        databaseInstance.GetResultsByBoardSize(gameDataInstance.boardSize);
+        List<Result> results = databaseInstance.resultHandler.GetResultsByBoardSize(gameDataInstance.boardSize);
 
         for(int difficulty = 1; difficulty <= 4; difficulty++)
         {
-            Result result = databaseInstance.results.Find(res => res.difficulty == difficulty);
+            Result result = results.Find(res => res.difficulty == difficulty);
             if(result != null)
             {
                 PRTexts[difficulty - 1].text = "Personal best\nTime: " + gameDataInstance.GetTimeInString(result.time) + "\nMoves: " + result.moved;

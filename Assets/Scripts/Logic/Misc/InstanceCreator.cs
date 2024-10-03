@@ -39,7 +39,7 @@ public class InstanceCreator : MonoBehaviour
     }
     public static Database GetDatabase()
     {
-        return GameObject.Find("MiscLogicManager").GetComponent<Database>();
+        return GameObject.Find("Database").GetComponent<Database>();
     }
     public static UIManager GetUIManager()
     {
