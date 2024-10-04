@@ -5,18 +5,22 @@ public class ModifyBoard : MonoBehaviour
 {
     public void InsertVehicle(Vehicle vehicle, int[,] board)
     {
+        Debug.Log(vehicle.ToString());
         List<int[]> position = vehicle.GetPosition();
         for (int x = 0; x < position.Count; x++)
         {
+            Debug.Log("insert point:" +  position[x][0] + ", " + position[x][1]);
             board[position[x][0], position[x][1]] = vehicle.id;
         }
     }
 
     public void RemoveVehicle(Vehicle vehicle, int[,] board)
     {
+        Debug.Log(vehicle.ToString());
         List<int[]> position = vehicle.GetPosition();
         for (int x = 0; x < position.Count; x++)
         {
+            Debug.Log("delete point:" + position[x][0] + ", " + position[x][1]);
             board[position[x][0], position[x][1]] = 0;
         }
     }
@@ -38,23 +42,23 @@ public class ModifyBoard : MonoBehaviour
 
             Result result = new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved);
 
-            database.GetResultsByBoardSize(board.GetLength(0));
+            List<Result> results = database.resultHandler.GetResultsByBoardSize(board.GetLength(0));
 
-            if(database.results.Count >= (int)gameData.difficulty && database.results[(int)gameData.difficulty - 1] != null)
+            if(results.Count >= (int)gameData.difficulty && results[(int)gameData.difficulty - 1] != null)
             {
-                if (database.results[(int)gameData.difficulty - 1].moved > gameData.prevMoved)
+                if (results[(int)gameData.difficulty - 1].moved > gameData.prevMoved)
                 {
-                    database.AddResult(new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
+                    database.resultHandler.AddResult(new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
                 }
-                else if (database.results[(int)gameData.difficulty - 1].moved == gameData.prevMoved && database.results[(int)gameData.difficulty - 1].time > gameData.timer)
+                else if (results[(int)gameData.difficulty - 1].moved == gameData.prevMoved && results[(int)gameData.difficulty - 1].time > gameData.timer)
                 {
-                    database.AddResult(new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
+                    database.resultHandler.AddResult(new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
                 }
 
             }
             else
             {
-                database.AddResult(new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
+                database.resultHandler.AddResult(new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
             }
 
             uIManager.SetMenuActive(Menu.GameOver);
