@@ -36,8 +36,9 @@ public class Solver : MonoBehaviour
         }
 
         graph.openList.Add(firstNode);
+
         int steps = 0;
-        while (graph.openList.Count != 0 && steps < 1000)
+        while (graph.openList.Count != 0 && steps < 100)
         {
             graph.openList.Sort();
             Node bestNode = graph.openList.First();
@@ -97,13 +98,19 @@ public class Solver : MonoBehaviour
 
         Node node = resultNode;
 
-        while (node != null)
+        while (node.parent != null)
         {
             solution.Add(node);
             node = node.parent;
         }
 
         solution.Reverse();
+
+        for (int nodeIndex = 0; nodeIndex < solution.Count; nodeIndex++)
+        {
+            Debug.Log(solution[nodeIndex].vehicle.ToString());
+            puzzleGeneratorInstance.PrintBoard(solution[nodeIndex].board);
+        }
 
         StartCoroutine(Move(solution));
 
@@ -112,8 +119,10 @@ public class Solver : MonoBehaviour
 
     IEnumerator Move(List<Node> solution)
     {
-        for (int nodeIndex = 1; nodeIndex < solution.Count; nodeIndex++)
+        for (int nodeIndex = 0; nodeIndex < solution.Count; nodeIndex++)
         {
+            Debug.Log("MOveTo");
+            Debug.Log(solution[nodeIndex].vehicle.startPosition[0] + ", " + solution[nodeIndex].vehicle.startPosition[1]);
             yield return InstanceCreator.GetVehicleMovement().MoveTo(solution[nodeIndex].vehicle.id, solution[nodeIndex].vehicle.startPosition);
         }
     }

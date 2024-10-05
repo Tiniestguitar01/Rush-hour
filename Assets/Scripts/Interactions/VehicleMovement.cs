@@ -1,7 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Playables;
+using UnityEngine.UIElements;
 
 
 public class VehicleMovement : MonoBehaviour
@@ -12,6 +13,7 @@ public class VehicleMovement : MonoBehaviour
     Vector3 DirectionFromCarOrigin;
     Vector3 startHitPoint;
     Vector3 moveTo;
+    List<GameObject> outlinedCells;
 
     public LayerMask carLayer;
     public LayerMask exceptCarLayer;
@@ -24,7 +26,7 @@ public class VehicleMovement : MonoBehaviour
     SpawnVehicles spawnVehicleInstance;
 
     float moveDuration = 0.5f;
-    float minDistanceFromClosestCell = 1.1f;
+    float minDistanceFromClosestCell = 2f; // 1.1f
 
     void Start()
     {
@@ -53,7 +55,22 @@ public class VehicleMovement : MonoBehaviour
                     startHitPoint = hit.point;
                     vehicle.GetMovablePosition(boardInstance.board);
 
+                    outlinedCells = new List<GameObject>();
+
+                    foreach (int[] position in vehicle.possibleMoves)
+                    {
+                        foreach(GameObject cell in spawnGridInstance.instantiatedCells)
+                        {
+                            if(cell.transform.position == boardInstance.BoardCoordinateToWordSpace(position))
+                            {
+                                cell.GetComponent<Outline>().enabled = true;
+                                outlinedCells.Add(cell);
+                            }
+                        }
+                    }
+
                     originalPosition = (int[])vehicle.startPosition.Clone();
+                    hitted.GetComponent<Outline>().enabled = true;
                 }
             }
             else if (hitted != null && (Input.GetMouseButton(0)))
@@ -84,6 +101,11 @@ public class VehicleMovement : MonoBehaviour
             }
             else if (hitted != null)
             {
+                foreach (GameObject cell in outlinedCells)
+                {
+                    cell.GetComponent<Outline>().enabled = false;
+                }
+
                 //Correction if not moved to a spot
                 Vector3 moveTo = boardInstance.BoardCoordinateToWordSpace(vehicle.possibleMoves[0]);
                 float minDistance = Vector3.Distance(hitted.transform.parent.position, moveTo);
@@ -109,6 +131,7 @@ public class VehicleMovement : MonoBehaviour
                     {
                         gameDataInstance.moved++;
                     }
+                    hitted.GetComponent<Outline>().enabled = false;
                     hitted = null;
                 }
             }
@@ -132,7 +155,7 @@ public class VehicleMovement : MonoBehaviour
             yield return null;
         }
 
-        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)(moveTo.x / spawnGridInstance.distance), (int)(moveTo.z / spawnGridInstance.distance) }, boardInstance.board, false);
+        InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)((moveTo.x - ((boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset)) / spawnGridInstance.distance), (int)((moveTo.z - ((boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset)) / spawnGridInstance.distance) }, boardInstance.board, true);
 
         vehicleToMove.transform.position = new Vector3(moveTo.x, (spawnVehicleInstance.vehicleYOffset * vehicle.size), moveTo.z);
     }

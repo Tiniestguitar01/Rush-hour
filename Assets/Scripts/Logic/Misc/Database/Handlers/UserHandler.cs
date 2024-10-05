@@ -5,17 +5,42 @@ using System.Security.Cryptography;
 using System.Text;
 using System;
 
+public class Error
+{
+    public bool isSuccessful;
+    public string message;
+    public Error(bool isSuccessful, string message)
+    {
+        this.isSuccessful = isSuccessful;
+        this.message = message;
+    }
+}
+
 public class UserHandler : MonoBehaviour
 {
     Database database;
+    Settings settings;
 
     void Start()
     {
         database = InstanceCreator.GetDatabase();
+        settings = InstanceCreator.GetSettings();
+        GetUsers();
+        GetUserResults();
     }
 
-    public bool RegisterUser(User user)
+    public Error RegisterUser(User user)
     {
+        if (user.username.Length < 5)
+        {
+            return new Error(false, "Username is too short!\nUse at least 5 character!");
+        }
+
+        if (user.password.Length < 10)
+        {
+            return new Error(false, "Password is too short!\nUse at least 10 character!");
+        }
+
         using (var connection = new SqliteConnection(database.databaseName))
         {
             connection.Open();
@@ -24,7 +49,7 @@ public class UserHandler : MonoBehaviour
             if(checkUser != null)
             {
                 connection.Close();
-                return false;
+                return new Error(false, "User already exists!");
             }
 
             using (var command = connection.CreateCommand())
@@ -34,18 +59,29 @@ public class UserHandler : MonoBehaviour
                 command.Parameters.AddWithValue("@password", HashPassword(user.password));
                 command.ExecuteNonQuery();
 
+                command.CommandText = "SELECT COUNT(*) AS count FROM `User`;";
+                command.ExecuteNonQuery();
+                int id = 0;
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        id = int.Parse(reader["count"].ToString());
+                    }
+                    reader.Close();
+                }
+
                 connection.Close();
 
                 database.loggedInUser = user;
-                return true;
+                database.loggedInUser.id = id;
+                return new Error(true, "Registration was successful!");
             }
 
         }
-
-        return false;
     }
 
-    public bool LoginUser(User user)
+    public Error LoginUser(User user)
     {
         using (var connection = new SqliteConnection(database.databaseName))
         {
@@ -55,19 +91,21 @@ public class UserHandler : MonoBehaviour
             if (checkUser == null)
             {
                 connection.Close();
-                return false;
+                return new Error(false, "Cannot find a user with this name!");
             }
 
             if(checkUser.username == user.username && checkUser.password == HashPassword(user.password))
             {
                 connection.Close();
-                database.loggedInUser = user;
-                return true;
+                database.loggedInUser = checkUser;
+                settings.GetSettings();
+                return new Error(true, "You are logged in!");
             }
-
+            else
+            {
+                return new Error(false, "Incorrect username or password!");
+            }
         }
-
-        return false;
     }
 
     public void LogoutUser()
@@ -90,6 +128,7 @@ public class UserHandler : MonoBehaviour
                 {
                     while (reader.Read())
                     {
+                        Debug.Log(int.Parse(reader["id"].ToString()));
                         user = new User(int.Parse(reader["id"].ToString()), reader["username"].ToString(), reader["password"].ToString());
                     }
                     reader.Close();
@@ -110,6 +149,60 @@ public class UserHandler : MonoBehaviour
 
             byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
             return Convert.ToBase64String(hashedBytes);
+        }
+    }
+
+    public User GetUsers()
+    {
+        User user = null;
+
+        using (var connection = new SqliteConnection(database.databaseName))
+        {
+            connection.Open();
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT * FROM `User`;";
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    Debug.Log("Users");
+                    while (reader.Read())
+                    {
+                        Debug.Log("User: {" + reader["id"].ToString() + ", " + reader["username"].ToString() + ", " + reader["password"].ToString() + "}");
+                        user = new User(int.Parse(reader["id"].ToString()), reader["username"].ToString(), reader["password"].ToString());
+                    }
+                    reader.Close();
+                }
+            }
+
+            connection.Close();
+        }
+
+        return user;
+    }
+
+    public void GetUserResults()
+    {
+
+        using (var connection = new SqliteConnection(database.databaseName))
+        {
+            connection.Open();
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT * FROM `User_Result`;";
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    Debug.Log("UserResults");
+                    while (reader.Read())
+                    {
+                        Debug.Log("UserResults: {" + reader["user_id"].ToString() + ", " + reader["result_id"].ToString() + "}");
+                    }
+                    reader.Close();
+                }
+            }
+
+            connection.Close();
         }
     }
 }

@@ -125,6 +125,12 @@ public class Vehicle : IComparable<Vehicle>
 
     public override string ToString()
     {
-        return "Vehicle: {Id: " + id + ", Size: " + size + ", Startposition: {" + startPosition[0] + "," + startPosition[1] + "}, Direction: " + direction + ", backSpace: " + maxDistanceBackward + ", frontSpace: " + maxDistanceForward + "}";
+        string possible = "";
+        for(int i = 0;i<possibleMoves.Count ; i++)
+        {
+            possible += "{" + possibleMoves[i][0].ToString() + "," + possibleMoves[i][1].ToString() + "} ";
+        }
+
+        return "Vehicle: {Id: " + id + ", Size: " + size + ", Startposition: {" + startPosition[0] + "," + startPosition[1] + "}, Direction: " + direction + ", backSpace: " + maxDistanceBackward + ", frontSpace: " + maxDistanceForward + "}" + "\npossible moves: [" + possible + "]";
     }
 }

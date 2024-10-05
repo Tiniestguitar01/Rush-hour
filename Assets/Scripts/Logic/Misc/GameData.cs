@@ -43,9 +43,9 @@ public class GameData : MonoBehaviour
                 timer += Time.deltaTime;
             }
 
-            uiManagerInstance.TimerText.text = GetTimeInString(timer);
+            uiManagerInstance.gameUI.TimerText.text = GetTimeInString(timer);
 
-            uiManagerInstance.MovedText.text = "Moved: " + moved;
+            uiManagerInstance.gameUI.MovedText.text = "Moved: " + moved;
         }
         else
         {

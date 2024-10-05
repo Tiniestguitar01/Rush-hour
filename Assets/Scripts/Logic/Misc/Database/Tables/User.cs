@@ -16,7 +16,7 @@ public class User
         this.password = password;
     }
 
-    public User(int id,string username, string password)
+    public User(int id, string username, string password)
     {
         this.id = id;
         this.username = username;

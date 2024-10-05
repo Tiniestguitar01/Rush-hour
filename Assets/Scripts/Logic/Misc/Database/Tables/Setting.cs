@@ -5,20 +5,14 @@ using UnityEngine;
 
 public class Setting
 {
-    public int id;
+    public int userId;
     public string name;
     public string value;
 
-    public Setting(string name, string value)
+    public Setting(string name, string value,int userId)
     {
         this.name = name;
         this.value = value;
-    }
-
-    public Setting(int id,string name, string value)
-    {
-        this.id = id;
-        this.name = name;
-        this.value = value;
+        this.userId = userId;
     }
 }
