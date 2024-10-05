@@ -10,6 +10,8 @@ public class SpawnGrid : MonoBehaviour
 
     Board boardInstance;
 
+    public Material goalCellMaterial;
+
     public List<GameObject> instantiatedCells;
     private void Start()
     {
@@ -22,7 +24,12 @@ public class SpawnGrid : MonoBehaviour
         {
             for (float z = (boardInstance.maxBoardSize - boardInstance.size) * offset; z < boardInstance.size * distance + (boardInstance.maxBoardSize - boardInstance.size) * offset; z += distance)
             {
-                instantiatedCells.Add(Instantiate(cell, new Vector3(x, 0, z), Quaternion.identity));
+                GameObject cellGO = Instantiate(cell, new Vector3(x, 0, z), Quaternion.identity);
+                if (x == (boardInstance.maxBoardSize - boardInstance.size) * offset && z == ((boardInstance.maxBoardSize - boardInstance.size) * offset) + (2 * distance))
+                {
+                    cellGO.GetComponent<Renderer>().material = goalCellMaterial;
+                }
+                instantiatedCells.Add(cellGO);
             }
         }
     }

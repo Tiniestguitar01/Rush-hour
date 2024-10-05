@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -46,18 +45,20 @@ public class PuzzleGenerator : MonoBehaviour
         boardInstance.GenerateBoard();
         spawnGridInstance.Spawn();
 
-        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(Mathf.Min(2 * (int)((int)gameDataInstance.difficulty / 1.5f), boardInstance.size - 2), boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(Mathf.Max(2 * (int)((int)gameDataInstance.difficulty / 1.5f), boardInstance.size - 2), boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
 
-        for (int i = 0; i < 2 * (int)gameDataInstance.difficulty; i++)
+        for (int i = 0; i < (int)gameDataInstance.difficulty; i++)
         {
             boardInstance.GetFreeSpaces();
             await GenerateVehicles();
         }
 
-        while (boardInstance.places.Count > 0)
+        int iteration = 0;
+        while (boardInstance.places.Count > 0 && ((int)gameDataInstance.difficulty * boardInstance.size - 2) == iteration)
         {
             int random = Random.Range(0, boardInstance.places.Count);
             await InsertVehicle(CreateVehicle(vehicles.Count + 1, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
+            iteration++;
         }
 
         /*Graph graph = new Graph();
@@ -106,7 +107,7 @@ public class PuzzleGenerator : MonoBehaviour
     public async Task GenerateVehicles()
     {
         int id = vehicles.Count - 1;
-        for (int i = 0; i < 4 * (int)gameDataInstance.difficulty; i++)
+        for (int i = 0; i < boardInstance.size * (int)gameDataInstance.difficulty; i++)
         {
             Place placeForward = boardInstance.GetPlace(vehicles[id], true);
 

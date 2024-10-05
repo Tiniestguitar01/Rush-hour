@@ -1,17 +1,21 @@
 using Mono.Data.Sqlite;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
-using static Codice.Client.Common.EventTracking.TrackFeatureUseEvent.Features.DesktopGUI.Filters;
+using UnityEngine.Rendering;
 
 public class SettingHandler : MonoBehaviour
 {
     Database database;
 
-    void Start()
+    private void Awake()
     {
         database = InstanceCreator.GetDatabase();
+    }
+
+    void Start()
+    {
+        GetSettings();
     }
 
     public void AddSetting(Setting setting)
@@ -22,14 +26,10 @@ public class SettingHandler : MonoBehaviour
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT OR REPLACE INTO `Setting` (name, value)  VALUES (@name, @value);";
+                command.CommandText = "INSERT OR REPLACE INTO `Setting` (name, value,user_id)  VALUES (@name, @value, @user_id);";
                 command.Parameters.AddWithValue("@name", setting.name);
                 command.Parameters.AddWithValue("@value", setting.value);
-                command.ExecuteNonQuery();
-
-                command.CommandText = "INSERT OR REPLACE INTO `User_Setting` (user_id, setting_id) VALUES (@user_id, @setting_id);";
                 command.Parameters.AddWithValue("@user_id", database.loggedInUser.id);
-                command.Parameters.AddWithValue("@setting_id", setting.id);
                 command.ExecuteNonQuery();
             }
 
@@ -37,23 +37,22 @@ public class SettingHandler : MonoBehaviour
         }
     }
 
-    public List<Setting> GetUserSettings(User user)
+    public Dictionary<string,string> GetUserSettings(User user)
     {
-        List<Setting> settings = new List<Setting>();
+        Dictionary < string,string > settings = new Dictionary<string, string>();
         using (var connection = new SqliteConnection(database.databaseName))
         {
             connection.Open();
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = "SELECT name, value FROM `Setting` INNER JOIN `User_Setting` ON User_Setting.setting_id = Setting.id WHERE User_Setting.user_id = @user_id;";
+                command.CommandText = "SELECT name, value FROM `Setting` WHERE user_id = @user_id;";
                 command.Parameters.AddWithValue("@user_id", database.loggedInUser.id);
                 using (IDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        Setting setting = new Setting(int.Parse(reader["id"].ToString()),reader["name"].ToString(), reader["value"].ToString());
-                        settings.Add(setting);
+                        settings[reader["name"].ToString()] = reader["value"].ToString();
                     }
                     reader.Close();
                 }
@@ -63,5 +62,34 @@ public class SettingHandler : MonoBehaviour
         }
 
         return settings;
+    }
+
+    public Setting GetSettings()
+    {
+        Setting setting = null;
+
+        using (var connection = new SqliteConnection(database.databaseName))
+        {
+            connection.Open();
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT * FROM `Setting`;";
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    Debug.Log("Setting");
+                    while (reader.Read())
+                    {
+                        Debug.Log("Setting: {" + reader["user_id"].ToString() + ", " + reader["name"].ToString() + ", " + reader["value"].ToString() + "}");
+                        setting = new Setting(reader["name"].ToString(), reader["value"].ToString(), int.Parse(reader["user_id"].ToString()));
+                    }
+                    reader.Close();
+                }
+            }
+
+            connection.Close();
+        }
+
+        return setting;
     }
 }

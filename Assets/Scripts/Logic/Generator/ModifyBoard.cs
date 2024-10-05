@@ -37,7 +37,7 @@ public class ModifyBoard : MonoBehaviour
             GameData gameData = InstanceCreator.GetGameData();
             Database database = InstanceCreator.GetDatabase();
 
-            gameData.prevMoved = gameData.moved;
+            gameData.prevMoved = gameData.moved + 1;
             gameData.prevTimer = gameData.GetTimeInString(gameData.timer);
 
             Result result = new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved);
@@ -48,11 +48,12 @@ public class ModifyBoard : MonoBehaviour
             {
                 if (results[(int)gameData.difficulty - 1].moved > gameData.prevMoved)
                 {
-                    database.resultHandler.AddResult(new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
+                    database.resultHandler.AddResult(new Result(results[(int)gameData.difficulty - 1].id, (int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
                 }
                 else if (results[(int)gameData.difficulty - 1].moved == gameData.prevMoved && results[(int)gameData.difficulty - 1].time > gameData.timer)
                 {
-                    database.resultHandler.AddResult(new Result((int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
+                    Debug.Log("jeeeeeeeeeeee time");
+                    database.resultHandler.AddResult(new Result(results[(int)gameData.difficulty - 1].id, (int)gameData.difficulty, board.GetLength(0), gameData.timer, gameData.prevMoved));
                 }
 
             }
