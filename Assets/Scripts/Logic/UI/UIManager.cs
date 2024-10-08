@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
-using System.Linq;
-using UnityEngine.UIElements;
-using UnityEditor.PackageManager.Requests;
 
 public enum Menu
 {
@@ -26,40 +24,21 @@ public class UIManager : MonoBehaviour
     [Header("Menus")]
     public List<GameObject> menus;
 
-    [Header("GameUI")]
-    public TMP_Text TimerText;
-    public TMP_Text MovedText;
     public int state = 0; //0=menu,1=game
-    public bool paused = false;
     public Menu previousMenu;
 
-    [Header("DifficultyUI")]
-    public UnityEngine.UI.Slider boardSizeSlider;
-    public List<TMP_Text> PRTexts;
-
-    [Header("GameOverUI")]
-    public TMP_Text TimeText;
-    public TMP_Text MovesText;
-
-    [Header("LoginUI")]
-    public TMP_InputField loginUserNameInput;
-    public TMP_InputField loginPasswordInput;
-
-    [Header("RegisterUI")]
-    public TMP_InputField registerUserNameInput;
-    public TMP_InputField registerPasswordInput;
-
-    [Header("LeaderboardUI")]
-    public UnityEngine.UI.Slider leaderboardBoardSizeSlider;
-    public TMP_Dropdown difficultyDropdown;
-    public Transform content;
-    public GameObject Record;
-    List<GameObject> instantiatedRecords;
-
-    [Header("MenuUI")]
-    public GameObject LoginButton;
-    public GameObject LogoutButton;
-
+    [HideInInspector]
+    public GameUI gameUI;
+    [HideInInspector]
+    public PauseUI pauseUI;
+    [HideInInspector]
+    public DifficultyUI difficultyUI;
+    [HideInInspector]
+    public GameOverUI gameOverUI;
+    [HideInInspector]
+    public UserHandleUI userHandleUI;
+    [HideInInspector]
+    public LeaderboardUI leaderboardUI;
 
     GameData gameDataInstance;
     Settings settingsInstance;
@@ -67,26 +46,13 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        instantiatedRecords = new List<GameObject>();
-        gameDataInstance = InstanceCreator.GetGameData();
-        databaseInstance = InstanceCreator.GetDatabase();
+        gameUI = GetComponent<GameUI>();
+        difficultyUI = GetComponent<DifficultyUI>();
+        gameOverUI = GetComponent<GameOverUI>();
+        userHandleUI = GetComponent<UserHandleUI>();
+        leaderboardUI = GetComponent<LeaderboardUI>();
+        pauseUI = GetComponent<PauseUI>();
         SetMenuActive(Menu.Menu);
-        gameDataInstance.boardSize = (int)boardSizeSlider.value;
-        boardSizeSlider.onValueChanged.AddListener(delegate { BoardSizeSliderChange(); });
-    }
-
-    void Update()
-    {
-        if(state == (int)Menu.Game || state == (int)Menu.Pause)
-        {
-            if(Input.GetKeyDown(KeyCode.Escape))
-            {
-                HandlePause();
-            }
-        }
-
-        TimeText.text = "Time: " + gameDataInstance.prevTimer;
-        MovesText.text = "Moved: " + gameDataInstance.prevMoved;
     }
 
     public void SetMenuActive(Menu menuCode)
@@ -101,13 +67,24 @@ public class UIManager : MonoBehaviour
 
         if (menuCode == Menu.Pause)
         {
-            paused = true;
+            pauseUI.paused = true;
             Time.timeScale = 0f;
         }
         else
         {
             Time.timeScale = 1f;
-            paused = false;
+            pauseUI.paused = false;
+        }
+
+        int i = 0;
+        while(menus[(int)menuCode].transform.GetChild(i).GetComponent<Button>() == null)
+        {
+            i++;
+        }
+        if(menus[(int)menuCode].transform.GetChild(i).gameObject.GetComponent<Button>() != null)
+        {
+            Debug.Log(i);
+            EventSystem.current.SetSelectedGameObject(menus[(int)menuCode].transform.GetChild(i).gameObject, new BaseEventData(EventSystem.current));
         }
     }
 
@@ -118,16 +95,8 @@ public class UIManager : MonoBehaviour
 
     public void StartToDifficulty()
     {
-        BoardSizeSliderChange();
+        difficultyUI.BoardSizeSliderChange();
         SetMenuActive(Menu.Difficulty);
-    }
-
-    public async Task<bool> StartGame()
-    {
-        await InstanceCreator.GetPuzzleGenerator().GeneratePuzzle();
-        SetMenuActive(Menu.Game);
-        gameDataInstance.StartTimer();
-        return await Task.FromResult(true);
     }
 
     public void BackToMenu()
@@ -150,100 +119,19 @@ public class UIManager : MonoBehaviour
         SetMenuActive(Menu.Login);
     }
 
-    public void Login()
-    {
-        bool result = databaseInstance.userHandler.LoginUser(new User(loginUserNameInput.text,loginPasswordInput.text));
-        if(result)
-        {
-            LoginButton.SetActive(false);
-            LogoutButton.SetActive(true);
-            SetMenuActive(Menu.Menu);
-        }
-    }
-
-    public void Logout()
-    {
-        databaseInstance.userHandler.LogoutUser();
-        LoginButton.SetActive(true);
-        LogoutButton.SetActive(false);
-    }
-
     public void StartToRegister()
     {
         SetMenuActive(Menu.Register);
     }
-    public void Register()
-    {
-        bool result = databaseInstance.userHandler.RegisterUser(new User(registerUserNameInput.text, registerPasswordInput.text));
-        if(result)
-        {
-            SetMenuActive(Menu.Menu);
-        }
-    }
 
     public void StartToLeaderboard()
     {
+        leaderboardUI.GetLeaderBoard();
         SetMenuActive(Menu.Leaderboard);
-    }
-
-    public void GetLeaderBoard()
-    {
-        for (int i = 0; i < instantiatedRecords.Count; i++)
-        {
-            Destroy(instantiatedRecords[i]);
-        }
-        instantiatedRecords.Clear();
-
-        List<UserResultDTO> results = databaseInstance.resultHandler.GetResultsByBoardSizeAndDifficulty(difficultyDropdown.value + 1, (int)leaderboardBoardSizeSlider.value);
-
-        for (int i = 0; i < results.Count; i++)
-        {
-            GameObject record = Instantiate(Record);
-            record.transform.parent = content;
-            record.GetComponent<TMP_Text>().text =results[i].username + ":" + "Moved: " + results[i].moved + ", Time:" + gameDataInstance.GetTimeInString(results[i].time);
-            instantiatedRecords.Add(record);
-        }
     }
 
     public void Quit()
     {
         Application.Quit();
-    }
-
-    public async void SetDifficulty(int difficulty)
-    {
-        gameDataInstance.difficulty = (Difficulty)difficulty;
-        await StartGame();
-    }
-
-    public void HandlePause()
-    {
-        if(paused == false)
-        {
-            SetMenuActive(Menu.Pause);
-        }
-        else
-        {
-            SetMenuActive(Menu.Game);
-        }
-    }
-
-    public void BoardSizeSliderChange()
-    {
-        gameDataInstance.boardSize = (int)boardSizeSlider.value;
-        List<Result> results = databaseInstance.resultHandler.GetResultsByBoardSize(gameDataInstance.boardSize);
-
-        for(int difficulty = 1; difficulty <= 4; difficulty++)
-        {
-            Result result = results.Find(res => res.difficulty == difficulty);
-            if(result != null)
-            {
-                PRTexts[difficulty - 1].text = "Personal best\nTime: " + gameDataInstance.GetTimeInString(result.time) + "\nMoves: " + result.moved;
-            }
-            else
-            {
-                PRTexts[difficulty - 1].text = "";
-            }
-        }
     }
 }
