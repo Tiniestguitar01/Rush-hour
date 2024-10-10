@@ -19,11 +19,12 @@ public class NodeForSolution : Node
 
     public override void EvaluateCost()
     {
-        for (int i = 0; i < board.GetLength(0); i++)
+        int boardSize = board.GetLength(0);
+        for (int i = 0; i < boardSize; i++)
         {
             if (board[i, 2] != 1 && board[i, 2] != 0)
             {
-                cost += board.GetLength(0);
+                cost += boardSize;
             }
 
             if (board[i, 2] == 1)
@@ -32,6 +33,10 @@ public class NodeForSolution : Node
                 break;
             }
         }
+
+        //int maxGreedyCost = ((boardSize - 2) * boardSize) + (boardSize - 2);
+        //float dijkstraWeight = cost/maxGreedyCost;
+
         cost += depth;
     }
 }
