@@ -44,6 +44,9 @@ public class UIManager : MonoBehaviour
     Settings settingsInstance;
     Database databaseInstance;
 
+    int currentInteractableIndex = 0;
+    public List<Selectable> interactableElements; 
+
     private void Start()
     {
         gameUI = GetComponent<GameUI>();
@@ -53,6 +56,17 @@ public class UIManager : MonoBehaviour
         leaderboardUI = GetComponent<LeaderboardUI>();
         pauseUI = GetComponent<PauseUI>();
         SetMenuActive(Menu.Menu);
+<<<<<<< HEAD
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Tab))
+        {
+            NavigateWithTab();
+        }
+=======
+>>>>>>> 4897b0c46eb732f28e09289841ccf9efbf69358d
     }
 
     public void SetMenuActive(Menu menuCode)
@@ -65,6 +79,21 @@ public class UIManager : MonoBehaviour
         menus[(int)menuCode].SetActive(true);
         state = (int)menuCode;
 
+        interactableElements.Clear();
+
+        if (menuCode != Menu.Loading)
+        {
+            foreach (Transform child in menus[(int)menuCode].transform.Find("Interactables").transform)
+            {
+                interactableElements.Add(child.gameObject.GetComponent<Selectable>());
+            }
+
+            if (interactableElements.Count > 0)
+            {
+                EventSystem.current.SetSelectedGameObject(interactableElements[0].gameObject);
+            }
+        }
+
         if (menuCode == Menu.Pause)
         {
             pauseUI.paused = true;
@@ -74,6 +103,8 @@ public class UIManager : MonoBehaviour
         {
             Time.timeScale = 1f;
             pauseUI.paused = false;
+<<<<<<< HEAD
+=======
         }
 
         int i = 0;
@@ -85,6 +116,7 @@ public class UIManager : MonoBehaviour
         {
             Debug.Log(i);
             EventSystem.current.SetSelectedGameObject(menus[(int)menuCode].transform.GetChild(i).gameObject, new BaseEventData(EventSystem.current));
+>>>>>>> 4897b0c46eb732f28e09289841ccf9efbf69358d
         }
     }
 
@@ -130,6 +162,21 @@ public class UIManager : MonoBehaviour
         SetMenuActive(Menu.Leaderboard);
     }
 
+<<<<<<< HEAD
+    public void NavigateWithTab()
+    {
+        currentInteractableIndex++;
+
+        if (currentInteractableIndex > interactableElements.Count - 1)
+        {
+            currentInteractableIndex = 0;
+        }
+
+        EventSystem.current.SetSelectedGameObject(interactableElements[currentInteractableIndex].gameObject);
+    }
+
+=======
+>>>>>>> 4897b0c46eb732f28e09289841ccf9efbf69358d
     public void Quit()
     {
         Application.Quit();
