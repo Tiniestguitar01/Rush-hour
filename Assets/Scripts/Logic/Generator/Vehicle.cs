@@ -56,18 +56,6 @@ public class Vehicle : IComparable<Vehicle>
 
         if (this.direction == Direction.Vertical)
         {
-            for (int coordinate = startPosition[0] + this.size; coordinate < size; coordinate++)
-            {
-                if (board[coordinate, startPosition[1]] == 0)
-                {
-                    possibleMoves.Add(new int[] { coordinate - this.size + 1, startPosition[1] });
-                    maxDistanceBackward++;
-                }
-                else
-                {
-                    break;
-                }
-            }
 
             for (int coordinate = startPosition[0] - 1; coordinate >= 0; coordinate--)
             {
@@ -81,14 +69,12 @@ public class Vehicle : IComparable<Vehicle>
                     break;
                 }
             }
-        }
-        else
-        {
-            for (int coordinate = startPosition[1] + this.size; coordinate < size; coordinate++)
+            
+            for (int coordinate = startPosition[0] + this.size; coordinate < size; coordinate++)
             {
-                if (board[startPosition[0], coordinate] == 0)
+                if (board[coordinate, startPosition[1]] == 0)
                 {
-                    possibleMoves.Add(new int[] { startPosition[0] , coordinate - this.size + 1});
+                    possibleMoves.Add(new int[] { coordinate - this.size + 1, startPosition[1] });
                     maxDistanceBackward++;
                 }
                 else
@@ -96,6 +82,9 @@ public class Vehicle : IComparable<Vehicle>
                     break;
                 }
             }
+        }
+        else
+        {
 
             for (int coordinate = startPosition[1] - 1; coordinate >= 0; coordinate--)
             {
@@ -103,6 +92,19 @@ public class Vehicle : IComparable<Vehicle>
                 {
                     possibleMoves.Add(new int[] { startPosition[0], coordinate });
                     maxDistanceForward++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
+            for (int coordinate = startPosition[1] + this.size; coordinate < size; coordinate++)
+            {
+                if (board[startPosition[0], coordinate] == 0)
+                {
+                    possibleMoves.Add(new int[] { startPosition[0] , coordinate - this.size + 1});
+                    maxDistanceBackward++;
                 }
                 else
                 {
@@ -125,6 +127,12 @@ public class Vehicle : IComparable<Vehicle>
 
     public override string ToString()
     {
-        return "Vehicle: {Id: " + id + ", Size: " + size + ", Startposition: {" + startPosition[0] + "," + startPosition[1] + "}, Direction: " + direction + ", backSpace: " + maxDistanceBackward + ", frontSpace: " + maxDistanceForward + "}";
+        string possible = "";
+        for(int i = 0;i<possibleMoves.Count ; i++)
+        {
+            possible += "{" + possibleMoves[i][0].ToString() + "," + possibleMoves[i][1].ToString() + "} ";
+        }
+
+        return "Vehicle: {Id: " + id + ", Size: " + size + ", Startposition: {" + startPosition[0] + "," + startPosition[1] + "}, Direction: " + direction + ", backSpace: " + maxDistanceBackward + ", frontSpace: " + maxDistanceForward + "}" + "\npossible moves: [" + possible + "]";
     }
 }

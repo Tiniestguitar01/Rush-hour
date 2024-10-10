@@ -36,13 +36,13 @@ public class Solver : MonoBehaviour
         }
 
         graph.openList.Add(firstNode);
-        int steps = 0;
-        while (graph.openList.Count != 0 && steps < 1000)
+        Node bestNode = graph.openList.First();
+        while (graph.openList.Count != 0 && bestNode.depth < 53)
         {
-            graph.openList.Sort();
-            Node bestNode = graph.openList.First();
+            //graph.openList.Sort();
+            bestNode = graph.openList.First();
 
-            graph.openList.RemoveAt(0);
+            graph.openList.Remove(graph.openList.First());
             graph.closedList.Add(bestNode);
 
             List<Node> children = bestNode.GetChildren();
@@ -70,8 +70,6 @@ public class Solver : MonoBehaviour
                     }
                 }
             }
-            steps++;
-            //Debug.Log("solver: "+ steps);
             await Task.Yield();
         }
         uiManagerInstance.SetMenuActive(Menu.Game);
@@ -97,13 +95,19 @@ public class Solver : MonoBehaviour
 
         Node node = resultNode;
 
-        while (node != null)
+        while (node.parent != null)
         {
             solution.Add(node);
             node = node.parent;
         }
 
         solution.Reverse();
+
+        for (int nodeIndex = 0; nodeIndex < solution.Count; nodeIndex++)
+        {
+            Debug.Log(solution[nodeIndex].vehicle.ToString());
+            puzzleGeneratorInstance.PrintBoard(solution[nodeIndex].board);
+        }
 
         StartCoroutine(Move(solution));
 
@@ -112,8 +116,9 @@ public class Solver : MonoBehaviour
 
     IEnumerator Move(List<Node> solution)
     {
-        for (int nodeIndex = 1; nodeIndex < solution.Count; nodeIndex++)
+        for (int nodeIndex = 0; nodeIndex < solution.Count; nodeIndex++)
         {
+            Debug.Log(solution[nodeIndex].vehicle.startPosition[0] + ", " + solution[nodeIndex].vehicle.startPosition[1]);
             yield return InstanceCreator.GetVehicleMovement().MoveTo(solution[nodeIndex].vehicle.id, solution[nodeIndex].vehicle.startPosition);
         }
     }
