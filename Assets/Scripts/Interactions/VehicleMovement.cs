@@ -54,22 +54,13 @@ public class VehicleMovement : MonoBehaviour
                     DirectionFromCarOrigin = hitted.transform.parent.position - hit.point;
                     startHitPoint = hit.point;
                     vehicle.GetMovablePosition(boardInstance.board);
+                    originalPosition = (int[])vehicle.startPosition.Clone();
 
                     outlinedCells = new List<GameObject>();
 
-                    foreach (int[] position in vehicle.possibleMoves)
-                    {
-                        foreach(GameObject cell in spawnGridInstance.instantiatedCells)
-                        {
-                            if(cell.transform.position == boardInstance.BoardCoordinateToWordSpace(position))
-                            {
-                                cell.GetComponent<Outline>().enabled = true;
-                                outlinedCells.Add(cell);
-                            }
-                        }
-                    }
-
-                    originalPosition = (int[])vehicle.startPosition.Clone();
+                    moveTo = boardInstance.BoardCoordinateToWordSpace(vehicle.possibleMoves[0]);
+                    GetOutlineCells();
+                    SetOutline();
                     hitted.GetComponent<Outline>().enabled = true;
                 }
             }
@@ -98,26 +89,17 @@ public class VehicleMovement : MonoBehaviour
                     }
                 }
 
+                if(Vector3.Distance(hitted.transform.parent.position, moveTo) > minDistanceFromClosestCell * vehicle.size / 2)
+                {
+                    GetClosestCell();
+                }
+
             }
             else if (hitted != null)
             {
                 foreach (GameObject cell in outlinedCells)
                 {
                     cell.GetComponent<Outline>().enabled = false;
-                }
-
-                //Correction if not moved to a spot
-                Vector3 moveTo = boardInstance.BoardCoordinateToWordSpace(vehicle.possibleMoves[0]);
-                float minDistance = Vector3.Distance(hitted.transform.parent.position, moveTo);
-
-                for (int pos = 0; pos < vehicle.possibleMoves.Count; pos++)
-                {
-                    Vector3 current = boardInstance.BoardCoordinateToWordSpace(vehicle.possibleMoves[pos]);
-                    if (Vector3.Distance(hitted.transform.parent.position, current) < minDistance)
-                    {
-                        minDistance = Vector3.Distance(hitted.transform.parent.position, current);
-                        moveTo = current;
-                    }
                 }
 
                 hitted.transform.parent.position = Vector3.Lerp(hitted.transform.parent.position, new Vector3(moveTo.x, (spawnVehicleInstance.vehicleYOffset * vehicle.size), moveTo.z), Vector3.Distance(hitted.transform.parent.position, moveTo));
@@ -158,5 +140,123 @@ public class VehicleMovement : MonoBehaviour
         InstanceCreator.GetModifyBoard().MoveVehicle(vehicle, new int[] { (int)((moveTo.x - ((boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset)) / spawnGridInstance.distance), (int)((moveTo.z - ((boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset)) / spawnGridInstance.distance) }, boardInstance.board, true);
 
         vehicleToMove.transform.position = new Vector3(moveTo.x, (spawnVehicleInstance.vehicleYOffset * vehicle.size), moveTo.z);
+    }
+
+    public void GetClosestCell()
+    {
+        if(Vector3.Distance(hitted.transform.parent.position, moveTo) > minDistanceFromClosestCell)
+        {
+            float minDistance = Vector3.Distance(hitted.transform.parent.position, moveTo);
+
+            for (int pos = 0; pos < vehicle.possibleMoves.Count; pos++)
+            {
+                Vector3 current = boardInstance.BoardCoordinateToWordSpace(vehicle.possibleMoves[pos]);
+                if (Vector3.Distance(hitted.transform.parent.position, current) < minDistance)
+                {
+                    minDistance = Vector3.Distance(hitted.transform.parent.position, current);
+                    moveTo = current;
+                }
+            }
+            SetOutline();
+        }
+    }
+
+    public void GetOutlineCells()
+    {
+        foreach (int[] position in vehicle.possibleMoves)
+        {
+            foreach(GameObject cell in spawnGridInstance.instantiatedCells)
+            {
+                if(cell.transform.position == boardInstance.BoardCoordinateToWordSpace(position))
+                {
+                    outlinedCells.Add(cell);
+                }
+            }
+        }
+
+<<<<<<< HEAD
+        int[] backSpace;
+        if(vehicle.maxDistanceBackward == 0)
+        {
+            backSpace = vehicle.possibleMoves[0];
+        }
+        else
+        {
+            backSpace = vehicle.possibleMoves[vehicle.possibleMoves.Count - 1];
+        }
+
+=======
+>>>>>>> 593ce32eb11dadfdd11ab62fb65241ddf5ce46f6
+        for(int i = 0; i < vehicle.size ;i++)
+        {
+            foreach(GameObject cell in spawnGridInstance.instantiatedCells)
+            {
+<<<<<<< HEAD
+                if(vehicle.direction == Direction.Vertical && cell.transform.position == boardInstance.BoardCoordinateToWordSpace(new int[] {backSpace[0] + i,backSpace[1]}) )
+                {
+                    outlinedCells.Add(cell);
+                }
+                else if(vehicle.direction == Direction.Horizontal && cell.transform.position == boardInstance.BoardCoordinateToWordSpace(new int[] {backSpace[0],backSpace[1] + i}) )
+=======
+                if(vehicle.direction == Direction.Vertical && cell.transform.position == boardInstance.BoardCoordinateToWordSpace(new int[] {vehicle.possibleMoves[vehicle.possibleMoves.Count - 1][0] + i,vehicle.possibleMoves[vehicle.possibleMoves.Count - 1][1]}) )
+                {
+                    outlinedCells.Add(cell);
+                }
+                else if(vehicle.direction == Direction.Horizontal && cell.transform.position == boardInstance.BoardCoordinateToWordSpace(new int[] {vehicle.possibleMoves[vehicle.possibleMoves.Count - 1][0],vehicle.possibleMoves[vehicle.possibleMoves.Count - 1][1] + i}) )
+>>>>>>> 593ce32eb11dadfdd11ab62fb65241ddf5ce46f6
+                {
+                    outlinedCells.Add(cell);
+                }
+            }
+        }
+    }
+
+    public void SetOutline()
+    {
+        foreach(GameObject cell in outlinedCells)
+        {
+            if(cell.transform.position == moveTo)
+            {
+                cell.GetComponent<Outline>().OutlineWidth = 10;
+            }
+            else
+            {
+                cell.GetComponent<Outline>().OutlineWidth = 3;
+            }
+            cell.GetComponent<Outline>().enabled = true;
+        }
+
+
+        for(int i = 0; i < vehicle.size ;i++)
+        {
+            foreach(GameObject cell in outlinedCells)
+            {
+<<<<<<< HEAD
+                if(vehicle.direction == Direction.Vertical && cell.transform.position == new Vector3((moveTo.x + spawnGridInstance.distance * i),moveTo.y,moveTo.z))
+                {
+                    cell.GetComponent<Outline>().OutlineWidth = 10;
+                }
+                else if(vehicle.direction == Direction.Horizontal && cell.transform.position == new Vector3(moveTo.x,moveTo.y,(moveTo.z + spawnGridInstance.distance * i)))
+=======
+                if(vehicle.direction == Direction.Vertical && cell.transform.position == new Vector3(moveTo.x + ((boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset) / spawnGridInstance.distance * i,moveTo.y,moveTo.z))
+                {
+                    cell.GetComponent<Outline>().OutlineWidth = 10;
+                }
+                else if(vehicle.direction == Direction.Horizontal && cell.transform.position == new Vector3(moveTo.x,moveTo.y,moveTo.z + ((boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset) / spawnGridInstance.distance * i))
+>>>>>>> 593ce32eb11dadfdd11ab62fb65241ddf5ce46f6
+                {
+                    cell.GetComponent<Outline>().OutlineWidth = 10;
+                }
+            }
+        }
+<<<<<<< HEAD
+        
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+=======
+>>>>>>> 593ce32eb11dadfdd11ab62fb65241ddf5ce46f6
     }
 }
