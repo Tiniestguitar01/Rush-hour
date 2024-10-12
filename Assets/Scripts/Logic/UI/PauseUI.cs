@@ -5,12 +5,14 @@ using UnityEngine;
 public class PauseUI : MonoBehaviour
 {
     UIManager manager;
+    GameData gameData;
 
     public bool paused = false;
 
     void Start()
     {
         manager = InstanceCreator.GetUIManager();
+        gameData = InstanceCreator.GetGameData();
     }
 
     void Update()
@@ -29,10 +31,12 @@ public class PauseUI : MonoBehaviour
         if (paused == false)
         {
             manager.SetMenuActive(Menu.Pause);
+            gameData.StopTimer();
         }
         else
         {
             manager.SetMenuActive(Menu.Game);
+            gameData.StartTimer(false);
         }
     }
 }

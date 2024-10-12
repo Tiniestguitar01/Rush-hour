@@ -61,7 +61,7 @@ public class Board : MonoBehaviour
         return new Vector3((coordinate[0] * spawnGridInstance.distance) + ((maxBoardSize - size) * spawnGridInstance.offset), 0, (coordinate[1] * spawnGridInstance.distance) + ((maxBoardSize- size) * spawnGridInstance.offset));
     }
 
-    public Place GetPlace(Vehicle vehicle, bool isForward)
+    public List<Place> GetPlace(Vehicle vehicle, bool isForward)
     {
         List<Place> resultList = new List<Place>();
         if (isForward)
@@ -80,7 +80,7 @@ public class Board : MonoBehaviour
                         resultList.Add(places[i]);
                     }
 
-                    if (places[i].placePosition[1 - (int)vehicle.direction] == vehicle.startPosition[1 - (int)vehicle.direction])
+                    if (places[i].placePosition[1 - (int)vehicle.direction] == vehicle.startPosition[1 - (int)vehicle.direction] && places[i].direction != vehicle.direction)
                     {
                         resultList.Add(places[i]);
                     }
@@ -103,7 +103,7 @@ public class Board : MonoBehaviour
                         resultList.Add(places[i]);
                     }
 
-                    if (places[i].placePosition[1 - (int)vehicle.direction] == vehicle.startPosition[1 - (int)vehicle.direction])
+                    if (places[i].placePosition[1 - (int)vehicle.direction] == vehicle.startPosition[1 - (int)vehicle.direction] && places[i].direction != vehicle.direction)
                     {
                         resultList.Add(places[i]);
                     }
@@ -114,7 +114,7 @@ public class Board : MonoBehaviour
 
         if (resultList.Count > 0)
         {
-            return resultList[Random.Range(0, resultList.Count - 1)];
+            return resultList;
         }
         else
         {

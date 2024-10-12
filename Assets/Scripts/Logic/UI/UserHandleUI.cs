@@ -96,15 +96,17 @@ public class UserHandleUI : MonoBehaviour
         if (error.isSuccessful)
         {
             PopUpBackground.color = new Color32(155, 245, 171, 255);
+            PopUpMessageText.color = new Color32(155, 245, 171, 255);
         }
         else
         {
             PopUpBackground.color = new Color32(255, 132, 89, 255);
+            PopUpMessageText.color = new Color32(255, 132, 89, 255);
         }
 
         PopUpMessageText.text = error.message;
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(PopUp.GetComponent<Animator>().runtimeAnimatorController.animationClips[0].length);
         if (PopUp.active == true)
         {
             PopUp.SetActive(false);

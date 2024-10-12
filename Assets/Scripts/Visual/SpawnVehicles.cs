@@ -34,26 +34,31 @@ public class SpawnVehicles : MonoBehaviour
 
             vehicleGOs.Add(holder);
 
+            float offset = 0;
+
             if (vehicles[id - 1].id == 1)
             {
                 clone = Instantiate(cars[0]);
+                offset = 1.8f;
             }
             else if (vehicle.size == 2 && vehicles[id - 1].id != 1)
             {
                 int random = Random.Range(1, cars.Count - 1);
                 clone = Instantiate(cars[random]);
+                offset = 1.8f;
             }
             else
             {
                 int random = Random.Range(0, trucks.Count - 1);
                 clone = Instantiate(trucks[random]);
+                offset = 3.55f;
             }
 
             clone.name = id.ToString();
             clone.transform.parent = holder.transform;
             clone.AddComponent<VehicleComponent>().Init(vehicle.id, vehicle.size, vehicle.startPosition, vehicle.direction);
-            holder.transform.position = new Vector3(vehicle.startPosition[0] * spawnGridInstance.distance + (boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset, (vehicleYOffset * vehicle.size), vehicle.startPosition[1] * spawnGridInstance.distance + (boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset);
-            clone.transform.localPosition = -new Vector3((int)vehicle.direction == 0 ? -1 : 0, 0, (int)vehicle.direction == 1 ? -1 : 0) * vehicle.size * 1f;
+            holder.transform.position = new Vector3(vehicle.startPosition[0] * spawnGridInstance.distance + (boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset, (vehicleYOffset * offset), vehicle.startPosition[1] * spawnGridInstance.distance + (boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset);
+            clone.transform.localPosition = -new Vector3((int)vehicle.direction == 0 ? -1 : 0, 0, (int)vehicle.direction == 1 ? -1 : 0) * offset * 1f;
             clone.transform.rotation = Quaternion.Euler(0, -90 * (int)vehicle.direction + 180, 0);
         }
     }

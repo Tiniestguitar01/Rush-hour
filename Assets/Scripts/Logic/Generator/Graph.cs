@@ -2,27 +2,26 @@ using System.Collections.Generic;
 
     public class Graph
     {
-        public List<Node> openList;
-        public List<Node> closedList;
+    public SortedSet<Node> openList;
+    public HashSet<Node> closedList;
 
-        public Graph()
-        {
-            openList = new List<Node> ();
-            closedList = new List<Node>();
-        }
-
-        public void AddToOpenList(Node node)
+    public Graph()
+    {
+        openList = new SortedSet<Node>();
+        closedList = new HashSet<Node>();
+    }
+    public void AddToOpenList(Node node)
         {
             openList.Add(node);
         }
 
         public void RemoveFromOpenList(Node node)
         {
-            for(int i = 0; i < openList.Count;i++)
+            foreach (Node openListNode in openList)
             {
-                if(openList[i].Equals(node))
+                if (openListNode.Equals(node))
                 {
-                    openList.RemoveAt(i);
+                    openList.Remove(openListNode);
                 }
             }
             closedList.Add(node);

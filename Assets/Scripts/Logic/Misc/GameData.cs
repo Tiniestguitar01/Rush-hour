@@ -5,10 +5,10 @@ using UnityEngine;
 [Serializable]
 public enum Difficulty
 {
-    Beginner = 10,
-    Intermediate = 25,
-    Advanced = 50,
-    Expert = 75
+    Beginner = 1,
+    Intermediate = 2,
+    Advanced = 3,
+    Expert = 4
 }
 
 public class GameData : MonoBehaviour
@@ -54,10 +54,13 @@ public class GameData : MonoBehaviour
         }
     }
 
-    public void StartTimer()
+    public void StartTimer(bool fromZero = true)
     {
         timerStarted = true;
-        timer = 0;
+        if (fromZero)
+        {
+            timer = 0;
+        }
     }
 
     public void StopTimer()

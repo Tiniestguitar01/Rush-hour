@@ -11,6 +11,7 @@ public class Solver : MonoBehaviour
     VehicleMovement vehicleMovementInstance;
     PuzzleGenerator puzzleGeneratorInstance;
     UIManager uiManagerInstance;
+    int stepsToSolve = 0;
 
     private void Start()
     {
@@ -21,7 +22,6 @@ public class Solver : MonoBehaviour
 
     public async Task<bool> Search(int[,] firstBoard, bool forSolution)
     {
-        uiManagerInstance.SetMenuActive(Menu.Loading);
 
         Graph graph = new Graph();
 
@@ -36,14 +36,15 @@ public class Solver : MonoBehaviour
         }
 
         graph.openList.Add(firstNode);
-
+        Node bestNode = graph.openList.First();
         int steps = 0;
-        while (graph.openList.Count != 0 && steps < 100)
+        while (graph.openList.Count != 0 && bestNode.depth <= 53)
         {
-            graph.openList.Sort();
-            Node bestNode = graph.openList.First();
+            Debug.Log("Mélység:" + bestNode.depth);
+            Debug.Log("Eddig megnézett node-ok:" + steps);
+            bestNode = graph.openList.First();
 
-            graph.openList.RemoveAt(0);
+            graph.openList.Remove(graph.openList.First());
             graph.closedList.Add(bestNode);
 
             List<Node> children = bestNode.GetChildren();
@@ -53,14 +54,14 @@ public class Solver : MonoBehaviour
 
                 if ((children[nodeIndex].cost - children[nodeIndex].depth) == 0 && forSolution == true)
                 {
+                    stepsToSolve = children[nodeIndex].depth;
+                    uiManagerInstance.gameUI.SolvableText.text = "Solvable in " + stepsToSolve + " steps";
                     resultNode = children[nodeIndex];
-                    uiManagerInstance.SetMenuActive(Menu.Game);
                     return await Task.FromResult(true);
                 }
                 else if(children[nodeIndex].cost == 0 && forSolution == false)
                 {
                     resultNode = children[nodeIndex];
-                    uiManagerInstance.SetMenuActive(Menu.Game);
                     return await Task.FromResult(true);
                 }
                 else
@@ -71,11 +72,10 @@ public class Solver : MonoBehaviour
                     }
                 }
             }
-            steps++;
             //Debug.Log("solver: "+ steps);
+            steps++;
             await Task.Yield();
         }
-        uiManagerInstance.SetMenuActive(Menu.Game);
         return await Task.FromResult(false);
     }
 
@@ -92,6 +92,7 @@ public class Solver : MonoBehaviour
 
     async Task<bool> GetSteps(bool forSolution)
     {
+        uiManagerInstance.SetMenuActive(Menu.Loading);
         List<Node> solution = new List<Node>();
 
         await Search(InstanceCreator.GetBoard().board, forSolution);
@@ -112,8 +113,8 @@ public class Solver : MonoBehaviour
             puzzleGeneratorInstance.PrintBoard(solution[nodeIndex].board);
         }
 
+        uiManagerInstance.SetMenuActive(Menu.Game);
         StartCoroutine(Move(solution));
-
         return await Task.FromResult(true);
     }
 
@@ -121,8 +122,6 @@ public class Solver : MonoBehaviour
     {
         for (int nodeIndex = 0; nodeIndex < solution.Count; nodeIndex++)
         {
-            Debug.Log("MOveTo");
-            Debug.Log(solution[nodeIndex].vehicle.startPosition[0] + ", " + solution[nodeIndex].vehicle.startPosition[1]);
             yield return InstanceCreator.GetVehicleMovement().MoveTo(solution[nodeIndex].vehicle.id, solution[nodeIndex].vehicle.startPosition);
         }
     }

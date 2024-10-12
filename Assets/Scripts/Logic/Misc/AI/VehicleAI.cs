@@ -6,11 +6,12 @@ public class VehicleAI : MonoBehaviour
 {
     public float step = 10f;
     public float speed = 1f;
+    float checkDistance = 5.5f;
 
     public bool stopped = false;
     Vector3 startPosition;
 
-    public float distanceToDestroy = 200f;
+    float distanceToDestroy = 400f;
 
     float timeSinceStop = 0;
 
@@ -30,7 +31,7 @@ public class VehicleAI : MonoBehaviour
         }
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hit, 5f))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.right), out hit, checkDistance))
         {
             if(hit.transform.tag == "car" || hit.transform.tag == "red")
             {

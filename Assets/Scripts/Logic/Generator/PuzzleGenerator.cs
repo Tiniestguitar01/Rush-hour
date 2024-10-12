@@ -38,23 +38,22 @@ public class PuzzleGenerator : MonoBehaviour
 
     public async Task<bool> GeneratePuzzle()
     {
-        uiManagerInstance.SetMenuActive(Menu.Loading);
 
         DeleteVehicles();
 
         boardInstance.GenerateBoard();
         spawnGridInstance.Spawn();
 
-        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(Mathf.Max(2 * (int)((int)gameDataInstance.difficulty / 1.5f), boardInstance.size - 2), boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
+        await InsertVehicle(CreateVehicle(1, 2, new int[] { Random.Range(Mathf.Min((int)(2 * (int)gameDataInstance.difficulty / 1.5f), boardInstance.size - 2), boardInstance.size - 1), 2 }, Direction.Vertical), boardInstance.board);
 
-        for (int i = 0; i < (int)gameDataInstance.difficulty; i++)
+        for (int i = 0; i < (int)gameDataInstance.difficulty * 2; i++)
         {
-            boardInstance.GetFreeSpaces();
+            //boardInstance.GetFreeSpaces();
             await GenerateVehicles();
         }
 
         int iteration = 0;
-        while (boardInstance.places.Count > 0 && ((int)gameDataInstance.difficulty * boardInstance.size - 2) == iteration)
+        while (boardInstance.places.Count > 0 && ((int)gameDataInstance.difficulty * boardInstance.size) == iteration)
         {
             int random = Random.Range(0, boardInstance.places.Count);
             await InsertVehicle(CreateVehicle(vehicles.Count + 1, boardInstance.places[random].size, boardInstance.places[random].placePosition, boardInstance.places[random].direction), boardInstance.board);
@@ -100,8 +99,6 @@ public class PuzzleGenerator : MonoBehaviour
         PrintBoard(boardInstance.board);
         spawnVehicleInstance.Spawn();
 
-        uiManagerInstance.SetMenuActive(Menu.Game);
-
         return await Task.FromResult(true);
     }
     public async Task GenerateVehicles()
@@ -109,19 +106,30 @@ public class PuzzleGenerator : MonoBehaviour
         int id = vehicles.Count - 1;
         for (int i = 0; i < boardInstance.size * (int)gameDataInstance.difficulty; i++)
         {
-            Place placeForward = boardInstance.GetPlace(vehicles[id], true);
 
             bool firstResult = false;
             bool secondResult = false;
 
-            if (placeForward != null)
+            List<Place> forwardPlaceList = boardInstance.GetPlace(vehicles[id], true);
+            if (forwardPlaceList != null)
             {
-                firstResult = await InsertVehicle(CreateVehicle(vehicles.Count + 1, placeForward.size, placeForward.placePosition, placeForward.direction), boardInstance.board);
+                while (forwardPlaceList.Count > 0 && !firstResult)
+                {
+                    Place place = forwardPlaceList[Random.Range(0, forwardPlaceList.Count - 1)];
+                    forwardPlaceList.Remove(place);
+                    firstResult = await InsertVehicle(CreateVehicle(vehicles.Count + 1, place.size, place.placePosition, place.direction), boardInstance.board);
+                }
             }
-            Place placeBackward = boardInstance.GetPlace(vehicles[id], false);
-            if (placeBackward != null)
+
+            List<Place> backwardPlaceList = boardInstance.GetPlace(vehicles[id], false);
+            if (backwardPlaceList != null)
             {
-                secondResult = await InsertVehicle(CreateVehicle(vehicles.Count + 1, placeBackward.size, placeBackward.placePosition, placeBackward.direction), boardInstance.board);
+                while (backwardPlaceList.Count > 0 && !secondResult)
+                {
+                    Place place = backwardPlaceList[Random.Range(0, backwardPlaceList.Count - 1)];
+                    backwardPlaceList.Remove(place);
+                    secondResult = await InsertVehicle(CreateVehicle(vehicles.Count + 1, place.size, place.placePosition, place.direction), boardInstance.board);
+                }
             }
 
             if (firstResult || (!firstResult && secondResult))

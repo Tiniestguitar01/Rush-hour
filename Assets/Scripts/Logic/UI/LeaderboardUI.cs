@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static Codice.CM.WorkspaceServer.WorkspaceTreeDataStore;
-using UnityEngine.Profiling;
 
 public class LeaderboardUI : MonoBehaviour
 {
@@ -40,7 +37,7 @@ public class LeaderboardUI : MonoBehaviour
         {
             GameObject record = Instantiate(Record);
             record.transform.parent = content;
-            record.GetComponent<TMP_Text>().text = results[i].username + ":" + "Moved: " + results[i].moved + ", Time:" + gameDataInstance.GetTimeInString(results[i].time);
+            record.GetComponent<TMP_Text>().text = results[i].username + ": " + "Moved: " + results[i].moved + ", Time:" + gameDataInstance.GetTimeInString(results[i].time);
             instantiatedRecords.Add(record);
         }
     }

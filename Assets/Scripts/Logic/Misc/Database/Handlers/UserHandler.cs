@@ -26,7 +26,6 @@ public class UserHandler : MonoBehaviour
         database = InstanceCreator.GetDatabase();
         settings = InstanceCreator.GetSettings();
         GetUsers();
-        GetUserResults();
     }
 
     public Error RegisterUser(User user)
@@ -179,30 +178,5 @@ public class UserHandler : MonoBehaviour
         }
 
         return user;
-    }
-
-    public void GetUserResults()
-    {
-
-        using (var connection = new SqliteConnection(database.databaseName))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM `User_Result`;";
-                using (IDataReader reader = command.ExecuteReader())
-                {
-                    Debug.Log("UserResults");
-                    while (reader.Read())
-                    {
-                        Debug.Log("UserResults: {" + reader["user_id"].ToString() + ", " + reader["result_id"].ToString() + "}");
-                    }
-                    reader.Close();
-                }
-            }
-
-            connection.Close();
-        }
     }
 }

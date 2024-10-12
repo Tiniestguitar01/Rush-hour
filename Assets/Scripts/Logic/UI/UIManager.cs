@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using UnityEngine.UI;
-using TMPro;
-using System.Threading.Tasks;
+using UnityEngine.EventSystems;
 
 public enum Menu
 {
@@ -18,13 +18,17 @@ public enum Menu
     Register = 8,
     Leaderboard = 9,
 }
+
 public class UIManager : MonoBehaviour
 {
     [Header("Menus")]
     public List<GameObject> menus;
 
+    Menu[] navigatableMenus = { Menu.Difficulty, Menu.Leaderboard, Menu.Options, Menu.Login, Menu.Register };
+
     public int state = 0; //0=menu,1=game
     public Menu previousMenu;
+    public Menu currentMenu;
 
     [HideInInspector]
     public GameUI gameUI;
@@ -43,6 +47,14 @@ public class UIManager : MonoBehaviour
     Settings settingsInstance;
     Database databaseInstance;
 
+    bool inAnimation = false;
+
+
+    public float animationLength = 0.5f;
+
+    int currentInteractableIndex = 0;
+    public List<Selectable> interactableElements;
+
     private void Start()
     {
         gameUI = GetComponent<GameUI>();
@@ -54,31 +66,112 @@ public class UIManager : MonoBehaviour
         SetMenuActive(Menu.Menu);
     }
 
+    private void Update()
+    {
+        switch (currentMenu)
+        {
+            case Menu.Login:
+            {
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    userHandleUI.Login();
+                }
+                break;
+            }
+            case Menu.Register:
+            {
+               if (Input.GetKeyDown(KeyCode.Return))
+               {
+                    userHandleUI.Register();
+               }
+               break;
+            }
+        }
+
+        if (navigatableMenus.Contains(currentMenu) && !inAnimation)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                BackToPreviousMenu();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            NavigateWithTab();
+        }
+
+    }
+
     public void SetMenuActive(Menu menuCode)
     {
         previousMenu = GetMenuActive();
-        foreach (GameObject menu in menus)
+        currentMenu = menuCode;
+        StartCoroutine(waitForOutAnimation());
+        for (int i = 0; i < menus[(int)currentMenu].transform.childCount; i++)
         {
-            menu.SetActive(false);
+            menus[(int)currentMenu].transform.GetChild(i).GetComponent<Animator>().SetBool("Out", false);
         }
-        menus[(int)menuCode].SetActive(true);
-        state = (int)menuCode;
+ 
+        SetNextMenu(currentMenu);
 
         if (menuCode == Menu.Pause)
         {
             pauseUI.paused = true;
-            Time.timeScale = 0f;
         }
         else
         {
-            Time.timeScale = 1f;
             pauseUI.paused = false;
         }
+    }
+
+    public IEnumerator waitForOutAnimation()
+    {
+        inAnimation = true;
+        if (previousMenu != Menu.Loading)
+        {
+            for (int i = 0; i < menus[(int)previousMenu].transform.childCount; i++)
+            {
+                menus[(int)previousMenu].transform.GetChild(i).GetComponent<Animator>().SetBool("Out", true);
+            }
+        }
+
+        yield return new WaitForSeconds(animationLength);
+        for(int i = 0; i < menus.Count; i++)
+        {
+            if((Menu)i != currentMenu)
+            {
+                menus[i].SetActive(false);
+            }
+        }
+        SetNextMenu(currentMenu);
+        inAnimation = false;
     }
 
     public Menu GetMenuActive()
     {
         return (Menu)state;
+    }
+
+    public void SetNextMenu(Menu next)
+    {
+        menus[(int)next].SetActive(true);
+        state = (int)next;
+
+        interactableElements.Clear();
+
+        if (next != Menu.Loading && next != Menu.Game)
+        {
+            foreach (Transform child in menus[(int)next].transform.Find("Interactables").transform)
+            {
+                interactableElements.Add(child.gameObject.GetComponent<Selectable>());
+            }
+
+            if (interactableElements.Count > 0)
+            {
+                EventSystem.current.SetSelectedGameObject(interactableElements[0].gameObject);
+            }
+        }
     }
 
     public void StartToDifficulty()
@@ -116,6 +209,18 @@ public class UIManager : MonoBehaviour
     {
         leaderboardUI.GetLeaderBoard();
         SetMenuActive(Menu.Leaderboard);
+    }
+
+    public void NavigateWithTab()
+    {
+        currentInteractableIndex++;
+
+        if (currentInteractableIndex > interactableElements.Count - 1)
+        {
+            currentInteractableIndex = 0;
+        }
+
+        EventSystem.current.SetSelectedGameObject(interactableElements[currentInteractableIndex].gameObject);
     }
 
     public void Quit()

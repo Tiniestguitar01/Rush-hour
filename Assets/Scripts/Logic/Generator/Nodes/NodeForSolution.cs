@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class NodeForSolution : Node
 {
     public NodeForSolution(int[,] board, int depth) : base(board, depth) { EvaluateCost(); }
