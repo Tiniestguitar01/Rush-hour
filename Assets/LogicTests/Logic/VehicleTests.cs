@@ -11,9 +11,9 @@ public class VehicleTests
     [SetUp]
     public void Init()
     {
-        boardInstance = InstanceCreator.GetBoard();
+        boardInstance = GameObject.Find("GenerationManager").GetComponent<Board>();
         boardInstance.size = 6;
-        boardInstance.GenerateBoard();
+        boardInstance.Start();
     }
 
     [Test]

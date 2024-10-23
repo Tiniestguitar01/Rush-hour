@@ -1073,6 +1073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   solutionPlaySpeed: 1
+  stepsToSolve: 0
 --- !u!4 &39912938 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 918397a7e0523114ea408fc4eb8ca157,
@@ -3061,7 +3062,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: a689281f545979940b5cedad12ec31a8, type: 3}
+  m_Texture: {fileID: 2800000, guid: 0800cc9d4da0323489f4d25c65194aa5, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -9025,6 +9026,7 @@ MonoBehaviour:
   timerStarted: 0
   difficulty: 10
   boardSize: 6
+  state: 0
 --- !u!4 &270333728
 Transform:
   m_ObjectHideFlags: 0
@@ -9879,7 +9881,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Back
 
-    Escape'
+    (Esc)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07a22ee43a9f86b4d9f841b19bfa692c, type: 2}
   m_sharedMaterial: {fileID: -3529354019913125042, guid: 07a22ee43a9f86b4d9f841b19bfa692c,
@@ -15604,7 +15606,6 @@ MonoBehaviour:
   - {fileID: 1785300695}
   - {fileID: 14970075}
   - {fileID: 1315100817}
-  state: 6
   previousMenu: 0
   currentMenu: 0
   gameUI: {fileID: 0}
@@ -21114,7 +21115,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Back
 
-    Escape'
+    (Esc)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07a22ee43a9f86b4d9f841b19bfa692c, type: 2}
   m_sharedMaterial: {fileID: -3529354019913125042, guid: 07a22ee43a9f86b4d9f841b19bfa692c,
@@ -34265,7 +34266,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: dcdc43f7a0ad67b4ab3e3db38233dfae, type: 3}
+  m_Texture: {fileID: 2800000, guid: f9fa9ebfa2606f840a23f0bb0ac882af, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -40392,7 +40393,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Back
 
-    Escape'
+    (Esc)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07a22ee43a9f86b4d9f841b19bfa692c, type: 2}
   m_sharedMaterial: {fileID: -3529354019913125042, guid: 07a22ee43a9f86b4d9f841b19bfa692c,
@@ -55266,7 +55267,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: a689281f545979940b5cedad12ec31a8, type: 3}
+  m_Texture: {fileID: 2800000, guid: 0800cc9d4da0323489f4d25c65194aa5, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -61562,7 +61563,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: dcdc43f7a0ad67b4ab3e3db38233dfae, type: 3}
+  m_Texture: {fileID: 2800000, guid: f9fa9ebfa2606f840a23f0bb0ac882af, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -65838,7 +65839,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Back
 
-    Escape'
+    (Esc)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07a22ee43a9f86b4d9f841b19bfa692c, type: 2}
   m_sharedMaterial: {fileID: -3529354019913125042, guid: 07a22ee43a9f86b4d9f841b19bfa692c,
@@ -67019,7 +67020,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 604d5ed6f532a5146bf48201437881ee, type: 3}
+  m_Texture: {fileID: 2800000, guid: 0800cc9d4da0323489f4d25c65194aa5, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -69055,7 +69056,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Back
 
-    Escape'
+    (Esc)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07a22ee43a9f86b4d9f841b19bfa692c, type: 2}
   m_sharedMaterial: {fileID: -3529354019913125042, guid: 07a22ee43a9f86b4d9f841b19bfa692c,

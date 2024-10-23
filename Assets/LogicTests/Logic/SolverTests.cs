@@ -1,20 +1,23 @@
 using NUnit.Framework;
-using System.Threading.Tasks;
+using UnityEngine;
 
 public class SolverTests
 {
     Board boardInstance;
     ModifyBoard modifyBoardInstance;
     Solver solverInstance;
+    GameData gameDataInstance;
 
     [SetUp]
     public void Init()
     {
-        boardInstance = InstanceCreator.GetBoard();
+        boardInstance = GameObject.Find("GenerationManager").GetComponent<Board>();
+        modifyBoardInstance = GameObject.Find("GenerationManager").GetComponent<ModifyBoard>();
+        solverInstance = GameObject.Find("GenerationManager").GetComponent<Solver>();
+        modifyBoardInstance.Start();
         boardInstance.size = 6;
-        boardInstance.GenerateBoard();
-        modifyBoardInstance = InstanceCreator.GetModifyBoard();
-        solverInstance = InstanceCreator.GetSolver();
+        boardInstance.Start();
+        solverInstance.Start();
     }
 
     [Test]
@@ -97,7 +100,11 @@ public class SolverTests
             { 12,12,12,9,0,8 }
         };
 
-        bool result = await solverInstance.Search(testBoard, true);
+        bool result = false;
+        for (int i = 0; i < 100; i++)
+        {
+            result = await solverInstance.Search(testBoard, true);
+        } 
         Assert.AreEqual(true, result);
     }
 }

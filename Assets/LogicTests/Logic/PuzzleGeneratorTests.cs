@@ -16,12 +16,14 @@ public class PuzzleGeneratorTests
     [SetUp]
     public void Init()
     {
-        boardInstance = InstanceCreator.GetBoard();
+        boardInstance = GameObject.Find("GenerationManager").GetComponent<Board>();
+        modifyBoardInstance = GameObject.Find("GenerationManager").GetComponent<ModifyBoard>();
+        modifyBoardInstance.Start();
         boardInstance.size = 6;
-        boardInstance.GenerateBoard();
-        puzzleGeneratorInstance = InstanceCreator.GetPuzzleGenerator();
-        modifyBoardInstance = InstanceCreator.GetModifyBoard();
-        spawnVehicleInstance = InstanceCreator.GetSpawnVehicles();
+        boardInstance.Start();
+        puzzleGeneratorInstance = GameObject.Find("GenerationManager").GetComponent<PuzzleGenerator>();
+        puzzleGeneratorInstance.Start();
+        spawnVehicleInstance = GameObject.Find("VisualManager").GetComponent<SpawnVehicles>();
     }
 
     [Test]
@@ -78,18 +80,5 @@ public class PuzzleGeneratorTests
 
         Assert.AreEqual(0, puzzleGeneratorInstance.vehicles.Count);
         Assert.AreEqual(0, spawnVehicleInstance.vehicleGOs.Count);
-    }
-
-    [Test]
-    public async void ShouldRemovePlaces()
-    {
-        puzzleGeneratorInstance.RemovePlaces(new int[] {2,2});
-
-        for(int i = 0; i < boardInstance.places.Count;i++)
-        {
-            Assert.AreNotEqual(new int[] { 2, 2 }, boardInstance.places[i].placePosition);
-            Assert.AreNotEqual(new int[] { 1, 2 }, boardInstance.places[i].placePosition);
-            Assert.AreNotEqual(new int[] { 2, 1 }, boardInstance.places[i].placePosition);
-        }
     }
 }

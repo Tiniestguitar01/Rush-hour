@@ -25,7 +25,6 @@ public class UserHandler : MonoBehaviour
     {
         database = InstanceCreator.GetDatabase();
         settings = InstanceCreator.GetSettings();
-        GetUsers();
     }
 
     public Error RegisterUser(User user)
@@ -149,34 +148,5 @@ public class UserHandler : MonoBehaviour
             byte[] hashedBytes = sha256.ComputeHash(passwordBytes);
             return Convert.ToBase64String(hashedBytes);
         }
-    }
-
-    public User GetUsers()
-    {
-        User user = null;
-
-        using (var connection = new SqliteConnection(database.databaseName))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM `User`;";
-                using (IDataReader reader = command.ExecuteReader())
-                {
-                    Debug.Log("Users");
-                    while (reader.Read())
-                    {
-                        Debug.Log("User: {" + reader["id"].ToString() + ", " + reader["username"].ToString() + ", " + reader["password"].ToString() + "}");
-                        user = new User(int.Parse(reader["id"].ToString()), reader["username"].ToString(), reader["password"].ToString());
-                    }
-                    reader.Close();
-                }
-            }
-
-            connection.Close();
-        }
-
-        return user;
     }
 }

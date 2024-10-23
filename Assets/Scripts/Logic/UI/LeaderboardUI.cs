@@ -40,5 +40,13 @@ public class LeaderboardUI : MonoBehaviour
             record.GetComponent<TMP_Text>().text = results[i].username + ": " + "Moved: " + results[i].moved + ", Time:" + gameDataInstance.GetTimeInString(results[i].time);
             instantiatedRecords.Add(record);
         }
+
+        if(results.Count == 0)
+        {
+            GameObject record = Instantiate(Record);
+            record.transform.parent = content;
+            record.GetComponent<TMP_Text>().text = "No records found in this difficulty and board size!";
+            instantiatedRecords.Add(record);
+        }
     }
 }

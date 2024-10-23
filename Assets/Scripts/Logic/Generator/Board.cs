@@ -12,7 +12,7 @@ public class Board : MonoBehaviour
     public int maxBoardSize = 7;
     SpawnGrid spawnGridInstance;
 
-    private void Start()
+    public void Start()
     {
         spawnGridInstance = InstanceCreator.GetSpawnGrid();
         gameDataInstance = InstanceCreator.GetGameData();
@@ -24,7 +24,6 @@ public class Board : MonoBehaviour
     {
         places.Clear();
         size = gameDataInstance.boardSize;
-        Debug.Log("size: "+ size);
         board = new int[size, size];
 
         for (int x = 0; x < size; x++)

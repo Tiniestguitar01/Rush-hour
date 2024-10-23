@@ -22,7 +22,7 @@ public class PuzzleGenerator : MonoBehaviour
 
     public int[,] resultBoard;
 
-    async void Start()
+    public async void Start()
     {
         boardInstance = InstanceCreator.GetBoard();
         modifyBoardInstance = InstanceCreator.GetModifyBoard();
@@ -96,7 +96,6 @@ public class PuzzleGenerator : MonoBehaviour
         resultBoard = (int[,])boardInstance.board.Clone();
 
         vehicles.Sort();
-        PrintBoard(boardInstance.board);
         spawnVehicleInstance.Spawn();
 
         return await Task.FromResult(true);
@@ -184,7 +183,6 @@ public class PuzzleGenerator : MonoBehaviour
         {
             boardInstance.places.RemoveAll(place => place.size == 3);
         }
-        PrintBoard(boardInstance.board);
 
         return await Task.FromResult(true);
     }

@@ -10,7 +10,6 @@ public class ResultHandler : MonoBehaviour
     void Start()
     {
         database = InstanceCreator.GetDatabase();
-        GetResults();
     }
 
     public void AddResult(Result result)
@@ -83,36 +82,6 @@ public class ResultHandler : MonoBehaviour
                     while (reader.Read())
                     {
                         UserResultDTO result = new UserResultDTO(reader["username"].ToString(), int.Parse(reader["moved"].ToString()), float.Parse(reader["time"].ToString()));
-                        results.Add(result);
-                    }
-                    reader.Close();
-                }
-            }
-
-            connection.Close();
-        }
-
-        return results;
-    }
-
-    public List<Result> GetResults()
-    {
-        List<Result> results = new List<Result>();
-        using (var connection = new SqliteConnection(database.databaseName))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM `Result`;";
-
-                using (IDataReader reader = command.ExecuteReader())
-                {
-                    Debug.Log("Result");
-                    while (reader.Read())
-                    {
-                        Debug.Log("Result: {" + reader["user_id"].ToString() + ", " + reader["difficulty"].ToString() + ", " + reader["board_size"].ToString() + ", " + reader["time"].ToString() + ", "  + reader["moved"].ToString() +  "}");
-                        Result result = new Result(int.Parse(reader["user_id"].ToString()), int.Parse(reader["difficulty"].ToString()), int.Parse(reader["board_size"].ToString()), float.Parse(reader["time"].ToString()), int.Parse(reader["moved"].ToString()));
                         results.Add(result);
                     }
                     reader.Close();

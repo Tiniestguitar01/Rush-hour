@@ -17,7 +17,7 @@ public class PauseUI : MonoBehaviour
 
     void Update()
     {
-        if (manager.state == (int)Menu.Game || manager.state == (int)Menu.Pause)
+        if (gameData.state == (int)Menu.Game || gameData.state == (int)Menu.Pause)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {

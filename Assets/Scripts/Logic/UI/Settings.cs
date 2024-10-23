@@ -30,7 +30,7 @@ public class Settings : MonoBehaviour
         List<string> res = new List<string>();
         for (int i = 0; i < resolutions.Length; i++)
         {
-            res.Add(resolutions[i].width + " x " + resolutions[i].height + " " + resolutions[i].refreshRateRatio + " Hz");
+            res.Add(resolutions[i].width + " x " + resolutions[i].height + " " + String.Format("{0:F2}", resolutions[i].refreshRateRatio) + " Hz");
 
             if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
             {

@@ -12,11 +12,10 @@ public class NodeTests
     [SetUp]
     public void Init()
     {
-        boardInstance = InstanceCreator.GetBoard();
+        boardInstance = GameObject.Find("GenerationManager").GetComponent<Board>();
+        modifyBoardInstance = GameObject.Find("GenerationManager").GetComponent<ModifyBoard>();
         boardInstance.size = 6;
-        boardInstance.GenerateBoard();
-
-        modifyBoardInstance = InstanceCreator.GetModifyBoard();
+        boardInstance.Start();
     }
 
     [Test]

@@ -36,7 +36,7 @@ public class VehicleMovement : MonoBehaviour
 
     void Update()
     {
-        if (InstanceCreator.GetUIManager().state == (int)Menu.Game)
+        if (gameDataInstance.state == (int)Menu.Game)
         {
             if (Input.GetMouseButtonDown(0))
             {

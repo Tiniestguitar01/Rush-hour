@@ -9,6 +9,7 @@ public class GameUI : MonoBehaviour
 {
     UIManager manager;
     GameData gameDataInstance;
+    Solver solverInstance;
 
     [Header("GameUI")]
     public TMP_Text TimerText;
@@ -27,6 +28,7 @@ public class GameUI : MonoBehaviour
     {
         manager = InstanceCreator.GetUIManager();
         gameDataInstance = InstanceCreator.GetGameData();
+        solverInstance = InstanceCreator.GetSolver();
         tutorialPopUp.SetActive(false);
         if (!tutorialShown)
         {
@@ -52,6 +54,7 @@ public class GameUI : MonoBehaviour
         await InstanceCreator.GetPuzzleGenerator().GeneratePuzzle();
         manager.SetMenuActive(Menu.Game);
         gameDataInstance.StartTimer();
+        SolvableText.text = "Solvable in " + solverInstance.stepsToSolve + " steps";
         return await Task.FromResult(true);
     }
 

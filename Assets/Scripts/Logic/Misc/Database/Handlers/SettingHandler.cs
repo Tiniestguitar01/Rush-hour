@@ -13,11 +13,6 @@ public class SettingHandler : MonoBehaviour
         database = InstanceCreator.GetDatabase();
     }
 
-    void Start()
-    {
-        GetSettings();
-    }
-
     public void AddSetting(Setting setting)
     {
         using (var connection = new SqliteConnection(database.databaseName))
@@ -62,34 +57,5 @@ public class SettingHandler : MonoBehaviour
         }
 
         return settings;
-    }
-
-    public Setting GetSettings()
-    {
-        Setting setting = null;
-
-        using (var connection = new SqliteConnection(database.databaseName))
-        {
-            connection.Open();
-
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "SELECT * FROM `Setting`;";
-                using (IDataReader reader = command.ExecuteReader())
-                {
-                    Debug.Log("Setting");
-                    while (reader.Read())
-                    {
-                        Debug.Log("Setting: {" + reader["user_id"].ToString() + ", " + reader["name"].ToString() + ", " + reader["value"].ToString() + "}");
-                        setting = new Setting(reader["name"].ToString(), reader["value"].ToString(), int.Parse(reader["user_id"].ToString()));
-                    }
-                    reader.Close();
-                }
-            }
-
-            connection.Close();
-        }
-
-        return setting;
     }
 }

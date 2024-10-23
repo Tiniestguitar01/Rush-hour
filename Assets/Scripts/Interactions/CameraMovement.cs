@@ -19,7 +19,7 @@ public class CameraMovement : MonoBehaviour
     void LateUpdate()
     {
         transform.LookAt(target);
-        if (InstanceCreator.GetUIManager().state == (int)Menu.Game)
+        if (InstanceCreator.GetGameData().state == (int)Menu.Game)
         {
             if (Input.GetMouseButton(1))
             {

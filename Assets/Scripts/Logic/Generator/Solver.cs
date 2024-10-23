@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -11,9 +13,9 @@ public class Solver : MonoBehaviour
     VehicleMovement vehicleMovementInstance;
     PuzzleGenerator puzzleGeneratorInstance;
     UIManager uiManagerInstance;
-    int stepsToSolve = 0;
+    public int stepsToSolve = 0;
 
-    private void Start()
+    public void Start()
     {
         vehicleMovementInstance = InstanceCreator.GetVehicleMovement();
         puzzleGeneratorInstance = InstanceCreator.GetPuzzleGenerator();
@@ -22,7 +24,6 @@ public class Solver : MonoBehaviour
 
     public async Task<bool> Search(int[,] firstBoard, bool forSolution)
     {
-
         Graph graph = new Graph();
 
         Node firstNode;
@@ -38,10 +39,10 @@ public class Solver : MonoBehaviour
         graph.openList.Add(firstNode);
         Node bestNode = graph.openList.First();
         int steps = 0;
-        while (graph.openList.Count != 0 && bestNode.depth <= 53)
+        while (graph.openList.Count != 0 )
         {
-            Debug.Log("Mélység:" + bestNode.depth);
-            Debug.Log("Eddig megnézett node-ok:" + steps);
+            graph.openList.Sort();
+
             bestNode = graph.openList.First();
 
             graph.openList.Remove(graph.openList.First());
@@ -51,11 +52,9 @@ public class Solver : MonoBehaviour
 
             for (int nodeIndex = 0; nodeIndex < children.Count; nodeIndex++)
             {
-
                 if ((children[nodeIndex].cost - children[nodeIndex].depth) == 0 && forSolution == true)
                 {
                     stepsToSolve = children[nodeIndex].depth;
-                    uiManagerInstance.gameUI.SolvableText.text = "Solvable in " + stepsToSolve + " steps";
                     resultNode = children[nodeIndex];
                     return await Task.FromResult(true);
                 }
@@ -66,13 +65,16 @@ public class Solver : MonoBehaviour
                 }
                 else
                 {
-                    if (!graph.openList.Any((node) => node.Equals(children[nodeIndex])) && !graph.closedList.Any((node) => node.Equals(children[nodeIndex])))
+                    if (children[nodeIndex].depth > 53)
+                    {
+                        graph.closedList.Add(children[nodeIndex]);
+                    }
+                    else if (!graph.openList.Any((node) => node.Equals(children[nodeIndex])) && !graph.closedList.Any((node) => node.Equals(children[nodeIndex])))
                     {
                         graph.openList.Add(children[nodeIndex]);
                     }
                 }
             }
-            //Debug.Log("solver: "+ steps);
             steps++;
             await Task.Yield();
         }
@@ -106,12 +108,6 @@ public class Solver : MonoBehaviour
         }
 
         solution.Reverse();
-
-        for (int nodeIndex = 0; nodeIndex < solution.Count; nodeIndex++)
-        {
-            Debug.Log(solution[nodeIndex].vehicle.ToString());
-            puzzleGeneratorInstance.PrintBoard(solution[nodeIndex].board);
-        }
 
         uiManagerInstance.SetMenuActive(Menu.Game);
         StartCoroutine(Move(solution));

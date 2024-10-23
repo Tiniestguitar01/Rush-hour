@@ -26,7 +26,6 @@ public class UIManager : MonoBehaviour
 
     Menu[] navigatableMenus = { Menu.Difficulty, Menu.Leaderboard, Menu.Options, Menu.Login, Menu.Register };
 
-    public int state = 0; //0=menu,1=game
     public Menu previousMenu;
     public Menu currentMenu;
 
@@ -44,8 +43,6 @@ public class UIManager : MonoBehaviour
     public LeaderboardUI leaderboardUI;
 
     GameData gameDataInstance;
-    Settings settingsInstance;
-    Database databaseInstance;
 
     bool inAnimation = false;
 
@@ -55,8 +52,9 @@ public class UIManager : MonoBehaviour
     int currentInteractableIndex = 0;
     public List<Selectable> interactableElements;
 
-    private void Start()
+    public void Start()
     {
+        gameDataInstance = InstanceCreator.GetGameData();
         gameUI = GetComponent<GameUI>();
         difficultyUI = GetComponent<DifficultyUI>();
         gameOverUI = GetComponent<GameOverUI>();
@@ -105,7 +103,7 @@ public class UIManager : MonoBehaviour
 
     public void SetMenuActive(Menu menuCode)
     {
-        previousMenu = GetMenuActive();
+        previousMenu = (Menu)gameDataInstance.state;
         currentMenu = menuCode;
         StartCoroutine(waitForOutAnimation());
         for (int i = 0; i < menus[(int)currentMenu].transform.childCount; i++)
@@ -148,15 +146,10 @@ public class UIManager : MonoBehaviour
         inAnimation = false;
     }
 
-    public Menu GetMenuActive()
-    {
-        return (Menu)state;
-    }
-
     public void SetNextMenu(Menu next)
     {
         menus[(int)next].SetActive(true);
-        state = (int)next;
+        gameDataInstance.state = (int)next;
 
         interactableElements.Clear();
 

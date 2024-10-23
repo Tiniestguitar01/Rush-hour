@@ -11,9 +11,9 @@ public class BoardCreationTest
     [SetUp]
     public void Init()
     {
-        boardInstance = InstanceCreator.GetBoard();
+        boardInstance = GameObject.Find("GenerationManager").GetComponent<Board>();
         boardInstance.size = 6;
-        boardInstance.GenerateBoard();
+        boardInstance.Start();
     }
 
     [Test]
@@ -51,6 +51,6 @@ public class BoardCreationTest
     [Test]
     public void ShouldConvertCoordinate()
     {
-        Assert.AreEqual(new Vector3(3.5f, 0f, 3.5f), boardInstance.BoardCoordinateToWordSpace(new int[] {1, 1}));
+        Assert.AreEqual(new Vector3(5.5f, 0f, 5.5f), boardInstance.BoardCoordinateToWordSpace(new int[] {1, 1}));
     }
 }

@@ -26,9 +26,11 @@ public class GameData : MonoBehaviour
 
     public int boardSize = 6;
 
+    public int state = 0;
+
     UIManager uiManagerInstance;
 
-    void Start()
+    public void Start()
     {
         uiManagerInstance = InstanceCreator.GetUIManager();
         difficulty = Difficulty.Beginner;
@@ -36,7 +38,7 @@ public class GameData : MonoBehaviour
 
     void Update()
     {
-        if (uiManagerInstance.state == (int)Menu.Game || uiManagerInstance.state == (int)Menu.Pause)
+        if (state == (int)Menu.Game || state == (int)Menu.Pause)
         {
             if (timerStarted)
             {
