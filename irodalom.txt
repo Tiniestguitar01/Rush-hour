@@ -1,0 +1,2 @@
+(https://people.computing.clemson.edu/~dhouse/courses/405/notes/raycast.pdf) // raycast
+(https://dea.lib.unideb.hu/bitstream/handle/2437/90313/Szakdolgozat_KathiFerenc.pdf?sequence=1) // hash
