@@ -1,2 +1,7 @@
 (https://people.computing.clemson.edu/~dhouse/courses/405/notes/raycast.pdf) // raycast
-(https://dea.lib.unideb.hu/bitstream/handle/2437/90313/Szakdolgozat_KathiFerenc.pdf?sequence=1) // hash
+
+(https://dea.lib.unideb.hu/bitstream/handle/2437/90313/Szakdolgozat_KathiFerenc.pdf?) // hash
+
+Dr. Kovács Emőd Komputergrafika – Matematikai alapok
+Elektronikus forrás:
+https://aries.ektf.hu/~hz/pdf-tamop/pdf-01/html/index.html Megtekintés dátuma: 2024.11.05 // bezier
