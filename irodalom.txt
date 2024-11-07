@@ -1,7 +1,44 @@
-(https://people.computing.clemson.edu/~dhouse/courses/405/notes/raycast.pdf) // raycast
-
-(https://dea.lib.unideb.hu/bitstream/handle/2437/90313/Szakdolgozat_KathiFerenc.pdf?) // hash
-
 Dr. Kovács Emőd Komputergrafika – Matematikai alapok
 Elektronikus forrás:
 https://aries.ektf.hu/~hz/pdf-tamop/pdf-01/html/index.html Megtekintés dátuma: 2024.11.05 // bezier
+
+„Az eljárást Pierre Bézier francia mérnök publikálta először 1962-ben, aki az autótervezésben alkalmazta a közelítő görbéket. Paul de Casteljau 1959-ben már kifejlesztette azt az algoritmust, amelyet a mai napig is használunk a Bézier-görbék előállítására [bezier gorbe]. „
+
+
+
+
+Hirotaka Yoshida Alex Biryukov Analysis of a SHA-256 Variant
+Elektronikus forrás:
+https://www.researchgate.net/publication/221274799_Analysis_of_a_SHA-256_Variant Megtekintés dátuma: 2024.11.06
+
+A kriptográfiai hashalgoritmus egy olyan algoritmus, amely tetszőleges hosszúságú bemeneti karakterláncokat vesz és ezeket rövid, fix hosszúságú kimeneti karakterláncokra térképezi.
+A SHA-256 egy kriptográfiai hashalgoritmus, amelyet 2000-ben javasoltak a SHA függvények új generációjaként, és 2002-ben fogadtak el FIPS szabványként.
+A SHA-256 az MD-konstrukcióra és a Davis-Meyer módra épül. A SHA-256 tömörítési függvénye 64 körből áll, kétféle nem-lineáris függvényt, ciklikus elforgatásokat és körökre jellemző konstansokat tartalmaz. A SHA-256 által kiszámított hashelt érték 256 bit hosszú.
+
+
+
+
+Physics- Raycasting
+Elektronikus forrás:
+https://research.ncl.ac.uk/game/mastersdegree/gametechnologies/physicstutorials/1raycasting/Physics%20-%20Raycasting.pdf Megtekintés dátuma: 2024.11.06
+
+A standard sugár egy olyan entitás, amely egy adott térbeli pozícióból és egy irányból áll, amely meghatározza, hogy merre haladjon a térben. Ezt úgy is elképzelhetjük, mint egy lézert: elhelyezünk egy lézerpontot, majd onnan egy lézert bocsátunk ki, amely egyenes vonalban halad, és végül eléri valamilyen objektumot.
+
+ez mar chatgpt
+Ebben az értelemben a sugár nem rendelkezik véggel. Egy adott kiinduló pontból egy végtelen irányba halad.
+
+
+
+Vugar Hacimahmud Abdullayev Alok Singh Chauhan SQL Injection Attack: Quick View
+Elektronikus forrás:
+https://www.researchgate.net/publication/368511340_SQL_Injection_Attack_Quick_View Megtekintés dátuma:
+
+Az SQL injection egy olyan biztonsági sebezhetőség, amely adatbázis-alapú webalkalmazásokban fordul elő, amikor egy támadó rosszindulatú kódot juttat be az alkalmazásba, hogy jogosulatlan hozzáférést szerezzen érzékeny információkhoz.
+
+
+
+Illés Zoltán Programozás C# nyelven
+Elektronikus forrás:
+http://compalg.inf.elte.hu/~tony/Informatikai-Konyvtar/09-Programozas%20C-sharp%20nyelven/Programozas-Csharp-nyelven-Konyv.pdf Megtekintés dátuma: 2024.11.07
+
+A C# programozási nyelv a Microsoft új fejlesztési környezetével, a 2002-ben megjelent Visual Studio.NET programcsomaggal, annak részeként jelent meg. 
