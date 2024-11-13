@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -7,8 +6,8 @@ using UnityEngine.TestTools;
 
 public class AIVehicleTests
 {
-    GameObject redPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/red.prefab");
-    GameObject car = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Car_2_Red.prefab");
+    GameObject vehiclePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Vehicle.prefab");
+    GameObject train = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Low Poly Simple Urban City 3D Asset Pack/Prefabs/Vehicles/Trams/Train.prefab");
 
     SpawnVehicles spawnVehiclesInstance;
     VehicleSpawner vehicleSpawnerInstance;
@@ -19,42 +18,41 @@ public class AIVehicleTests
     {
         GameObject VehicleSpawnerGO = new GameObject("Spawner");
         vehicleSpawnerInstance = VehicleSpawnerGO.AddComponent<VehicleSpawner>();
-
-        GameObject InstanceCreatorGO = new GameObject("InstanceCreator");
-        GameObject VisualManagerGO = new GameObject("VisualManager");
-        GameObject stopVehicleGO = new GameObject("Stopper");
-        stopVehicleInstance = stopVehicleGO.AddComponent<StopVehicle>();
-        InstanceCreatorGO.AddComponent<InstanceCreator>();
-        VisualManagerGO.AddComponent<SpawnVehicles>();
-        spawnVehiclesInstance = InstanceCreator.GetSpawnVehicles();
-
-        spawnVehiclesInstance.cars.Add(car);
+        vehicleSpawnerInstance.VehiclePrefab = vehiclePrefab;
+        vehicleSpawnerInstance.isTrain = true;
+        vehicleSpawnerInstance.Train = train;
     }
 
     [Test]
     public void AIVehicleSpawnTest()
     {
-        vehicleSpawnerInstance.Spawn();
+        vehicleSpawnerInstance.Start();
+        GameObject vehicle = GameObject.Find("Vehicle");
+
+        Assert.IsTrue(vehicle != null);
     }
 
-    [Test]
-    public void AIVehicleTest()
+    [UnityTest]
+    public IEnumerator AIVehicleTest()
     {
-        vehicleSpawnerInstance.Spawn();
+        vehicleSpawnerInstance.Start();
+        GameObject vehicle = GameObject.Find("Vehicle");
+        VehicleAI ai = vehicle.AddComponent<VehicleAI>();
+        yield return new WaitForSeconds(ai.distanceToDestroy/(ai.speed * ai.step));
+        Assert.IsTrue(vehicle == null);
     }
 
     [UnityTest]
     public IEnumerator VehicleStopperTest()
     {
-        //stopVehicleInstance.InstantiateRed(redPrefab);
-        stopVehicleInstance.Stop();
+        GameObject stopVehicleGO = new GameObject();
+        stopVehicleGO.AddComponent<BoxCollider>();
+        stopVehicleInstance = stopVehicleGO.AddComponent<StopVehicle>();
 
         Assert.IsFalse(stopVehicleInstance.stopped);
-        //Assert.IsFalse(stopVehicleInstance.red.activeSelf);
 
         yield return  new WaitForSeconds(stopVehicleInstance.wait);
 
         Assert.IsTrue(stopVehicleInstance.stopped);
-        //Assert.IsTrue(stopVehicleInstance.red.activeSelf);
     }
 }

@@ -9,7 +9,6 @@ public class BoardSpawnTests
 {
     SpawnGrid spawnGridInstance;
     Board boardInstance;
-    PuzzleGenerator puzzleGeneratorInstance;
 
     private GameObject cell = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Cell.prefab");
 
@@ -19,32 +18,34 @@ public class BoardSpawnTests
         GameObject InstanceCreatorGO = new GameObject("InstanceCreator");
         GameObject GenerationManagerGO = new GameObject("GenerationManager");
         GameObject VisualManagerGO = new GameObject("VisualManager");
+        GameObject MiscLogicManagerGO = new GameObject("MiscLogicManager");
+        GameObject UIManagerGO = new GameObject("UIManager");
 
         InstanceCreatorGO.AddComponent<InstanceCreator>();
-        GenerationManagerGO.AddComponent<Board>();
-        GenerationManagerGO.AddComponent<PuzzleGenerator>();
-        VisualManagerGO.AddComponent<SpawnGrid>();
-
-        boardInstance = InstanceCreator.GetBoard();
-        puzzleGeneratorInstance = InstanceCreator.GetPuzzleGenerator();
-        puzzleGeneratorInstance.vehicles.Add(new Vehicle(1, 2, new int[] { 0, 2 }, Direction.Vertical, boardInstance.board));
-        spawnGridInstance = InstanceCreator.GetSpawnGrid();
-
+        UIManagerGO.AddComponent<UIManager>();
+        MiscLogicManagerGO.AddComponent<GameData>();
+        boardInstance = GenerationManagerGO.AddComponent<Board>();
+        spawnGridInstance = VisualManagerGO.AddComponent<SpawnGrid>();
         spawnGridInstance.cell = cell;
 
-        boardInstance.GenerateBoard();
     }
 
     [Test]
     public void VehicleSpawnTestsSimplePasses()
     {
+        spawnGridInstance.Start();
+        boardInstance.Start();
+        spawnGridInstance.distance = 1;
+        spawnGridInstance.offset = 0;
         spawnGridInstance.Spawn();
 
-        for (int x = 0; x < InstanceCreator.GetBoard().size; x++)
+        for (int x = 0; x < boardInstance.size; x++)
         {
-            for (int z = 0; z < InstanceCreator.GetBoard().size; z++)
+            for (int z = 0; z < boardInstance.size; z++)
             {
-                Assert.AreEqual(boardInstance.BoardCoordinateToWordSpace(new int[] { x, z }), spawnGridInstance.instantiatedCells[z * (x+1)].transform.position);
+                Debug.Log(x + "," + z);
+                Debug.Log(x * (boardInstance.size) + z);
+                Assert.AreEqual(boardInstance.BoardCoordinateToWordSpace(new int[] { x, z }), spawnGridInstance.instantiatedCells[x * (boardInstance.size) + z].transform.position);
             }
         }
 

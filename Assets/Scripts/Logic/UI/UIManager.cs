@@ -17,6 +17,7 @@ public enum Menu
     Login = 7,
     Register = 8,
     Leaderboard = 9,
+    Thanks = 10,
 }
 
 public class UIManager : MonoBehaviour
@@ -24,7 +25,7 @@ public class UIManager : MonoBehaviour
     [Header("Menus")]
     public List<GameObject> menus;
 
-    Menu[] navigatableMenus = { Menu.Difficulty, Menu.Leaderboard, Menu.Options, Menu.Login, Menu.Register };
+    Menu[] navigatableMenus = { Menu.Difficulty, Menu.Leaderboard, Menu.Options, Menu.Login, Menu.Register, Menu.Thanks };
 
     public Menu previousMenu;
     public Menu currentMenu;
@@ -54,6 +55,11 @@ public class UIManager : MonoBehaviour
 
     public void Start()
     {
+        if(menus == null)
+        {
+            menus = new List<GameObject>();
+        }
+
         gameDataInstance = InstanceCreator.GetGameData();
         gameUI = GetComponent<GameUI>();
         difficultyUI = GetComponent<DifficultyUI>();
@@ -103,8 +109,14 @@ public class UIManager : MonoBehaviour
 
     public void SetMenuActive(Menu menuCode)
     {
+        if ((int)currentMenu >= menus.Count)
+        {
+            return;
+        }
+
         previousMenu = (Menu)gameDataInstance.state;
         currentMenu = menuCode;
+
         StartCoroutine(waitForOutAnimation());
         for (int i = 0; i < menus[(int)currentMenu].transform.childCount; i++)
         {
@@ -153,7 +165,7 @@ public class UIManager : MonoBehaviour
 
         interactableElements.Clear();
 
-        if (next != Menu.Loading && next != Menu.Game)
+        if (next != Menu.Loading && next != Menu.Game && next != Menu.Thanks)
         {
             foreach (Transform child in menus[(int)next].transform.Find("Interactables").transform)
             {
@@ -196,6 +208,11 @@ public class UIManager : MonoBehaviour
     public void StartToRegister()
     {
         SetMenuActive(Menu.Register);
+    }
+
+    public void StartToThanks()
+    {
+        SetMenuActive(Menu.Thanks);
     }
 
     public void StartToLeaderboard()

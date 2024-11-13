@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PuzzleGenerator : MonoBehaviour
 {
-    public List<Vehicle> vehicles = new List<Vehicle>();
+    public List<Vehicle> vehicles;
 
     int numberOfCars = 12;
     int numberOfTrucks = 4;
@@ -24,6 +24,7 @@ public class PuzzleGenerator : MonoBehaviour
 
     public async void Start()
     {
+        vehicles = new List<Vehicle>();
         boardInstance = InstanceCreator.GetBoard();
         modifyBoardInstance = InstanceCreator.GetModifyBoard();
         solverInstance = InstanceCreator.GetSolver();
@@ -149,7 +150,7 @@ public class PuzzleGenerator : MonoBehaviour
         List<int[]> position = vehicle.GetPosition();
         modifyBoardInstance.InsertVehicle(vehicle, board);
 
-        bool solvable = await solverInstance.Search(boardInstance.board,true);
+        bool solvable = await solverInstance.Search(boardInstance.board, true);
         if (!solvable)
         {
             boardInstance.places.RemoveAll(place => place.placePosition[0] == position[0][0] && place.placePosition[1] == position[0][1]);

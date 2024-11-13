@@ -11,7 +11,7 @@ public class VehicleAI : MonoBehaviour
     public bool stopped = false;
     Vector3 startPosition;
 
-    float distanceToDestroy = 400f;
+    public float distanceToDestroy = 400f;
 
     float timeSinceStop = 0;
 

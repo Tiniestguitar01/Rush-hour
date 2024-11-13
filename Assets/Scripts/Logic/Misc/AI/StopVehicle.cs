@@ -12,10 +12,10 @@ public class StopVehicle : MonoBehaviour
 
     public bool stopped = false;
 
-    void Start()
+    public void Start()
     {
-        redLight.SetActive(false);
-        greenLight.SetActive(false);
+        redLight?.SetActive(false);
+        greenLight?.SetActive(false);
         boxCollider = GetComponent<BoxCollider>();
         StartCoroutine(Stop());
     }
@@ -25,15 +25,15 @@ public class StopVehicle : MonoBehaviour
         if(stopped)
         {
             boxCollider.enabled = false;
-            redLight.SetActive(false);
-            greenLight.SetActive(true);
+            redLight?.SetActive(false);
+            greenLight?.SetActive(true);
             stopped = false;
         }
         else
         {
             boxCollider.enabled = true;
-            redLight.SetActive(true);
-            greenLight.SetActive(false);
+            redLight?.SetActive(true);
+            greenLight?.SetActive(false);
             stopped = true;
         }
         yield return new WaitForSeconds(wait);

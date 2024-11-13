@@ -39,7 +39,7 @@ public class Solver : MonoBehaviour
         graph.openList.Add(firstNode);
         Node bestNode = graph.openList.First();
         int steps = 0;
-        while (graph.openList.Count != 0 )
+        while (graph.openList.Count != 0 && steps < 2500)
         {
             graph.openList.Sort();
 

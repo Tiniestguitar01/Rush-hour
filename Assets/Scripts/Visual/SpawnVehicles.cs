@@ -13,7 +13,7 @@ public class SpawnVehicles : MonoBehaviour
     SpawnGrid spawnGridInstance;
     Board boardInstance;
 
-    private void Start()
+    public void Start()
     {
         spawnGridInstance = InstanceCreator.GetSpawnGrid();
         boardInstance = InstanceCreator.GetBoard();

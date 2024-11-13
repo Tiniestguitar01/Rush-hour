@@ -13,7 +13,7 @@ public class SpawnGrid : MonoBehaviour
     public Material goalCellMaterial;
 
     public List<GameObject> instantiatedCells;
-    private void Start()
+    public void Start()
     {
         boardInstance = InstanceCreator.GetBoard();
         instantiatedCells = new List<GameObject>();

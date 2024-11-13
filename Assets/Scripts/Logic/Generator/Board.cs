@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    public int size;
+    public int size = 6;
 
     public int[,] board;
 

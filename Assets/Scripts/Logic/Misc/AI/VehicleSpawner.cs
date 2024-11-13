@@ -17,7 +17,7 @@ public class VehicleSpawner : MonoBehaviour
     public int maxNumberOfCars = 10;
 
     SpawnVehicles spawnVehiclesInstance;
-    void Start()
+    public void Start()
     {
         spawnVehiclesInstance = InstanceCreator.GetSpawnVehicles();
         StartCoroutine(Spawn());
@@ -29,7 +29,7 @@ public class VehicleSpawner : MonoBehaviour
         {
             GameObject vehicleParent = Instantiate(VehiclePrefab, transform.position, Quaternion.identity);
             vehicleParent.transform.parent = transform;
-            GameObject vehicle;
+            GameObject vehicle = new GameObject("Vehicle");
             float size = 0;
             if (!isTrolley && !isTrain)
             {

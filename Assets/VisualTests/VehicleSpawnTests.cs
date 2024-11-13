@@ -11,6 +11,7 @@ public class VehicleSpawnTests
     SpawnVehicles spawnVehiclesInstance;
     Board boardInstance;
     PuzzleGenerator puzzleGeneratorInstance;
+    SpawnGrid spawnGridInstance;
 
     private GameObject car = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/BrokenVector/LowPolyCarPack/Prefabs/Car_3_Red.prefab");
 
@@ -20,16 +21,23 @@ public class VehicleSpawnTests
         GameObject InstanceCreatorGO = new GameObject("InstanceCreator");
         GameObject GenerationManagerGO = new GameObject("GenerationManager");
         GameObject VisualManagerGO = new GameObject("VisualManager");
+        GameObject MiscLogicManagerGO = new GameObject("MiscLogicManager");
+        GameObject UIManagerGO = new GameObject("UIManager");
 
         InstanceCreatorGO.AddComponent<InstanceCreator>();
-        GenerationManagerGO.AddComponent<Board>();
-        GenerationManagerGO.AddComponent<PuzzleGenerator>();
-        VisualManagerGO.AddComponent<SpawnVehicles>();
+        UIManagerGO.AddComponent<UIManager>();
+        MiscLogicManagerGO.AddComponent<GameData>();
+        boardInstance = GenerationManagerGO.AddComponent<Board>();
+        boardInstance.Start();
+        puzzleGeneratorInstance = GenerationManagerGO.AddComponent<PuzzleGenerator>();
+        puzzleGeneratorInstance.Start();
+        spawnVehiclesInstance = VisualManagerGO.AddComponent<SpawnVehicles>();
+        spawnGridInstance = VisualManagerGO.AddComponent<SpawnGrid>();
+        spawnVehiclesInstance.Start();
+        spawnGridInstance.distance = 1;
+        spawnGridInstance.offset = 0;
 
-        boardInstance = InstanceCreator.GetBoard();
-        puzzleGeneratorInstance = InstanceCreator.GetPuzzleGenerator();
         puzzleGeneratorInstance.vehicles.Add(new Vehicle(1, 2, new int[] { 0, 2 }, Direction.Vertical, boardInstance.board));
-        spawnVehiclesInstance = InstanceCreator.GetSpawnVehicles();
 
         spawnVehiclesInstance.cars.Add(car);
     }
@@ -46,7 +54,7 @@ public class VehicleSpawnTests
         Assert.AreEqual(vehicle.startPosition, vehicleComponent.startPosition);
         Assert.AreEqual(vehicle.direction, vehicleComponent.direction);
 
-        Assert.AreEqual(new Vector3(vehicle.startPosition[0] * 3.5f, (0.5f * vehicle.size), vehicle.startPosition[1] * 3.5f), spawnVehiclesInstance.vehicleGOs[0].transform.position);
+        Assert.AreEqual(new Vector3(vehicle.startPosition[0] * spawnGridInstance.distance + (boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset, 0.99f, vehicle.startPosition[1] * spawnGridInstance.distance + (boardInstance.maxBoardSize - boardInstance.size) * spawnGridInstance.offset), spawnVehiclesInstance.vehicleGOs[0].transform.position);
 
     }
 }

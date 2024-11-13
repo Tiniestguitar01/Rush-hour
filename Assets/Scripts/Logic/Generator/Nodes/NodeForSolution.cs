@@ -1,6 +1,9 @@
 public class NodeForSolution : Node
 {
-    public NodeForSolution(int[,] board, int depth) : base(board, depth) { EvaluateCost(); }
+    bool useBestFirstSearch;
+    public NodeForSolution(int[,] board, int depth) : base(board, depth) {
+        EvaluateCost(); 
+    }
 
     public override Node CreateChild(Vehicle vehicle, int[] position, int[,] board)
     {
