@@ -14,7 +14,3 @@ Tesztelők:
 - Bárándi Dominik Csaba
 - Kalmár Patrik
 
-## Futtatás
-
-rushhour/Rush Hour.exe
-
