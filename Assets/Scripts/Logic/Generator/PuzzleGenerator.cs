@@ -61,39 +61,6 @@ public class PuzzleGenerator : MonoBehaviour
             iteration++;
         }
 
-        /*Graph graph = new Graph();
-        Node firstNode = new NodeForGeneration(boardInstance.board, 0, vehicles[0]);
-        graph.openList.Add(firstNode);
-        int steps = 0;
-        while (graph.openList.Count != 0 && steps < 100)
-        {
-            graph.openList.Sort();
-
-            Node bestNode = graph.openList.Last();
-            graph.openList.RemoveAt(graph.openList.Count - 1);
-            graph.closedList.Add(bestNode);
-
-
-            vehicles = bestNode.GetVehicles();
-
-            List<Node> children = bestNode.GetChildren();
-
-            for (int nodeIndex = 0; nodeIndex < children.Count; nodeIndex++)
-            {
-                {
-                    if (!graph.openList.Any((node) => node.Equals(children[nodeIndex])) && !graph.closedList.Any((node) => node.Equals(children[nodeIndex])))
-                    {
-                        graph.openList.Add(children[nodeIndex]);
-                    }
-                }
-            }
-            steps++;
-        }
-
-        graph.closedList.Sort();
-        vehicles = graph.closedList.Last().GetVehicles();
-        boardInstance.board = (int[,])graph.closedList.Last().board.Clone();*/
-
         resultBoard = (int[,])boardInstance.board.Clone();
 
         vehicles.Sort();
