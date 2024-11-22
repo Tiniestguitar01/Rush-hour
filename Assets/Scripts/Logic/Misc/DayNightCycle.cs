@@ -1,20 +1,19 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DayNightCycle : MonoBehaviour
 {
     public float time;
     public float scale = 2f;
+    public float speed = 1;
     public GameObject Light;
 
 
     void Update()
     {
-        if(time < 360 * scale)
+        if (time < 360 * scale)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * speed;
         }
         else
         {

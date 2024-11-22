@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 1493514157350940974}
   - component: {fileID: 2822715792356984322}
   - component: {fileID: 722559213847707640}
-  - component: {fileID: -2351351188566544046}
-  - component: {fileID: -3131948073173432095}
   m_Layer: 0
   m_Name: red
   m_TagString: red
@@ -102,43 +100,6 @@ MonoBehaviour:
   wait: 30
   redLight: {fileID: 1195721422574835367}
   greenLight: {fileID: 3380520659790767776}
-  stopped: 0
---- !u!65 &-2351351188566544046
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 382876705942873761}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-3131948073173432095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 382876705942873761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9950bffb0bc28244948a31ca03848a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wait: 30
-  redLight: {fileID: 0}
-  greenLight: {fileID: 0}
   stopped: 0
 --- !u!1 &1195721422574835367
 GameObject:

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -33,14 +34,14 @@ public class CameraMovement : MonoBehaviour
                 rotation.transform.localEulerAngles = new Vector3(rotationY, rotationX, 0);
             }
 
-            if (Input.mouseScrollDelta.y != 0)
+            if (Input.mouseScrollDelta.y != 0) 
             {
-                transform.localPosition = new Vector3(transform.localPosition.x,transform.localPosition.y, Mathf.Clamp(transform.localPosition.z + Input.mouseScrollDelta.y * scrollScale,cameraZMin,cameraZMax));
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, Mathf.Clamp(transform.localPosition.z + Input.mouseScrollDelta.y * scrollScale, cameraZMin, cameraZMax));
             }
         }
         else
         {
             rotation.RotateAround(target.position, Vector3.up, speed * Time.deltaTime);
         }
-    }
+    }   
 }

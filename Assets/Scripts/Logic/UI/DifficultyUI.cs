@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -19,7 +20,6 @@ public class DifficultyUI : MonoBehaviour
         databaseInstance = InstanceCreator.GetDatabase();
         gameDataInstance = InstanceCreator.GetGameData();
     }
-
     public async void SetDifficulty(int difficulty)
     {
         BoardSizeSliderChange();
